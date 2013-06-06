@@ -8,14 +8,36 @@
     		<element name="artist" type="tns:artistType" maxOccurs="1"
     			minOccurs="0">
     		</element>
-    		<element name="albumList" type="tns:albumListType" maxOccurs="unbounded" minOccurs="0"></element>
+    		<element name="albumList" type="tns:albumListType"
+    			maxOccurs="unbounded" minOccurs="0">
+    		</element>
     	</sequence>
     	<attribute name="mbID" type="string">
     		<annotation>
     			<documentation>It is the musicbrainz id.</documentation>
-    		</annotation></attribute>
-    	<attribute name="title" type="string"></attribute>
+    		</annotation>
+    	</attribute>
+    	<attribute name="title" type="string">
+    		<annotation>
+    			<documentation>
+    				This is the title of the song, it can be different
+    				of the name.mp3 of the corresponding file.
+    			</documentation>
+    		</annotation>
+    	</attribute>
     	<attribute name="length" type="positiveInteger"></attribute>
+    	<attribute name="name" type="string">
+    		<annotation>
+    			<documentation>
+    				This is the name of the song, it can be different of
+    				the title.
+    			</documentation>
+    		</annotation>
+    	</attribute>
+    	<attribute name="bitrate" type="positiveInteger"></attribute>
+    	<attribute name="encoding" type="string"></attribute>
+    	<attribute name="channelsNum" type="positiveInteger"></attribute>
+    	<attribute name="frequency" type="positiveInteger"></attribute>
     </complexType>
 
     <complexType name="artistType">
