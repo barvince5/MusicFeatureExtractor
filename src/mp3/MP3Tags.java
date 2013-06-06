@@ -33,14 +33,6 @@ public final class MP3Tags {
 		return MP3Tags.tag;
 		
 		
-		
-//		System.err.println("bitrate "+audioFile.getBitrate());
-//		System.err.println("CH: "+audioFile.getChannelNumber());
-//		System.err.println("freq [hz] "+audioFile.getSamplingRate());
-//		System.err.println("file name "+audioFile.getName());
-//		System.err.println("length [s] "+audioFile.getLength());
-//		
-//		
 //		System.err.println("Ar "+audioFile.getTag().getFirstArtist());
 //		System.err.println("til "+audioFile.getTag().getFirstTitle());
 //		System.err.println("al "+audioFile.getTag().getFirstAlbum());
