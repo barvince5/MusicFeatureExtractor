@@ -35,6 +35,8 @@ public final class MusicbrainzUrl {
 									"/ws/2/recording/", 
 									"query=artist:\""+artist+"\" AND recording:\""+title+"\" AND release:\""+album+"\"", 
 									null);
+						if(uri != null)
+							return url= uri.toURL();
 				}
 			
 			if(album != null) {
@@ -42,6 +44,8 @@ public final class MusicbrainzUrl {
 							"/ws/2/recording/", 
 							"query=recording:\""+title+"\" AND release:\""+album+"\"", 
 							null);
+				if(uri != null)
+					return url= uri.toURL();
 				}
 			
 			if(artist != null) {
@@ -49,11 +53,10 @@ public final class MusicbrainzUrl {
 							"/ws/2/recording/", 
 							"query=artist:\""+artist+"\" AND recording:\""+title+"\"", 
 							null);
+				if(uri != null)
+					return url= uri.toURL();
 				}
-			
-			if(uri != null)
-				url= uri.toURL();
-			
+						
 		} catch (URISyntaxException e) {
 			throw new MusicbrainzUrlException("URISyntaxException "+e.getMessage(), e);
 		} catch (MalformedURLException e) {
@@ -71,7 +74,7 @@ public final class MusicbrainzUrl {
 	 * @return musicbrainz url style to perform a gethttp, or null.
 	 * @throws MusicbrainzUrlException in case of errors (e.g. artist null).
 	 */
-	public static final URL getMbArtistUrl(String artist) 
+	public final static URL getMbArtistUrl(String artist) 
 			throws MusicbrainzUrlException {
 		
 		if(artist == null)
@@ -108,7 +111,7 @@ public final class MusicbrainzUrl {
 	 * @return musicbrainz url style to perform a gethttp, or null.
 	 * @throws MusicbrainzUrlException in case of errors (e.g. artistID null).
 	 */
-	public static final URL getMbAlbumsOfArtist(String artistID) 
+	public final static URL getMbAlbumsOfArtist(String artistID) 
 			throws MusicbrainzUrlException {
 		
 		if(artistID == null)
@@ -145,7 +148,7 @@ public final class MusicbrainzUrl {
 	 * @return musicbrainz url style to perform a gethttp, or null.
 	 * @throws MusicbrainzUrlException in case of errors (e.g. artistID null).
 	 */
-	public static final URL getMbSongsOfAlbum(String releaseGroupID) 
+	public final static URL getMbSongsOfAlbum(String releaseGroupID) 
 			throws MusicbrainzUrlException {
 		
 		if(releaseGroupID == null)

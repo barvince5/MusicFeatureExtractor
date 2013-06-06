@@ -20,6 +20,7 @@ import customException.GetHttpException;
  */
 public final class GetHttpPage {
 	
+	private static Object lock;
 	private static int timeOut, wait;
 	private static GetHttpPage instance= null;
 	
@@ -30,6 +31,7 @@ public final class GetHttpPage {
 	private GetHttpPage() {
 		GetHttpPage.wait= 1000; 	// 1000 milli second is the default value.
 		GetHttpPage.timeOut= 7000; 	// 7000 milli seconds is the default value
+		GetHttpPage.lock= new Object();
 	}
 	
 	/**
@@ -99,7 +101,7 @@ public final class GetHttpPage {
 			conn.setRequestMethod("GET");
 			conn.setConnectTimeout(GetHttpPage.timeOut);
 			
-			synchronized(GetHttpPage.class) {
+			synchronized(GetHttpPage.lock) {
 				rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 				try {
 					Thread.sleep(GetHttpPage.wait);
