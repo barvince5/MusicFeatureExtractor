@@ -84,7 +84,7 @@ public final class ArtistBiography {
 		if(url.contains("en.wikipedia") == false)
 			throw new ArtistBiographyException("The expected url is not the english version of wikipedia web site");
 		
-		//get all info from wikipedia website
+		//gets all info from wikipedia website
 		String bio= null;
 		Document doc= null;
 		Elements paragraphs= null;

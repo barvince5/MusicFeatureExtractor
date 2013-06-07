@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="https://github.com/AntonioCollarino/MusicFeatureExtractor.git" elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="https://github.com/AntonioCollarino/MusicFeatureExtractor.git">
+
+    <element name="SongMetaData" type="tns:SongMetadataType"></element>
+
+    <complexType name="SongMetadataType">
+    	<sequence>
+    		<element name="artist" type="tns:artistType" maxOccurs="1"
+    			minOccurs="0">
+    		</element>
+    		<element name="albumList" type="tns:albumListType"
+    			maxOccurs="unbounded" minOccurs="0">
+    		</element>
+    		<element name="title" type="string" maxOccurs="1"
+    			minOccurs="1">
+    		</element>
+    		<element name="length" type="positiveInteger" maxOccurs="1"
+    			minOccurs="0">
+    		</element>
+    		<element name="fileName" type="string" maxOccurs="1"
+    			minOccurs="1">
+    		</element>
+    		<element name="bitrate" type="positiveInteger" maxOccurs="1"
+    			minOccurs="0">
+    		</element>
+    		<element name="encoding" type="string" maxOccurs="1"
+    			minOccurs="0">
+    		</element>
+    		<element name="channelsNum" type="positiveInteger"
+    			maxOccurs="1" minOccurs="0">
+    		</element>
+    		<element name="frequency" type="positiveInteger" maxOccurs="1" minOccurs="0"></element>
+    	</sequence>
+    	<attribute name="mbSongID" type="string">
+    		<annotation>
+    			<documentation>It is the musicbrainz id.</documentation>
+    		</annotation>
+    	</attribute>
+    </complexType>
+
+    <complexType name="artistType">
+    	<sequence>
+    		<element name="disambiguation" type="string" maxOccurs="1" minOccurs="0"></element>
+    		<element name="name" type="string" maxOccurs="1" minOccurs="1"></element>
+    	</sequence>
+    	<attribute name="mbArtistID" type="string">
+    		<annotation>
+    			<documentation>It is the musicbrainz id.</documentation>
+    		</annotation>
+    	</attribute>
+    </complexType>
+
+    <complexType name="albumListType">
+
+    	<sequence>
+    		<element name="title" type="string" maxOccurs="1" minOccurs="1"></element>
+    		<element name="date" type="date" maxOccurs="1" minOccurs="0"></element>
+    		<element name="position" type="positiveInteger" maxOccurs="1" minOccurs="0"></element>
+    		<element name="format" type="string" maxOccurs="1" minOccurs="0"></element>
+    		<element name="country" type="tns:countryType" maxOccurs="1" minOccurs="0"></element>
+    		<element name="track" type="positiveInteger" maxOccurs="1" minOccurs="0"></element>
+    		<element name="status" type="string" maxOccurs="1" minOccurs="0"></element>
+    	</sequence>
+    	<attribute name="mbAlbumID" type="string">
+    		<annotation>
+    			<documentation>It is the musicbrainz id.</documentation>
+    		</annotation>
+    	</attribute>
+    </complexType>
+
+    <simpleType name="countryType">
+        <annotation>
+        	<documentation>It must be long 2 characters and it must contain only letters.</documentation>
+        </annotation>
+        <restriction base="string">
+    		<pattern value="[a-zA-Z]{2}"></pattern>
+    	</restriction>
+    </simpleType>
+</schema>

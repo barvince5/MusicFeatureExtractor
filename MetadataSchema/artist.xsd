@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="https://github.com/AntonioCollarino/MusicFeatureExtractor.git" elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="https://github.com/AntonioCollarino/MusicFeatureExtractor.git">
+
+    <element name="ArtistMetadata" type="tns:ArtistType"></element>
+    
+    <complexType name="ArtistType">
+    	<sequence>
+    		<element name="aliasList" type="string"
+    			maxOccurs="unbounded" minOccurs="0">
+    		</element>
+    		<element name="biography" type="string" maxOccurs="1"
+    			minOccurs="0">
+    		</element>
+    		<element name="name" type="string" maxOccurs="1"
+    			minOccurs="1">
+    		</element>
+    		<element name="gender" type="tns:genderType" maxOccurs="1"
+    			minOccurs="0">
+    		</element>
+    		<element name="country" type="tns:countryType" maxOccurs="1"
+    			minOccurs="0">
+    		</element>
+    		<element name="begin" type="date" maxOccurs="1"
+    			minOccurs="0">
+    		</element>
+    		<element name="end" type="date" maxOccurs="1"
+    			minOccurs="0">
+    		</element>
+    		<element name="ended" type="boolean" maxOccurs="1"
+    			minOccurs="0">
+    		</element>
+    		<element name="type" type="string" maxOccurs="1"
+    			minOccurs="0">
+    		</element>
+    		<element name="disambiguation" type="string" maxOccurs="1"
+    			minOccurs="0">
+    		</element>
+    		<element name="linkList" type="string" maxOccurs="unbounded"
+    			minOccurs="0">
+    		</element>
+    		<element name="albumList" type="tns:albumListType" maxOccurs="unbounded" minOccurs="0"></element>
+    	</sequence>
+    	<attribute name="mbID" type="string"></attribute>
+    </complexType>
+
+    <simpleType name="genderType">
+    	<restriction base="string">
+    		<pattern value="(male|female)"></pattern>
+    	</restriction>
+    </simpleType>
+
+    <simpleType name="countryType">
+    	<restriction base="string">
+    		<pattern value="[a-zA-Z]{2}"></pattern>
+    	</restriction>
+    </simpleType>
+
+    <complexType name="albumListType">
+    	<sequence>
+    		<element name="type" type="string" maxOccurs="1"
+    			minOccurs="0">
+    		</element>
+    		<element name="title" type="string" maxOccurs="1"
+    			minOccurs="1">
+    		</element>
+    		<element name="date" type="date" maxOccurs="1" minOccurs="0"></element>
+    	</sequence>
+    	<attribute name="mbID" type="string"></attribute>
+    </complexType>
+</schema>

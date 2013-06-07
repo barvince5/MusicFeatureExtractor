@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="https://github.com/AntonioCollarino/MusicFeatureExtractor.git" elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="https://github.com/AntonioCollarino/MusicFeatureExtractor.git">
+
+    <element name="albumMetadata" type="tns:albumMetadataType"></element>
+    
+    <complexType name="albumMetadataType">
+    	<sequence>
+    		<element name="title" type="string" maxOccurs="1"
+    			minOccurs="1">
+    		</element>
+    		<element name="songList" type="tns:songListType"
+    			maxOccurs="unbounded" minOccurs="0">
+    		</element>
+    		<element name="artist" type="tns:artistType" maxOccurs="1"
+    			minOccurs="0">
+    		</element>
+    		<element name="date" type="date" maxOccurs="1"
+    			minOccurs="0">
+    		</element>
+    		<element name="country" type="tns:countryType" maxOccurs="1" minOccurs="0"></element>
+    	</sequence>
+    	
+    	<attribute name="mbArtistID" type="string"></attribute>
+    </complexType>
+    
+    <complexType name="songListType">
+    	<sequence>
+    		<element name="title" type="string" maxOccurs="1"
+    			minOccurs="1">
+    		</element>
+    		<element name="track" type="positiveInteger" maxOccurs="1"
+    			minOccurs="0">
+    		</element>
+    		<element name="format" type="string" maxOccurs="1"
+    			minOccurs="0">
+    		</element>
+    		<element name="position" type="positiveInteger"
+    			maxOccurs="1" minOccurs="0">
+    		</element>
+    		<element name="status" type="string" maxOccurs="1" minOccurs="0">
+    			<annotation>
+    				<documentation>E.g. official</documentation>
+    			</annotation></element>
+    	</sequence>
+    	<attribute name="present" type="boolean"></attribute>
+    	<attribute name="mbSongID" type="string"></attribute>
+    </complexType>
+    
+    <complexType name="artistType">
+    	<sequence>
+    		<element name="disambiguation" type="string" maxOccurs="1"
+    			minOccurs="0">
+    		</element>
+    		<element name="name" type="string" maxOccurs="1" minOccurs="1"></element>
+    	</sequence>
+    	<attribute name="mbArtistID" type="string"></attribute>
+    </complexType>
+    
+        <simpleType name="countryType">
+        <annotation>
+        	<documentation>It must be long 2 characters and it must contain only letters.</documentation>
+        </annotation>
+        <restriction base="string">
+    		<pattern value="[a-zA-Z]{2}"></pattern>
+    	</restriction>
+    </simpleType>
+</schema>
