@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="https://github.com/AntonioCollarino/MusicFeatureExtractor.git" elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="https://github.com/AntonioCollarino/MusicFeatureExtractor.git">
+<schema targetNamespace="https://github.com/AntonioCollarino/MusicFeatureExtractor.git" elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xsd1="https://github.com/AntonioCollarino/MusicFeatureExtractor.git">
 
-    <element name="SongMetaData" type="tns:SongMetadataType"></element>
+    <element name="SongMetaData" type="xsd1:SongMetadataType"></element>
 
     <complexType name="SongMetadataType">
     	<sequence>
-    		<element name="artist" type="tns:artistType" maxOccurs="1"
+    		<element name="artist" type="xsd1:artistType" maxOccurs="1"
     			minOccurs="0">
     		</element>
-    		<element name="albumList" type="tns:albumListType"
+    		<element name="albumList" type="xsd1:albumListType"
     			maxOccurs="unbounded" minOccurs="0">
     		</element>
     		<element name="title" type="string" maxOccurs="1"
@@ -55,9 +55,8 @@
     	<sequence>
     		<element name="title" type="string" maxOccurs="1" minOccurs="1"></element>
     		<element name="date" type="date" maxOccurs="1" minOccurs="0"></element>
-    		<element name="position" type="positiveInteger" maxOccurs="1" minOccurs="0"></element>
     		<element name="format" type="string" maxOccurs="1" minOccurs="0"></element>
-    		<element name="country" type="tns:countryType" maxOccurs="1" minOccurs="0"></element>
+    		<element name="country" type="xsd1:countryType" maxOccurs="1" minOccurs="0"></element>
     		<element name="track" type="positiveInteger" maxOccurs="1" minOccurs="0"></element>
     		<element name="status" type="string" maxOccurs="1" minOccurs="0"></element>
     	</sequence>

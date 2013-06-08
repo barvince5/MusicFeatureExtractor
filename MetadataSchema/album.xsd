@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="https://github.com/AntonioCollarino/MusicFeatureExtractor.git" elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="https://github.com/AntonioCollarino/MusicFeatureExtractor.git">
+<schema targetNamespace="https://github.com/AntonioCollarino/MusicFeatureExtractor.git" elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xsd3="https://github.com/AntonioCollarino/MusicFeatureExtractor.git">
 
-    <element name="albumMetadata" type="tns:albumMetadataType"></element>
+    <element name="albumMetadata" type="xsd3:albumMetadataType"></element>
     
     <complexType name="albumMetadataType">
     	<sequence>
     		<element name="title" type="string" maxOccurs="1"
     			minOccurs="1">
     		</element>
-    		<element name="songList" type="tns:songListType"
+    		<element name="songList" type="xsd3:songListType"
     			maxOccurs="unbounded" minOccurs="0">
     		</element>
-    		<element name="artist" type="tns:artistType" maxOccurs="1"
+    		<element name="artist" type="xsd3:artistType" maxOccurs="1"
     			minOccurs="0">
     		</element>
     		<element name="date" type="date" maxOccurs="1"
     			minOccurs="0">
     		</element>
-    		<element name="country" type="tns:countryType" maxOccurs="1" minOccurs="0"></element>
+    		<element name="country" type="xsd3:countryType" maxOccurs="1" minOccurs="0"></element>
     	</sequence>
     	
     	<attribute name="mbArtistID" type="string"></attribute>
