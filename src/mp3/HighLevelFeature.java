@@ -43,6 +43,8 @@ public final class HighLevelFeature extends MP3Info {
 			ArtistType artist= this.obf.createArtistType();
 			artist.setName(audioFile.getName());
 			
+			//TODO
+			
 			//file name can be different of the title. 
 			this.smt.setArtist(artist);
 			//KB/s

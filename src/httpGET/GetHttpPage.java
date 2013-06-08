@@ -93,7 +93,7 @@ public final class GetHttpPage {
 		HttpURLConnection conn= null;
 		BufferedReader rd= null;
 		String line= null;
-		String result = null;
+		String result = "";
 		
 		try {
 			

@@ -30,7 +30,7 @@ public final class ArtistBiography {
 	 * Note: Default wait is 1 second and default tiemout is 7 seconds
 	 * @return ArtistBiography
 	 */
-	public final ArtistBiography getInstance() {
+	public final static ArtistBiography getInstance() {
 		
 		if(ArtistBiography.instance == null)
 			synchronized(ArtistBiography.class) {
@@ -85,10 +85,9 @@ public final class ArtistBiography {
 			throw new ArtistBiographyException("The expected url is not the english version of wikipedia web site");
 		
 		//gets all info from wikipedia website
-		String bio= null;
+		String bio= "[From en.wikipedia] ";
 		Document doc= null;
 		Elements paragraphs= null;
-		Element firstParagraph= null;
 		Element lastParagraph= null;
 		Element p= null;
 		
@@ -106,11 +105,8 @@ public final class ArtistBiography {
 			}
 			
 			paragraphs = doc.select(".mw-content-ltr p");
-			firstParagraph = paragraphs.first();
 			lastParagraph = paragraphs.last();
-			p= firstParagraph;
-			bio= p.text().replaceAll("\\[.*\\]", "") + '\n';
-			for(int i= 1; p != lastParagraph ; ++i) {
+			for(int i= 0; p != lastParagraph ; ++i) {
 				p= paragraphs.get(i);
 				bio += p.text().replaceAll("\\[.*\\]", "") + '\n';
 			}
