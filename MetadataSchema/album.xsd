@@ -14,15 +14,18 @@
     		<element name="artist" type="xsd3:artistType" maxOccurs="1"
     			minOccurs="0">
     		</element>
-    		<element name="date" type="date" maxOccurs="1"
+    		<element name="date" type="string" maxOccurs="1"
     			minOccurs="0">
     		</element>
-    		<element name="country" type="xsd3:countryType" maxOccurs="1" minOccurs="0"></element>
+    		<element name="country" type="xsd3:countryType"
+    			maxOccurs="1" minOccurs="0">
+    		</element>
     	</sequence>
-    	
+
     	<attribute name="mbArtistID" type="string"></attribute>
+    	<attribute name="mbAlbumID" type="string"></attribute>
     </complexType>
-    
+
     <complexType name="songListType">
     	<sequence>
     		<element name="title" type="string" maxOccurs="1"
@@ -33,9 +36,6 @@
     		</element>
     		<element name="format" type="string" maxOccurs="1"
     			minOccurs="0">
-    		</element>
-    		<element name="position" type="positiveInteger"
-    			maxOccurs="1" minOccurs="0">
     		</element>
     		<element name="status" type="string" maxOccurs="1" minOccurs="0">
     			<annotation>
@@ -53,7 +53,6 @@
     		</element>
     		<element name="name" type="string" maxOccurs="1" minOccurs="1"></element>
     	</sequence>
-    	<attribute name="mbArtistID" type="string"></attribute>
     </complexType>
     
         <simpleType name="countryType">

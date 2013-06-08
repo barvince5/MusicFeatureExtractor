@@ -5,42 +5,34 @@
     
     <complexType name="ArtistType">
     	<sequence>
-    		<element name="aliasList" type="string"
-    			maxOccurs="unbounded" minOccurs="0">
+            <element name="name" type="string" maxOccurs="1" minOccurs="1">
+    		</element>
+            <element name="gender" type="xsd2:genderType" maxOccurs="1" minOccurs="0">
+    		</element>
+            <element name="type" type="string" maxOccurs="1" minOccurs="0">
+    		</element>
+            <element name="country" type="xsd2:countryType" maxOccurs="1" minOccurs="0">
+    		</element>
+            <element name="begin" type="string" maxOccurs="1" minOccurs="0">
+    		</element>
+            <element name="ended" type="boolean" maxOccurs="1" minOccurs="0">
+    		</element>
+            <element name="end" type="string" maxOccurs="1" minOccurs="0">
+    		</element>
+            <element name="disambiguation" type="string" maxOccurs="1" minOccurs="0">
+    		</element>
+            <element name="aliasList" type="xsd2:aliasListType"
+    			maxOccurs="1" minOccurs="0">
     		</element>
     		<element name="biography" type="string" maxOccurs="1"
     			minOccurs="0">
     		</element>
-    		<element name="name" type="string" maxOccurs="1"
-    			minOccurs="1">
-    		</element>
-    		<element name="gender" type="xsd2:genderType" maxOccurs="1"
+            <element name="albumList" type="xsd2:albumListType" maxOccurs="1" minOccurs="0"></element>
+            <element name="linkList" type="xsd2:linkListType" maxOccurs="1"
     			minOccurs="0">
     		</element>
-    		<element name="country" type="xsd2:countryType" maxOccurs="1"
-    			minOccurs="0">
-    		</element>
-    		<element name="begin" type="date" maxOccurs="1"
-    			minOccurs="0">
-    		</element>
-    		<element name="end" type="date" maxOccurs="1"
-    			minOccurs="0">
-    		</element>
-    		<element name="ended" type="boolean" maxOccurs="1"
-    			minOccurs="0">
-    		</element>
-    		<element name="type" type="string" maxOccurs="1"
-    			minOccurs="0">
-    		</element>
-    		<element name="disambiguation" type="string" maxOccurs="1"
-    			minOccurs="0">
-    		</element>
-    		<element name="linkList" type="string" maxOccurs="unbounded"
-    			minOccurs="0">
-    		</element>
-    		<element name="albumList" type="xsd2:albumListType" maxOccurs="unbounded" minOccurs="0"></element>
     	</sequence>
-    	<attribute name="mbID" type="string"></attribute>
+    	<attribute name="mbArtistID" type="string"></attribute>
     </complexType>
 
     <simpleType name="genderType">
@@ -55,7 +47,7 @@
     	</restriction>
     </simpleType>
 
-    <complexType name="albumListType">
+    <complexType name="albumType">
     	<sequence>
     		<element name="type" type="string" maxOccurs="1"
     			minOccurs="0">
@@ -63,8 +55,26 @@
     		<element name="title" type="string" maxOccurs="1"
     			minOccurs="1">
     		</element>
-    		<element name="date" type="date" maxOccurs="1" minOccurs="0"></element>
+    		<element name="date" type="string" maxOccurs="1" minOccurs="0"></element>
     	</sequence>
-    	<attribute name="mbID" type="string"></attribute>
+    	<attribute name="mbAlbumID" type="string"></attribute>
+    </complexType>
+
+    <complexType name="linkListType">
+    	<sequence>
+    		<element name="link" type="string" maxOccurs="unbounded" minOccurs="1"></element>
+    	</sequence>
+    </complexType>
+
+    <complexType name="albumListType">
+    	<sequence>
+    		<element name="album" type="xsd2:albumType" maxOccurs="unbounded" minOccurs="1"></element>
+    	</sequence>
+    </complexType>
+
+    <complexType name="aliasListType">
+    	<sequence>
+    		<element name="alias" type="string" maxOccurs="unbounded" minOccurs="1"></element>
+    	</sequence>
     </complexType>
 </schema>
