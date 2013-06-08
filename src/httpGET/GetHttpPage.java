@@ -26,7 +26,7 @@ public final class GetHttpPage {
 	
 	/**
 	 * This is the private constructor for the singleton pattern.<br>
-	 * Note: Default wait is 1 second and default tiemout is 7 seconds
+	 * Note: Default wait is 1 second and default timeout is 7 seconds
 	 */
 	private GetHttpPage() {
 		GetHttpPage.wait= 1000; 	// 1000 milli second is the default value.
@@ -36,7 +36,7 @@ public final class GetHttpPage {
 	
 	/**
 	 * This method (Singleton) return the only instance of GetHttpPage class.<br>
-	 * Note: Default wait is 1 second and default tiemout is 7 seconds
+	 * Note: Default wait is 1 second and default timeout is 7 seconds
 	 * @return GetHttpPage
 	 */
 	public final static GetHttpPage getInstance() {
@@ -81,7 +81,7 @@ public final class GetHttpPage {
 	}
 	
 	/**
-	 * This method return a web page.
+	 * This method return a web page, or empty string.
 	 * @param url
 	 * @param timeOut in milli-second
 	 * @return
@@ -130,7 +130,7 @@ public final class GetHttpPage {
 	}
 	
 	/**
-	 * This method return a web page.
+	 * This method return a web page, or empty string.
 	 * @param url
 	 * @return
 	 * @throws GetHttpException
@@ -148,7 +148,7 @@ public final class GetHttpPage {
 	}
 	
 	/**
-	 * This method return a web page.
+	 * This method return a web page, or empty file.
 	 * @param url
 	 * @param outputFile
 	 * @return
@@ -175,7 +175,7 @@ public final class GetHttpPage {
 	}
 	
 	/**
-	 * This method return a web page.
+	 * This method return a web page, or empty file.
 	 * @param url
 	 * @param outputFile
 	 * @return

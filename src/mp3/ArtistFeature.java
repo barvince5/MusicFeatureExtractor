@@ -57,17 +57,28 @@ public class ArtistFeature extends MP3Info {
 
 	public final boolean start() 
 			throws MP3Exception {
-		
-		String artistName= super.getArtist();
-		if(artistName == null)
-			return false;
-		
+				
 		GetHttpPage getHttp= GetHttpPage.getInstance();
-		String content= null;
+		String content= "";
 		try {
 			
+			String artistName= super.getArtist();
+			if(artistName.equals("")) {
+				String title= super.getTitle();
+				if(title.equals(""))
+					return false;
+				
+				content= getHttp.getWebPageAsString(MusicbrainzUrl.getMbRecordingUrl(null, title, super.getAlbum()));
+				if(content.equals(""))
+					return false;
+				Document tempDoc= MusicbrainzDoc.createDoc(content);
+				artistName= tempDoc.getElementsByTagName("name").item(0).getTextContent();
+				if(artistName == null || artistName.equals(""))
+					return false;
+			}
+			
 			content= getHttp.getWebPageAsString(MusicbrainzUrl.getMbArtistUrl(artistName));
-			if(content == null)
+			if(content.equals(""))
 				return false;
 			this.artistDoc= MusicbrainzDoc.createDoc(content);
 			
@@ -134,9 +145,9 @@ public class ArtistFeature extends MP3Info {
 			}
 			
 			//get all links for this artist, new gethttp is required
-			content= null;
+			content= "";
 			content= getHttp.getWebPageAsString(MusicbrainzUrl.getMbLinksUrl(this.artistID));
-			if(content != null) {
+			if(content.equals("") == false) {
 				
 				this.linksDoc= MusicbrainzDoc.createDoc(content);
 				nodeList= this.linksDoc.getElementsByTagName("target");
@@ -163,9 +174,9 @@ public class ArtistFeature extends MP3Info {
 			}
 			
 			//get all albums of this artist
-			content= null;
+			content= "";
 			content= getHttp.getWebPageAsString(MusicbrainzUrl.getMbAlbumsOfArtist(this.artistID));
-			if(content != null) {
+			if(content.equals("") == false) {
 				
 				this.albumsDoc= MusicbrainzDoc.createDoc(content);
 				nodeList= this.albumsDoc.getElementsByTagName("release-group");
@@ -183,7 +194,6 @@ public class ArtistFeature extends MP3Info {
 					
 				}
 				this.artist.setAlbumList(albumList);
-				
 			}
 			
 			//marshall this JaxbElement

@@ -64,6 +64,13 @@ public final class MusicbrainzUrl {
 				if(uri != null)
 					return url= uri.toURL();
 				}
+			
+			uri= new URI("http","www.musicbrainz.org",
+					"/ws/2/recording/", 
+					"query=recording:\""+title+"\"&limit=1", 
+					null);
+			if(uri != null)
+				url= uri.toURL();
 						
 		} catch (URISyntaxException e) {
 			throw new MusicbrainzUrlException("URISyntaxException "+e.getMessage(), e);
