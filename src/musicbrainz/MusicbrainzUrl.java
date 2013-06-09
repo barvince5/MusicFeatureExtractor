@@ -196,15 +196,15 @@ public final class MusicbrainzUrl {
 	
 	/**
 	 * Creates a correct musicbrainz url to get all songs inside an album.
-	 * @param releaseGroupID musicbrainz id. It must not be null or empty.
+	 * @param releaseID musicbrainz id. It must not be null or empty.
 	 * @return musicbrainz url style to perform a gethttp, or null.
 	 * @throws MusicbrainzUrlException in case of errors (e.g. artistID null).
 	 */
-	public final static URL getMbSongsOfAlbum(String releaseGroupID) 
+	public final static URL getMbSongsOfAlbum(String releaseID) 
 			throws MusicbrainzUrlException {
 		
-		if(releaseGroupID == null || releaseGroupID.equals(""))
-			throw new MusicbrainzUrlException("The releaseGroupID is null or empty");
+		if(releaseID == null || releaseID.equals(""))
+			throw new MusicbrainzUrlException("The releaseID is null or empty");
 		
 		URL url= null;
 		URI uri= null;
@@ -213,7 +213,7 @@ public final class MusicbrainzUrl {
 			
 			uri= new URI("http","www.musicbrainz.org",
 					"/ws/2/recording/", 
-					"query=rgid:"+releaseGroupID, 
+					"query=reid:"+releaseID, 
 					null);
 			
 			if(uri != null)

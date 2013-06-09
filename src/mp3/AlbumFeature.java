@@ -40,6 +40,7 @@ public class AlbumFeature extends MP3Info {
 	private AlbumType album= null;
 	private Document albumDoc= null;
 	private Document songsDoc= null;
+	private String albumID= null;
 	
 	public AlbumFeature(File song) 
 			throws MP3Exception {
@@ -64,13 +65,37 @@ public class AlbumFeature extends MP3Info {
 		try {
 			
 			String title= super.getTitle();
-			if(title.equals(""))
+			if(title == null || title.equals(""))
 				return false;
 			
 			String albumName= super.getAlbum();
 			String artistName= super.getArtist();
 			if(albumName.equals("") || artistName.equals("")) {
-				//TODO
+				
+				content= getHttp.getWebPageAsString(MusicbrainzUrl.getMbRecordingUrl(artistName, title, albumName));
+				if(content.equals(""))
+					return false;
+				Document tempDoc= MusicbrainzDoc.createDoc(content);
+				nodeList= tempDoc.getElementsByTagName("artist");
+				if (nodeList.getLength() == 0)
+					return false;
+				Element e= (Element)nodeList.item(0);
+				nodeList= e.getElementsByTagName("name");
+				if (nodeList.getLength() == 0)
+					return false;				
+				artistName = nodeList.item(0).getTextContent();
+				if (artistName.equals(""))
+					return false;
+				nodeList= tempDoc.getElementsByTagName("release");
+				if (nodeList.getLength() == 0)
+					return false;
+				e= (Element)nodeList.item(0);
+				nodeList= e.getElementsByTagName("title");
+				if (nodeList.getLength() == 0)
+					return false;				
+				albumName = nodeList.item(0).getTextContent();
+				if (albumName.equals(""))
+					return false;
 			}
 			
 			content= getHttp.getWebPageAsString(MusicbrainzUrl.getMbAlbum(artistName, albumName));
@@ -96,7 +121,8 @@ public class AlbumFeature extends MP3Info {
 			
 			//set album id
 			Element albumElement= (Element) albumListNode.getElementsByTagName("release").item(0);
-			this.album.setMbAlbumID(albumElement.getAttribute("id"));
+			this.albumID= albumElement.getAttribute("id");
+			this.album.setMbAlbumID(this.albumID);
 			
 			//set title
 			this.album.setTitle(albumElement.getElementsByTagName("title").item(0).getTextContent());
@@ -119,20 +145,30 @@ public class AlbumFeature extends MP3Info {
 			//medium list
 			nodeList= albumListNode.getElementsByTagName("format");
 			MediumListType mlt= this.obf.createMediumListType();
+			
 			for(int i= 0; i< nodeList.getLength(); ++i) {
+				
 				String format= nodeList.item(i).getTextContent();
-				if(mlt.getMedium().contains(format) == false);
+				boolean present= false;
+				for(int j= 0; j< mlt.getMedium().size() && !present; ++j) {
+					if(mlt.getMedium().get(j).equalsIgnoreCase(format)) {
+						present= true;
+					}
+				}
+				
+				if(present == false)
 					mlt.getMedium().add(format);
+				
 			}
-			this.album.setMediumList(mlt);
+			
+			if(mlt.getMedium().isEmpty() == false)
+				this.album.setMediumList(mlt);
 			
 			//fill song list
 			nodeList= albumElement.getElementsByTagName("release-group");
 			if(nodeList.getLength() != 0) {
 				
-				Element rgElement= (Element) nodeList.item(0);
-				String releaseGroupID= rgElement.getAttribute("id");
-				content= getHttp.getWebPageAsString(MusicbrainzUrl.getMbSongsOfAlbum(releaseGroupID));
+				content= getHttp.getWebPageAsString(MusicbrainzUrl.getMbSongsOfAlbum(this.albumID));
 				if(content.equals("") == false) {
 					
 					this.songsDoc= MusicbrainzDoc.createDoc(content);
@@ -144,18 +180,19 @@ public class AlbumFeature extends MP3Info {
 					if(count.intValue() != 0) {
 
 						nodeList= songListNode.getElementsByTagName("recording");
-						for (int i=0; i<nodeList.getLength(); ++i) {
+						for (int i=0; i< nodeList.getLength(); ++i) {
+							
 							SongType st= this.obf.createSongType();
 							Element songElement= (Element) nodeList.item(i);
 							st.setMbSongID(songElement.getAttribute("id"));
 							st.setTitle(songElement.getElementsByTagName("title").item(0).getTextContent());
-							nodeList= songElement.getElementsByTagName("number");
-							if(nodeList.getLength() != 0)
-								st.setPosition(new BigInteger(nodeList.item(0).getTextContent()));
+							NodeList numberList= songElement.getElementsByTagName("number");
+							if(numberList.getLength() != 0)
+								st.setPosition(numberList.item(0).getTextContent());
 							slt.getSong().add(st);
-							}
-						this.album.setSongList(slt);
 							
+							}
+						this.album.setSongList(slt);							
 					}
 					
 				}
