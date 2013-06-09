@@ -17,16 +17,16 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for songListType complex type.
+ * <p>Java class for mediumListType complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="songListType">
+ * &lt;complexType name="mediumListType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="song" type="{https://github.com/AntonioCollarino/MusicFeatureExtractor.git}songType" maxOccurs="unbounded"/>
+ *         &lt;element name="medium" type="{http://www.w3.org/2001/XMLSchema}string" maxOccurs="unbounded"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -36,41 +36,41 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "songListType", propOrder = {
-    "song"
+@XmlType(name = "mediumListType", propOrder = {
+    "medium"
 })
-public class SongListType {
+public class MediumListType {
 
     @XmlElement(required = true)
-    protected List<SongType> song;
+    protected List<String> medium;
 
     /**
-     * Gets the value of the song property.
+     * Gets the value of the medium property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the song property.
+     * This is why there is not a <CODE>set</CODE> method for the medium property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getSong().add(newItem);
+     *    getMedium().add(newItem);
      * </pre>
      * 
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link SongType }
+     * {@link String }
      * 
      * 
      */
-    public List<SongType> getSong() {
-        if (song == null) {
-            song = new ArrayList<SongType>();
+    public List<String> getMedium() {
+        if (medium == null) {
+            medium = new ArrayList<String>();
         }
-        return this.song;
+        return this.medium;
     }
 
 }
