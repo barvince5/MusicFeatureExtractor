@@ -21,7 +21,7 @@ public final class HighLevelFeature extends MP3Info {
 		
 		super(song);
 		this.obf= new ObjectFactory();
-		this.smt= this.obf.createSongMetadataType();
+		
 	}
 
 	public final void start() 
