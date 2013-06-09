@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema targetNamespace="https://github.com/AntonioCollarino/MusicFeatureExtractor.git" elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xsd1="https://github.com/AntonioCollarino/MusicFeatureExtractor.git">
 
-    <element name="SongMetaData" type="xsd1:SongMetadataType"></element>
+    <element name="SongMetadata" type="xsd1:SongType"></element>
 
-    <complexType name="SongMetadataType">
+    <complexType name="SongType">
     	<sequence>
     		<element name="artist" type="xsd1:artistType" maxOccurs="1"
     			minOccurs="0">
     		</element>
     		<element name="albumList" type="xsd1:albumListType"
-    			maxOccurs="unbounded" minOccurs="0">
+    			maxOccurs="1" minOccurs="0">
     		</element>
     		<element name="title" type="string" maxOccurs="1"
     			minOccurs="1">
@@ -50,7 +50,7 @@
     	</attribute>
     </complexType>
 
-    <complexType name="albumListType">
+    <complexType name="albumType">
 
     	<sequence>
     		<element name="title" type="string" maxOccurs="1" minOccurs="1"></element>
@@ -75,4 +75,10 @@
     		<pattern value="[a-zA-Z]{2}"></pattern>
     	</restriction>
     </simpleType>
+
+    <complexType name="albumListType">
+    	<sequence>
+    		<element name="album" type="xsd1:albumType" maxOccurs="unbounded" minOccurs="1"></element>
+    	</sequence>
+    </complexType>
 </schema>

@@ -63,19 +63,27 @@ public class ArtistFeature extends MP3Info {
 		GetHttpPage getHttp= GetHttpPage.getInstance();
 		String content= "";
 		File output= null;
+		NodeList nodeList= null;
+		
 		try {
+			
+			String title= super.getTitle();
+			if(title.equals(""))
+				return false;
 			
 			String artistName= super.getArtist();
 			if(artistName.equals("")) {
-				String title= super.getTitle();
-				if(title.equals(""))
-					return false;
 				
 				content= getHttp.getWebPageAsString(MusicbrainzUrl.getMbRecordingUrl(null, title, super.getAlbum()));
 				if(content.equals(""))
 					return false;
+				
 				Document tempDoc= MusicbrainzDoc.createDoc(content);
-				artistName= tempDoc.getElementsByTagName("name").item(0).getTextContent();
+				nodeList= tempDoc.getElementsByTagName("name");
+				if(nodeList.getLength() == 0)
+					return false;
+				
+				artistName= nodeList.item(0).getTextContent();
 				if(artistName == null || artistName.equals(""))
 					return false;
 			}
@@ -101,7 +109,7 @@ public class ArtistFeature extends MP3Info {
 			this.artist.setType(artistNode.getAttribute("type"));
 			
 			//set artist/group name
-			NodeList nodeList= artistNode.getElementsByTagName("name");
+			nodeList= artistNode.getElementsByTagName("name");
 			if(nodeList.getLength() != 0) {
 				this.artist.setName(nodeList.item(0).getTextContent());
 			}
@@ -214,6 +222,9 @@ public class ArtistFeature extends MP3Info {
 					return false;
 				}
 			});
+			
+			//TODO correct path it's not present yet.
+			
 			output= new File("mfe_"+this.artist.getName()+".xml");
 			m.marshal(je, output);
 			
