@@ -46,6 +46,7 @@ public final class HighLevelSongFeature extends MP3Info {
 		
 		super(song);
 		this.obf= new ObjectFactory();
+		this.song= this.obf.createSongType();
 		
 	}
 
@@ -63,7 +64,7 @@ public final class HighLevelSongFeature extends MP3Info {
 		try {
 			
 			String title= super.getTitle();
-			if(title.equals(""))
+			if(title == null || title.equals(""))
 				return false;
 			
 			String artistName= super.getArtist();
@@ -83,19 +84,20 @@ public final class HighLevelSongFeature extends MP3Info {
 				return false;
 			
 			Element recordingNode= (Element) recordingListNode.getElementsByTagName("recording").item(0);
+	
 			//set song id
 			this.song.setMbSongID(recordingNode.getAttribute("id"));
-			
 			//set song title
+
 			this.song.setTitle(recordingNode.getElementsByTagName("title").item(0).getTextContent());
-			
+
 			//set song position
 			nodeList= recordingNode.getElementsByTagName("track");
 			if (nodeList.getLength() != 0) {
 				Element tracknode=(Element) nodeList.item(0);
 				nodeList= tracknode.getElementsByTagName("number");
 				if (nodeList.getLength() != 0)
-					this.song.setPosition(new BigInteger(nodeList.item(0).getTextContent()));	
+					this.song.setPosition(nodeList.item(0).getTextContent());	
 			}
 			
 			
@@ -123,29 +125,30 @@ public final class HighLevelSongFeature extends MP3Info {
 				album.setTitle(releaseNode.getElementsByTagName("title").item(0).getTextContent());
 				
 				//set album status
-				nodeList = releaseNode.getElementsByTagName("status");
-				if (nodeList.getLength() != 0) 
-					album.setStatus(nodeList.item(0).getTextContent());
+				NodeList valueList = releaseNode.getElementsByTagName("status");
+				if (valueList.getLength() != 0) 
+					album.setStatus(valueList.item(0).getTextContent());
 				
 				//set album date
-				nodeList = releaseNode.getElementsByTagName("date");
-				if (nodeList.getLength() != 0) 
-					album.setDate(nodeList.item(0).getTextContent());
+				valueList = releaseNode.getElementsByTagName("date");
+				if (valueList.getLength() != 0) 
+					album.setDate(valueList.item(0).getTextContent());
 				
 				//set album country
-				nodeList = releaseNode.getElementsByTagName("country");
-				if (nodeList.getLength() != 0) 
-					album.setCountry(nodeList.item(0).getTextContent());
+				valueList = releaseNode.getElementsByTagName("country");
+				if (valueList.getLength() != 0) 
+					album.setCountry(valueList.item(0).getTextContent());
 				
 				//set album track count
-				nodeList = releaseNode.getElementsByTagName("track-count");
-				if (nodeList.getLength() != 0) 
-					album.setTrackCount(new BigInteger(nodeList.item(0).getTextContent()));
+				valueList = releaseNode.getElementsByTagName("track-count");
+				if (valueList.getLength() != 0) 
+					album.setTrackCount(new BigInteger(valueList.item(0).getTextContent()));
 				
 				albumList.getAlbum().add(album);
 			}
 			
-			this.song.setAlbumList(albumList);
+			if (albumList.getAlbum().isEmpty() == false)
+				this.song.setAlbumList(albumList);
 			
 			AudioFile afile = super.getAudioFile();
 			

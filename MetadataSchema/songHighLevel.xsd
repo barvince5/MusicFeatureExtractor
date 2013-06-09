@@ -32,7 +32,9 @@
     		<element name="frequency" type="positiveInteger"
     			maxOccurs="1" minOccurs="1">
     		</element>
-    		<element name="position" type="positiveInteger" maxOccurs="1" minOccurs="0"></element>
+    		<element name="position" type="string" maxOccurs="1"
+    			minOccurs="0">
+    		</element>
     	</sequence>
     	<attribute name="mbSongID" type="string">
     		<annotation>
