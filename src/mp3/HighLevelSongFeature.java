@@ -167,7 +167,7 @@ public final class HighLevelSongFeature extends MP3Info {
 				this.song.setEncoding(encoding);
 			
 			//marshall this JaxbElement
-			JAXBContext jc= JAXBContext.newInstance("songArtifacts");
+			JAXBContext jc= JAXBContext.newInstance("songArtifacts.highLevel");
 			JAXBElement<SongType> je= this.obf.createSongMetadata(this.song);
 			Marshaller m= jc.createMarshaller();
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
