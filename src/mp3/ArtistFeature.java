@@ -45,7 +45,7 @@ public class ArtistFeature extends MP3Info {
 	private Document albumsDoc= null;
 	private Document linksDoc= null;
 	private String artistID= null;
-	
+	private GetHttpPage getHttp= null;
 	
 	public ArtistFeature(File song) 
 			throws MP3Exception {
@@ -53,16 +53,35 @@ public class ArtistFeature extends MP3Info {
 		super(song);
 		this.obf= new ObjectFactory();
 		this.artist= this.obf.createArtistType();
+		this.getHttp= GetHttpPage.getInstance();
 	}
 		
 	public final void stop() {
 		
 	}
+	
+	private final Element getArtistListNode(String artistName) 
+			throws GetHttpException, MusicbrainzUrlException, CreateDocException {
+		
+		String content= "";
+		
+		content= this.getHttp.getWebPageAsString(MusicbrainzUrl.getMbArtistUrl(artistName));
+		if(content.equals(""))
+			return null;
+		this.artistDoc= CreateDoc.create(content);
+		
+		//if the count is zero, no artist was found.
+		Element artistListNode= (Element) this.artistDoc.getElementsByTagName("artist-list").item(0);
+		Integer count= Integer.valueOf(artistListNode.getAttributes().getNamedItem("count").getNodeValue());
+		if(count.intValue() == 0)
+			return null;
+		else
+			return artistListNode;
+	}
 
 	public final boolean start() 
 			throws MP3Exception {
 				
-		GetHttpPage getHttp= GetHttpPage.getInstance();
 		String content= "";
 		File output= null;
 		NodeList nodeList= null;
@@ -75,23 +94,25 @@ public class ArtistFeature extends MP3Info {
 			
 			String artistName= super.getArtist();
 			if(artistName.equals("")) {
+				
 				FindAlbumArtist finder= new FindAlbumArtist(artistName, super.getAlbum(), title);
 				artistName= finder.getArtistName();
+				if(artistName.equals(""))
+					return false;
 			}
-			
-			if(artistName.equals(""))
-				return false;
+		
+			Element artistListNode= this.getArtistListNode(artistName);
+			if(artistListNode == null) {
 				
-			content= getHttp.getWebPageAsString(MusicbrainzUrl.getMbArtistUrl(artistName));
-			if(content.equals(""))
-				return false;
-			this.artistDoc= CreateDoc.create(content);
-			
-			//if the count is zero, no artist was found.
-			Element artistListNode= (Element) this.artistDoc.getElementsByTagName("artist-list").item(0);
-			Integer count= Integer.valueOf(artistListNode.getAttributes().getNamedItem("count").getNodeValue());
-			if(count.intValue() == 0)
-				return false;
+				FindAlbumArtist finder= new FindAlbumArtist(artistName, super.getAlbum(), title);
+				artistName= finder.getArtistName();
+				if(artistName.equals(""))
+					return false;
+				
+				artistListNode= this.getArtistListNode(artistName);
+				if(artistListNode == null)
+					return false;
+			}
 			
 			Element artistNode= (Element) artistListNode.getElementsByTagName("artist").item(0);
 			this.artistID= artistNode.getAttribute("id"); //global variable useful for next queries.
@@ -149,9 +170,9 @@ public class ArtistFeature extends MP3Info {
 				this.artist.setAliasList(aliasList);
 			}
 			
-			//get all links for this artist, new gethttp is required
+			//get all links for this artist, new this.getHttp is required
 			content= "";
-			content= getHttp.getWebPageAsString(MusicbrainzUrl.getMbLinksUrl(this.artistID));
+			content= this.getHttp.getWebPageAsString(MusicbrainzUrl.getMbLinksUrl(this.artistID));
 			if(content.equals("") == false) {
 				
 				this.linksDoc= CreateDoc.create(content);
@@ -180,7 +201,7 @@ public class ArtistFeature extends MP3Info {
 			
 			//get all albums of this artist
 			content= "";
-			content= getHttp.getWebPageAsString(MusicbrainzUrl.getMbReleasesOfArtist(this.artistID));
+			content= this.getHttp.getWebPageAsString(MusicbrainzUrl.getMbReleasesOfArtist(this.artistID));
 			if(content.equals("") == false) {
 				
 				this.albumsDoc= CreateDoc.create(content);

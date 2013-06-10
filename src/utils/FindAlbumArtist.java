@@ -75,6 +75,14 @@ public final class FindAlbumArtist {
 					currAlbumName= currentEl.getElementsByTagName("title").item(0).getTextContent();
 				} 
 				
+				valueList= currentRecording.getElementsByTagName("release-group");
+				if (valueList.getLength() != 0) {
+					currentEl= (Element) valueList.item(0);
+					String type = currentEl.getAttribute("type");
+					if(type.equalsIgnoreCase("Soundtrack") || type.equalsIgnoreCase("Compilation"))
+						continue;	
+					}
+				
 				// first try exact equality, then without spaces
 				if (currAlbumName.equalsIgnoreCase(this.albumName) || currArtistName.equalsIgnoreCase(this.artistName)
 					|| currAlbumName.replace(" ", "").equalsIgnoreCase(this.albumName.replace(" ", ""))
