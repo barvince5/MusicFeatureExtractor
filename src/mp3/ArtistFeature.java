@@ -75,7 +75,7 @@ public class ArtistFeature extends MP3Info {
 			
 			String artistName= super.getArtist();
 			if(artistName.equals("")) {
-				FindAlbumArtist finder= new FindAlbumArtist(title);
+				FindAlbumArtist finder= new FindAlbumArtist(artistName, super.getAlbum(), title);
 				artistName= finder.getArtistName();
 			}
 			

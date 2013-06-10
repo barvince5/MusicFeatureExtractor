@@ -23,6 +23,7 @@ public final class FindAlbumArtist {
 		
 		this.artistName= artist;
 		this.albumName= album;
+		this.title= title;
 		if (title.equals("") == false)
 			this.find();
 	}
