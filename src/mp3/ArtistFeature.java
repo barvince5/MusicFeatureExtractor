@@ -45,7 +45,7 @@ public class ArtistFeature extends MP3Info {
 	private Document albumsDoc= null;
 	private Document linksDoc= null;
 	private String artistID= null;
-	private GetHttpPage getHttp;
+	private GetHttpPage getHttp= null;
 	
 	public ArtistFeature(File song) 
 			throws MP3Exception {
