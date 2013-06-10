@@ -5,19 +5,19 @@ package customException;
  * @author Antonio Collarino
  *
  */
-public class MusicbrainzDocException extends Exception {
+public class CreateDocException extends Exception {
 
 	private static final long serialVersionUID = 8668158185252734002L;
 
-	public MusicbrainzDocException(String msg) {
+	public CreateDocException(String msg) {
 		super(msg);
 	}
 	
-	public MusicbrainzDocException(String msg, Throwable e) {
+	public CreateDocException(String msg, Throwable e) {
 		super(msg, e);
 	}
 	
-	public MusicbrainzDocException() {
+	public CreateDocException() {
 		super();
 	}
 }

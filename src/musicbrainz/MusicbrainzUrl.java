@@ -82,6 +82,7 @@ public final class MusicbrainzUrl {
 	
 		return url;
 	}
+	
 	/**
 	 * Creates a correct musicbrainz url for this song, returning all matches.<br>
 	 * Note: At least the title must not be null or empty.

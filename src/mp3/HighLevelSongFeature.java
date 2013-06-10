@@ -6,6 +6,8 @@ import songArtifacts.highLevel.AlbumType;
 import songArtifacts.highLevel.ObjectFactory;
 import songArtifacts.highLevel.SongType;
 import songArtifacts.highLevel.ArtistType;
+import utils.CreateDoc;
+import utils.FindAlbumArtist;
 
 import httpGET.GetHttpPage;
 
@@ -21,17 +23,16 @@ import javax.xml.bind.ValidationEventHandler;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
-import musicbrainz.MusicbrainzDoc;
 import musicbrainz.MusicbrainzUrl;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-
+import customException.CreateDocException;
+import customException.FindAlbumArtistException;
 import customException.GetHttpException;
 import customException.MP3Exception;
-import customException.MusicbrainzDocException;
 import customException.MusicbrainzUrlException;
 import entagged.audioformats.AudioFile;
 
@@ -56,6 +57,7 @@ public final class HighLevelSongFeature extends MP3Info {
 	
 	public final boolean start() 
 			throws MP3Exception {
+		
 		GetHttpPage getHttp= GetHttpPage.getInstance();
 		String content= "";
 		File output= null;
@@ -75,103 +77,32 @@ public final class HighLevelSongFeature extends MP3Info {
 			if(content.equals(""))
 				return false;
 			
-			this.songDoc= MusicbrainzDoc.createDoc(content);
+			this.songDoc= CreateDoc.create(content);
 			
 			//if the count is zero, no song was found.
 			Element recordingListNode= (Element) this.songDoc.getElementsByTagName("recording-list").item(0);
 			Integer count= Integer.valueOf(recordingListNode.getAttributes().getNamedItem("count").getNodeValue());
 			if(count.intValue() == 0) {
+			
 				// some tags were not correct, performing a more generic query to find the right one
-				content= getHttp.getWebPageAsString(MusicbrainzUrl.getMbAllRecordingsUrl(title));
-				if(content.equals(""))
-					return false;
-				
-				this.songDoc= MusicbrainzDoc.createDoc(content);
-				
-				recordingListNode= (Element) this.songDoc.getElementsByTagName("recording-list").item(0);
-				count= Integer.valueOf(recordingListNode.getAttributes().getNamedItem("count").getNodeValue());
-				// if count is still 0, the title is not correct, and will be skipped
-				if(count.intValue() == 0) 
-					return false;
-				
-				// get all recording nodes in the xml and search for the correct one (has one correct tag between release and artist)
-				// when one is found, the loop will stop
-				NodeList recordingList= this.songDoc.getElementsByTagName("recording");
-				boolean found= false;
-				// these two strings are for comparison with the ones in the tag. They are initialized to empty string
-				// at the beginning of processing each song in the recording list
-				String currArtistName;
-				String currAlbumName;
-				
-				for (int i=0; i<recordingList.getLength() && !found; ++i) {
-					currArtistName= "";
-					currAlbumName= "";
-					Element currentRecording= (Element)recordingList.item(i);
-					NodeList valueList= currentRecording.getElementsByTagName("artist");
-					Element currentEl= null;
-					if (valueList.getLength() != 0) {
-						currentEl= (Element)valueList.item(0);
-						currArtistName= currentEl.getElementsByTagName("name").item(0).getTextContent();
-					} 
-					valueList= currentRecording.getElementsByTagName("release");
-					if (valueList.getLength() != 0) {
-						currentEl= (Element)valueList.item(0);
-						currAlbumName= currentEl.getElementsByTagName("title").item(0).getTextContent();
-					} 
-					// first try exact equality, then without spaces
-					if (currAlbumName.equalsIgnoreCase(albumName) || currArtistName.equalsIgnoreCase(artistName)
-						|| currAlbumName.replace(" ", "").equalsIgnoreCase(albumName.replace(" ", ""))
-						|| currArtistName.replace(" ", "").equalsIgnoreCase(artistName.replace(" ", "")) ) {
-						artistName= currArtistName;
-						albumName= currAlbumName;
-						found= true;
-					}
-				}
-				
-				// last attempt, try for partially correct artist names (useful for artist collaborations, containing "featuring")
-				if (!found) {
-					String[] artistNameSplit = artistName.split(" ");
-					for (int i=0; i<recordingList.getLength() && !found; ++i) {
-						currArtistName= "";
-						currAlbumName= "";
-						Element currentRecording= (Element)recordingList.item(i);
-						NodeList valueList= currentRecording.getElementsByTagName("artist");
-						Element currentEl= null;
-						if (valueList.getLength() != 0) {
-							currentEl= (Element)valueList.item(0);
-							currArtistName= currentEl.getElementsByTagName("name").item(0).getTextContent();
-						} 
-						valueList= currentRecording.getElementsByTagName("release");
-						if (valueList.getLength() != 0) {
-							currentEl= (Element)valueList.item(0);
-							currAlbumName= currentEl.getElementsByTagName("title").item(0).getTextContent();
-						}
-						for (int a=0; a< artistNameSplit.length && !found; ++a) {
-							if (currArtistName.equalsIgnoreCase(artistNameSplit[a])
-								|| currArtistName.replace(" ", "").equalsIgnoreCase(artistNameSplit[a].replace(" ", "")) ) {
-									artistName= currArtistName;
-									albumName= currAlbumName;
-									found= true;
-								}	
-						}
-					}
-					
-				}
-					
-				// try the query with the new parameters
-				content= getHttp.getWebPageAsString(MusicbrainzUrl.getMbRecordingUrl(artistName, title, albumName));
-				if(content.equals(""))
-					return false;
-					
-				this.songDoc= MusicbrainzDoc.createDoc(content);
-				
-				recordingListNode= (Element) this.songDoc.getElementsByTagName("recording-list").item(0);
-				count= Integer.valueOf(recordingListNode.getAttributes().getNamedItem("count").getNodeValue());
-				
-				if(count.intValue() == 0) 
-					return false;		
-				
+				FindAlbumArtist finder= new FindAlbumArtist(title);
+				artistName= finder.getArtistName();
+				albumName= finder.getAlbumName();
 			}
+					
+			// try the query with the new parameters
+			content= getHttp.getWebPageAsString(MusicbrainzUrl.getMbRecordingUrl(artistName, title, albumName));
+			if(content.equals(""))
+					return false;
+					
+			this.songDoc= CreateDoc.create(content);
+				
+			recordingListNode= (Element) this.songDoc.getElementsByTagName("recording-list").item(0);
+			count= Integer.valueOf(recordingListNode.getAttributes().getNamedItem("count").getNodeValue());
+				
+			if(count.intValue() == 0) 
+				return false;		
+				
 			
 			Element recordingNode= (Element) recordingListNode.getElementsByTagName("recording").item(0);
 	
@@ -283,14 +214,16 @@ public final class HighLevelSongFeature extends MP3Info {
 		} catch (JAXBException e) {
 			if(output != null)
 				output.delete();
-			throw new MP3Exception("JAXBException "+e.getMessage(), e);
+			throw new MP3Exception("JAXBException "+e.getMessage(), e);	
+		} catch (FindAlbumArtistException e) {
+			throw new MP3Exception("FindAlbumArtistException "+e.getMessage(), e);
 		} catch (NullPointerException e) {
 			throw new MP3Exception("NullPointerException "+e.getMessage(), e);
 		} catch (MusicbrainzUrlException e) {
 			throw new MP3Exception("MusicbrainzUrlException "+e.getMessage(), e);
 		} catch (GetHttpException e) {
 			throw new MP3Exception("GetHttpException "+e.getMessage(), e);
-		} catch (MusicbrainzDocException e) {
+		} catch (CreateDocException e) {
 			throw new MP3Exception("MusicbrainzDocException doc creation problem "+e.getMessage(), e);
 		} catch (Exception e) {
 			throw new MP3Exception("Exception "+e.getMessage(), e);
