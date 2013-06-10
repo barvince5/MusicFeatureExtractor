@@ -4,9 +4,9 @@ import java.io.File;
 
 import customException.MP3Exception;
 
-public final class LowLevelFeature extends MP3Info{
+public final class LowLevelSongFeature extends MP3Info{
 
-	public LowLevelFeature(File song) 
+	public LowLevelSongFeature(File song) 
 			throws MP3Exception {
 		
 		super(song);	

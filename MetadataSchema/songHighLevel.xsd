@@ -21,15 +21,20 @@
     			minOccurs="1">
     		</element>
     		<element name="bitrate" type="positiveInteger" maxOccurs="1"
-    			minOccurs="0">
+    			minOccurs="1">
     		</element>
     		<element name="encoding" type="string" maxOccurs="1"
     			minOccurs="0">
     		</element>
     		<element name="channelsNum" type="positiveInteger"
-    			maxOccurs="1" minOccurs="0">
+    			maxOccurs="1" minOccurs="1">
     		</element>
-    		<element name="frequency" type="positiveInteger" maxOccurs="1" minOccurs="0"></element>
+    		<element name="frequency" type="positiveInteger"
+    			maxOccurs="1" minOccurs="1">
+    		</element>
+    		<element name="position" type="string" maxOccurs="1"
+    			minOccurs="0">
+    		</element>
     	</sequence>
     	<attribute name="mbSongID" type="string">
     		<annotation>
@@ -55,9 +60,8 @@
     	<sequence>
     		<element name="title" type="string" maxOccurs="1" minOccurs="1"></element>
     		<element name="date" type="string" maxOccurs="1" minOccurs="0"></element>
-    		<element name="format" type="string" maxOccurs="1" minOccurs="0"></element>
     		<element name="country" type="xsd1:countryType" maxOccurs="1" minOccurs="0"></element>
-    		<element name="track" type="positiveInteger" maxOccurs="1" minOccurs="0"></element>
+    		<element name="trackCount" type="positiveInteger" maxOccurs="1" minOccurs="0"></element>
     		<element name="status" type="string" maxOccurs="1" minOccurs="0"></element>
     	</sequence>
     	<attribute name="mbAlbumID" type="string">

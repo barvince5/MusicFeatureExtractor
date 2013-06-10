@@ -84,6 +84,44 @@ public final class MusicbrainzUrl {
 	}
 	
 	/**
+	 * Creates a correct musicbrainz url for this song, returning all matches.<br>
+	 * Note: At least the title must not be null or empty.
+	 * @param artist
+	 * @param title
+	 * @param album
+	 * @return url musicbrainz style to perform a gethttp, or null.
+	 * @throws MusicbrainzUrlException in case of errors (e.g. title null).
+	 */
+	public final static URL getMbAllRecordingsUrl(String title) 
+			throws MusicbrainzUrlException {
+		
+		if(title == null || title.equals(""))
+			throw new MusicbrainzUrlException("The title is null or empty");
+		
+		URL url= null;
+		URI uri= null;
+		
+		try {
+			
+			uri= new URI("http","www.musicbrainz.org",
+					"/ws/2/recording/", 
+					"query=recording:\""+title+"\"", 
+					null);
+			if(uri != null)
+				url= uri.toURL();
+						
+		} catch (URISyntaxException e) {
+			throw new MusicbrainzUrlException("URISyntaxException "+e.getMessage(), e);
+		} catch (MalformedURLException e) {
+			throw new MusicbrainzUrlException("MalformedURLException "+e.getMessage(), e);
+		} catch (Exception e) {
+			throw new MusicbrainzUrlException("Exception "+e.getMessage(), e);
+		}
+	
+		return url;
+	}
+	
+	/**
 	 * Creates a correct musicbrainz url for this artist.
 	 * @param artist must not be null or empty.
 	 * @return musicbrainz url style to perform a gethttp, or null.

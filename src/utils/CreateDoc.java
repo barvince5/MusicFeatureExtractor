@@ -1,4 +1,5 @@
-package musicbrainz;
+package utils;
+
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -12,14 +13,14 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import customException.MusicbrainzDocException;
+import customException.CreateDocException;
 
-public final class MusicbrainzDoc {
+public final class CreateDoc {
 
 	/**
 	 * Private constructor, to avoid instantiation 
 	 */
-	private MusicbrainzDoc() {
+	private CreateDoc() {
 		
 	}
 	
@@ -29,8 +30,8 @@ public final class MusicbrainzDoc {
 	 * @return DOM document
 	 * @throws MusicbrainzDocException in case of error.
 	 */
-	public final static Document createDoc(String input) 
-			throws MusicbrainzDocException {
+	public final static Document create(String input) 
+		throws CreateDocException {
 		try {
 			
 			DocumentBuilderFactory dbf= DocumentBuilderFactory.newInstance();
@@ -38,15 +39,15 @@ public final class MusicbrainzDoc {
 			return db.parse(new InputSource(new StringReader(input)));
 			
 		} catch (ParserConfigurationException e) {
-			throw new MusicbrainzDocException("ParserConfigurationException "+e.getMessage(), e);
+			throw new CreateDocException("ParserConfigurationException "+e.getMessage(), e);
 		} catch (SAXException e) {
-			throw new MusicbrainzDocException("SAXException "+e.getMessage(), e);
+			throw new CreateDocException("SAXException "+e.getMessage(), e);
 		} catch (IOException e) {
-			throw new MusicbrainzDocException("IOException "+e.getMessage(), e);
+			throw new CreateDocException("IOException "+e.getMessage(), e);
 		} catch(FactoryConfigurationError e) {
-			throw new MusicbrainzDocException("FactoryConfigurationError "+e.getMessage(), e);
+			throw new CreateDocException("FactoryConfigurationError "+e.getMessage(), e);
 		} catch (Exception e) {
-			throw new MusicbrainzDocException("Exception "+e.getMessage(), e);
+			throw new CreateDocException("Exception "+e.getMessage(), e);
 		}
 	}
 }
