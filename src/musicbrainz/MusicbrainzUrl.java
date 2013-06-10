@@ -105,7 +105,7 @@ public final class MusicbrainzUrl {
 			
 			uri= new URI("http","www.musicbrainz.org",
 					"/ws/2/recording/", 
-					"query=recording:\""+title+"\"", 
+					"query=recording:\""+title+"\"&limit=100", 
 					null);
 			if(uri != null)
 				url= uri.toURL();
