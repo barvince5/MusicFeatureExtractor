@@ -13,9 +13,9 @@ public class MP3Info {
 	
 	private Tag tag= null;
 	private AudioFile audioFile= null;
-	private String songTitle= null;
-	private String albumName= null;
-	private String artistName= null;
+	private String songTitle= "";
+	private String albumName= "";
+	private String artistName= "";
 	
 	public MP3Info(File song) 
 			throws MP3Exception {
