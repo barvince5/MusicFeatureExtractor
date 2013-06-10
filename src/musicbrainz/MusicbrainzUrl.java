@@ -201,7 +201,7 @@ public final class MusicbrainzUrl {
 	 * @return musicbrainz url style to perform a gethttp, or null.
 	 * @throws MusicbrainzUrlException in case of errors (e.g. artistID null).
 	 */
-	public final static URL getMbAlbumsOfArtist(String artistID) 
+	public final static URL getMbReleasesOfArtist(String artistID) 
 			throws MusicbrainzUrlException {
 		
 		if(artistID == null || artistID.equals(""))
@@ -238,7 +238,7 @@ public final class MusicbrainzUrl {
 	 * @return musicbrainz url style to perform a gethttp, or null.
 	 * @throws MusicbrainzUrlException in case of errors (e.g. artistID null).
 	 */
-	public final static URL getMbSongsOfAlbum(String releaseID) 
+	public final static URL getMbRecordingsOfRelease(String releaseID) 
 			throws MusicbrainzUrlException {
 		
 		if(releaseID == null || releaseID.equals(""))
@@ -268,7 +268,7 @@ public final class MusicbrainzUrl {
 		return url;
 	}
 	
-	public final static URL getMbAlbum(String artist, String album) 
+	public final static URL getMbRelease(String artist, String album) 
 			throws MusicbrainzUrlException {
 		
 		if(artist == null || artist.equals(""))

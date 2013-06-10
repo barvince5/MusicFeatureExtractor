@@ -15,12 +15,14 @@ import javax.xml.bind.ValidationEventHandler;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
-import musicbrainz.MusicbrainzDoc;
 import musicbrainz.MusicbrainzUrl;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
+import utils.CreateDoc;
+import utils.FindAlbumArtist;
 
 import albumArtifacts.AlbumType;
 import albumArtifacts.ArtistType;
@@ -29,9 +31,10 @@ import albumArtifacts.ObjectFactory;
 import albumArtifacts.SongListType;
 import albumArtifacts.SongType;
 
+import customException.CreateDocException;
+import customException.FindAlbumArtistException;
 import customException.GetHttpException;
 import customException.MP3Exception;
-import customException.MusicbrainzDocException;
 import customException.MusicbrainzUrlException;
 
 public class AlbumFeature extends MP3Info {
@@ -71,37 +74,18 @@ public class AlbumFeature extends MP3Info {
 			String albumName= super.getAlbum();
 			String artistName= super.getArtist();
 			if(albumName.equals("") || artistName.equals("")) {
-				
-				content= getHttp.getWebPageAsString(MusicbrainzUrl.getMbRecordingUrl(artistName, title, albumName));
-				if(content.equals(""))
-					return false;
-				Document tempDoc= MusicbrainzDoc.createDoc(content);
-				nodeList= tempDoc.getElementsByTagName("artist");
-				if (nodeList.getLength() == 0)
-					return false;
-				Element e= (Element)nodeList.item(0);
-				nodeList= e.getElementsByTagName("name");
-				if (nodeList.getLength() == 0)
-					return false;				
-				artistName = nodeList.item(0).getTextContent();
-				if (artistName.equals(""))
-					return false;
-				nodeList= tempDoc.getElementsByTagName("release");
-				if (nodeList.getLength() == 0)
-					return false;
-				e= (Element)nodeList.item(0);
-				nodeList= e.getElementsByTagName("title");
-				if (nodeList.getLength() == 0)
-					return false;				
-				albumName = nodeList.item(0).getTextContent();
-				if (albumName.equals(""))
-					return false;
+				FindAlbumArtist finder= new FindAlbumArtist(title);
+				artistName= finder.getArtistName();
+				albumName= finder.getAlbumName();
 			}
 			
-			content= getHttp.getWebPageAsString(MusicbrainzUrl.getMbAlbum(artistName, albumName));
+			if(albumName.equals("") || artistName.equals("")) 
+				return false;
+			
+			content= getHttp.getWebPageAsString(MusicbrainzUrl.getMbRelease(artistName, albumName));
 			if(content.equals(""))
 				return false;
-			this.albumDoc= MusicbrainzDoc.createDoc(content);
+			this.albumDoc= CreateDoc.create(content);
 			
 			//if the count is zero, no album was found.
 			Element albumListNode= (Element) this.albumDoc.getElementsByTagName("release-list").item(0);
@@ -168,10 +152,10 @@ public class AlbumFeature extends MP3Info {
 			nodeList= albumElement.getElementsByTagName("release-group");
 			if(nodeList.getLength() != 0) {
 				
-				content= getHttp.getWebPageAsString(MusicbrainzUrl.getMbSongsOfAlbum(this.albumID));
+				content= getHttp.getWebPageAsString(MusicbrainzUrl.getMbRecordingsOfRelease(this.albumID));
 				if(content.equals("") == false) {
 					
-					this.songsDoc= MusicbrainzDoc.createDoc(content);
+					this.songsDoc= CreateDoc.create(content);
 					SongListType slt= this.obf.createSongListType();
 
 					//if the count is zero, no song was found.
@@ -223,13 +207,15 @@ public class AlbumFeature extends MP3Info {
 			if(output != null)
 				output.delete();
 			throw new MP3Exception("JAXBException "+e.getMessage(), e);
+		} catch (FindAlbumArtistException e) {
+				throw new MP3Exception("FindAlbumArtistException "+e.getMessage(), e);
 		} catch (NullPointerException e) {
 			throw new MP3Exception("NullPointerException "+e.getMessage(), e);
 		} catch (MusicbrainzUrlException e) {
 			throw new MP3Exception("MusicbrainzUrlException "+e.getMessage(), e);
 		} catch (GetHttpException e) {
 			throw new MP3Exception("GetHttpException "+e.getMessage(), e);
-		} catch (MusicbrainzDocException e) {
+		} catch (CreateDocException e) {
 			throw new MP3Exception("MusicbrainzDocException doc creation problem "+e.getMessage(), e);
 		} catch (Exception e) {
 			throw new MP3Exception("Exception "+e.getMessage(), e);
