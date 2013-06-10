@@ -85,7 +85,7 @@ public final class HighLevelSongFeature extends MP3Info {
 			if(count.intValue() == 0) {
 			
 				// some tags were not correct, performing a more generic query to find the right one
-				FindAlbumArtist finder= new FindAlbumArtist(title);
+				FindAlbumArtist finder= new FindAlbumArtist(artistName, albumName, title);
 				artistName= finder.getArtistName();
 				albumName= finder.getAlbumName();
 			}
