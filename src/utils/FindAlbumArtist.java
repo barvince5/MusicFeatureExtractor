@@ -14,24 +14,26 @@ import customException.MusicbrainzUrlException;
 
 public final class FindAlbumArtist {
 
-	private String artistName;
-	private String albumName;
+	private String artistName= "";
+	private String albumName= "";
+	private String title= "";
 	
-	public FindAlbumArtist(String title) 
+	public FindAlbumArtist(String artist, String album, String title) 
 			throws FindAlbumArtistException {
 		
-		this.artistName= "";
-		this.albumName= "";
-		this.find(title);
+		this.artistName= artist;
+		this.albumName= album;
+		if (title.equals("") == false)
+			this.find();
 	}
 	
-	private final void find(String title) 
+	private final void find() 
 			throws FindAlbumArtistException {
 		
 		GetHttpPage getHttp= GetHttpPage.getInstance();
 		try {
 			
-			String content= getHttp.getWebPageAsString(MusicbrainzUrl.getMbAllRecordingsUrl(title));
+			String content= getHttp.getWebPageAsString(MusicbrainzUrl.getMbAllRecordingsUrl(this.title));
 			if(content.equals(""))
 				return;
 			
@@ -84,7 +86,6 @@ public final class FindAlbumArtist {
 			
 			// last attempt, try for partially correct artist names (useful for artist collaborations, containing "featuring")
 			if (!found) {
-				String[] artistNameSplit = this.artistName.split(" ");
 				for (int i=0; i<recordingList.getLength() && !found; ++i) {
 					currArtistName= "";
 					currAlbumName= "";
@@ -100,14 +101,13 @@ public final class FindAlbumArtist {
 						currentEl= (Element)valueList.item(0);
 						currAlbumName= currentEl.getElementsByTagName("title").item(0).getTextContent();
 					}
-					for (int a=0; a< artistNameSplit.length && !found; ++a) {
-						if (currArtistName.equalsIgnoreCase(artistNameSplit[a])
-							|| currArtistName.replace(" ", "").equalsIgnoreCase(artistNameSplit[a].replace(" ", "")) ) {
-								this.artistName= currArtistName;
-								this.albumName= currAlbumName;
-								found= true;
-							}	
-					}
+					if (this.artistName.toLowerCase().contains(currArtistName.toLowerCase())
+						|| this.artistName.replace(" ", "").toLowerCase().contains(currArtistName.replace(" ", "").toLowerCase()) ) {
+							this.artistName= currArtistName;
+							this.albumName= currAlbumName;
+							found= true;
+						}	
+					
 				}
 				
 			}
@@ -117,6 +117,8 @@ public final class FindAlbumArtist {
 			throw new FindAlbumArtistException("GetHttpException "+e.getMessage(), e);
 		} catch (MusicbrainzUrlException e) {
 			throw new FindAlbumArtistException("MusicbrainzUrlException "+e.getMessage(), e);
+		} catch (Exception e) {
+			throw new FindAlbumArtistException("Exception "+e.getMessage(), e);
 		}
 	}
 
@@ -127,4 +129,9 @@ public final class FindAlbumArtist {
 	public final String getAlbumName() {
 		return this.albumName;
 	}
+
+	public String getTitle() {
+		return this.title;
+	}
+
 }
