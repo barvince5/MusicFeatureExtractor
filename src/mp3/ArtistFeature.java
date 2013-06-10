@@ -14,13 +14,14 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
 
-import musicbrainz.MusicbrainzDoc;
 import musicbrainz.MusicbrainzUrl;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import utils.CreateDoc;
+import utils.FindAlbumArtist;
 import wikipedia.ArtistBiography;
 
 import artistArtifacts.AlbumListType;
@@ -30,9 +31,10 @@ import artistArtifacts.ArtistType;
 import artistArtifacts.LinkListType;
 import artistArtifacts.ObjectFactory;
 
+import customException.FindAlbumArtistException;
 import customException.GetHttpException;
 import customException.MP3Exception;
-import customException.MusicbrainzDocException;
+import customException.CreateDocException;
 import customException.MusicbrainzUrlException;
 
 public class ArtistFeature extends MP3Info {
@@ -73,25 +75,17 @@ public class ArtistFeature extends MP3Info {
 			
 			String artistName= super.getArtist();
 			if(artistName.equals("")) {
-				
-				content= getHttp.getWebPageAsString(MusicbrainzUrl.getMbRecordingUrl(null, title, super.getAlbum()));
-				if(content.equals(""))
-					return false;
-				
-				Document tempDoc= MusicbrainzDoc.createDoc(content);
-				nodeList= tempDoc.getElementsByTagName("name");
-				if(nodeList.getLength() == 0)
-					return false;
-				
-				artistName= nodeList.item(0).getTextContent();
-				if(artistName == null || artistName.equals(""))
-					return false;
+				FindAlbumArtist finder= new FindAlbumArtist(title);
+				artistName= finder.getArtistName();
 			}
 			
+			if(artistName.equals(""))
+				return false;
+				
 			content= getHttp.getWebPageAsString(MusicbrainzUrl.getMbArtistUrl(artistName));
 			if(content.equals(""))
 				return false;
-			this.artistDoc= MusicbrainzDoc.createDoc(content);
+			this.artistDoc= CreateDoc.create(content);
 			
 			//if the count is zero, no artist was found.
 			Element artistListNode= (Element) this.artistDoc.getElementsByTagName("artist-list").item(0);
@@ -160,7 +154,7 @@ public class ArtistFeature extends MP3Info {
 			content= getHttp.getWebPageAsString(MusicbrainzUrl.getMbLinksUrl(this.artistID));
 			if(content.equals("") == false) {
 				
-				this.linksDoc= MusicbrainzDoc.createDoc(content);
+				this.linksDoc= CreateDoc.create(content);
 				nodeList= this.linksDoc.getElementsByTagName("target");
 				
 				if(nodeList.getLength() != 0) {
@@ -186,10 +180,10 @@ public class ArtistFeature extends MP3Info {
 			
 			//get all albums of this artist
 			content= "";
-			content= getHttp.getWebPageAsString(MusicbrainzUrl.getMbAlbumsOfArtist(this.artistID));
+			content= getHttp.getWebPageAsString(MusicbrainzUrl.getMbReleasesOfArtist(this.artistID));
 			if(content.equals("") == false) {
 				
-				this.albumsDoc= MusicbrainzDoc.createDoc(content);
+				this.albumsDoc= CreateDoc.create(content);
 				nodeList= this.albumsDoc.getElementsByTagName("release-group");
 				
 				AlbumListType albumList= this.obf.createAlbumListType();
@@ -232,13 +226,15 @@ public class ArtistFeature extends MP3Info {
 			if(output != null)
 				output.delete();
 			throw new MP3Exception("JAXBException "+e.getMessage(), e);
+		} catch (FindAlbumArtistException e) {
+			throw new MP3Exception("FindAlbumArtistException "+e.getMessage(), e);
 		} catch (NullPointerException e) {
 			throw new MP3Exception("NullPointerException "+e.getMessage(), e);
 		} catch (MusicbrainzUrlException e) {
 			throw new MP3Exception("MusicbrainzUrlException "+e.getMessage(), e);
 		} catch (GetHttpException e) {
 			throw new MP3Exception("GetHttpException "+e.getMessage(), e);
-		} catch (MusicbrainzDocException e) {
+		} catch (CreateDocException e) {
 			throw new MP3Exception("MusicbrainzDocException doc creation problem "+e.getMessage(), e);
 		} catch (Exception e) {
 			throw new MP3Exception("Exception "+e.getMessage(), e);
