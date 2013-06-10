@@ -8,9 +8,6 @@
     		<element name="title" type="string" maxOccurs="1"
     			minOccurs="1">
     		</element>
-    		<element name="songList" type="xsd3:songListType"
-    			maxOccurs="1" minOccurs="0">
-    		</element>
     		<element name="artist" type="xsd3:artistType" maxOccurs="1"
     			minOccurs="0">
     		</element>
@@ -20,6 +17,12 @@
     		<element name="country" type="xsd3:countryType"
     			maxOccurs="1" minOccurs="0">
     		</element>
+    		<element name="trackCount" type="positiveInteger"
+    			maxOccurs="1" minOccurs="0">
+    		</element>
+            <element name="songList" type="xsd3:songListType" maxOccurs="1" minOccurs="0">
+    		</element>
+            <element name="mediumList" type="xsd3:mediumListType" maxOccurs="1" minOccurs="0"></element>
     	</sequence>
 
     	<attribute name="mbArtistID" type="string"></attribute>
@@ -31,27 +34,19 @@
     		<element name="title" type="string" maxOccurs="1"
     			minOccurs="1">
     		</element>
-    		<element name="track" type="positiveInteger" maxOccurs="1"
+    		<element name="position" type="string" maxOccurs="1"
     			minOccurs="0">
     		</element>
-    		<element name="format" type="string" maxOccurs="1"
-    			minOccurs="0">
-    		</element>
-    		<element name="status" type="string" maxOccurs="1" minOccurs="0">
-    			<annotation>
-    				<documentation>E.g. official</documentation>
-    			</annotation></element>
     	</sequence>
-    	<attribute name="present" type="boolean"></attribute>
     	<attribute name="mbSongID" type="string"></attribute>
     </complexType>
     
     <complexType name="artistType">
     	<sequence>
-    		<element name="disambiguation" type="string" maxOccurs="1"
+            <element name="name" type="string" maxOccurs="1" minOccurs="1"></element>
+            <element name="disambiguation" type="string" maxOccurs="1"
     			minOccurs="0">
     		</element>
-    		<element name="name" type="string" maxOccurs="1" minOccurs="1"></element>
     	</sequence>
     </complexType>
     
@@ -69,4 +64,11 @@
         		<element name="song" type="xsd3:songType" maxOccurs="unbounded" minOccurs="1"></element>
         	</sequence>
         </complexType>
+
+        <complexType name="mediumListType">
+        	<sequence>
+        		<element name="medium" type="string" maxOccurs="unbounded" minOccurs="1"></element>
+        	</sequence>
+        </complexType>
+
 </schema>
