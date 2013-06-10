@@ -80,8 +80,98 @@ public final class HighLevelSongFeature extends MP3Info {
 			//if the count is zero, no song was found.
 			Element recordingListNode= (Element) this.songDoc.getElementsByTagName("recording-list").item(0);
 			Integer count= Integer.valueOf(recordingListNode.getAttributes().getNamedItem("count").getNodeValue());
-			if(count.intValue() == 0)
-				return false;
+			if(count.intValue() == 0) {
+				// some tags were not correct, performing a more generic query to find the right one
+				content= getHttp.getWebPageAsString(MusicbrainzUrl.getMbAllRecordingsUrl(title));
+				if(content.equals(""))
+					return false;
+				
+				this.songDoc= MusicbrainzDoc.createDoc(content);
+				
+				recordingListNode= (Element) this.songDoc.getElementsByTagName("recording-list").item(0);
+				count= Integer.valueOf(recordingListNode.getAttributes().getNamedItem("count").getNodeValue());
+				// if count is still 0, the title is not correct, and will be skipped
+				if(count.intValue() == 0) 
+					return false;
+				
+				// get all recording nodes in the xml and search for the correct one (has one correct tag between release and artist)
+				// when one is found, the loop will stop
+				NodeList recordingList= this.songDoc.getElementsByTagName("recording");
+				boolean found= false;
+				// these two strings are for comparison with the ones in the tag. They are initialized to empty string
+				// at the beginning of processing each song in the recording list
+				String currArtistName;
+				String currAlbumName;
+				
+				for (int i=0; i<recordingList.getLength() && !found; ++i) {
+					currArtistName= "";
+					currAlbumName= "";
+					Element currentRecording= (Element)recordingList.item(i);
+					NodeList valueList= currentRecording.getElementsByTagName("artist");
+					Element currentEl= null;
+					if (valueList.getLength() != 0) {
+						currentEl= (Element)valueList.item(0);
+						currArtistName= currentEl.getElementsByTagName("name").item(0).getTextContent();
+					} 
+					valueList= currentRecording.getElementsByTagName("release");
+					if (valueList.getLength() != 0) {
+						currentEl= (Element)valueList.item(0);
+						currAlbumName= currentEl.getElementsByTagName("title").item(0).getTextContent();
+					} 
+					// first try exact equality, then without spaces
+					if (currAlbumName.equalsIgnoreCase(albumName) || currArtistName.equalsIgnoreCase(artistName)
+						|| currAlbumName.replace(" ", "").equalsIgnoreCase(albumName.replace(" ", ""))
+						|| currArtistName.replace(" ", "").equalsIgnoreCase(artistName.replace(" ", "")) ) {
+						artistName= currArtistName;
+						albumName= currAlbumName;
+						found= true;
+					}
+				}
+				
+				// last attempt, try for partially correct artist names (useful for artist collaborations, containing "featuring")
+				if (!found) {
+					String[] artistNameSplit = artistName.split(" ");
+					for (int i=0; i<recordingList.getLength() && !found; ++i) {
+						currArtistName= "";
+						currAlbumName= "";
+						Element currentRecording= (Element)recordingList.item(i);
+						NodeList valueList= currentRecording.getElementsByTagName("artist");
+						Element currentEl= null;
+						if (valueList.getLength() != 0) {
+							currentEl= (Element)valueList.item(0);
+							currArtistName= currentEl.getElementsByTagName("name").item(0).getTextContent();
+						} 
+						valueList= currentRecording.getElementsByTagName("release");
+						if (valueList.getLength() != 0) {
+							currentEl= (Element)valueList.item(0);
+							currAlbumName= currentEl.getElementsByTagName("title").item(0).getTextContent();
+						}
+						for (int a=0; a< artistNameSplit.length && !found; ++a) {
+							if (currArtistName.equalsIgnoreCase(artistNameSplit[a])
+								|| currArtistName.replace(" ", "").equalsIgnoreCase(artistNameSplit[a].replace(" ", "")) ) {
+									artistName= currArtistName;
+									albumName= currAlbumName;
+									found= true;
+								}	
+						}
+					}
+					
+				}
+					
+				// try the query with the new parameters
+				content= getHttp.getWebPageAsString(MusicbrainzUrl.getMbRecordingUrl(artistName, title, albumName));
+				if(content.equals(""))
+					return false;
+					
+				this.songDoc= MusicbrainzDoc.createDoc(content);
+				
+				recordingListNode= (Element) this.songDoc.getElementsByTagName("recording-list").item(0);
+				count= Integer.valueOf(recordingListNode.getAttributes().getNamedItem("count").getNodeValue());
+				
+				if(count.intValue() == 0) 
+					return false;		
+				
+			}
 			
 			Element recordingNode= (Element) recordingListNode.getElementsByTagName("recording").item(0);
 	
