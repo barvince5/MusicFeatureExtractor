@@ -1,4 +1,4 @@
-package mp3;
+package feature.highlevel;
 
 import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
 import songArtifacts.highLevel.AlbumListType;
@@ -7,6 +7,7 @@ import songArtifacts.highLevel.ObjectFactory;
 import songArtifacts.highLevel.SongType;
 import songArtifacts.highLevel.ArtistType;
 import utils.CreateDoc;
+import utils.DateConverter;
 import utils.FindAlbumArtist;
 
 import httpGET.GetHttpPage;
@@ -30,11 +31,14 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import customException.CreateDocException;
+import customException.DateConverterException;
 import customException.FindAlbumArtistException;
 import customException.GetHttpException;
 import customException.MP3Exception;
 import customException.MusicbrainzUrlException;
+import customException.SongFeatureException;
 import entagged.audioformats.AudioFile;
+import feature.MP3Info;
 
 public final class HighLevelSongFeature extends MP3Info {
 
@@ -56,7 +60,7 @@ public final class HighLevelSongFeature extends MP3Info {
 	}
 	
 	public final boolean start() 
-			throws MP3Exception {
+			throws SongFeatureException {
 		
 		GetHttpPage getHttp= GetHttpPage.getInstance();
 		String content= "";
@@ -190,6 +194,9 @@ public final class HighLevelSongFeature extends MP3Info {
 			if (encoding != null && !encoding.equals(""))
 				this.song.setEncoding(encoding);
 			
+			//set the creation date
+			this.song.setXMLFileCreation(DateConverter.CurrentDateToXMLGregorianCalendar());
+			
 			//marshall this JaxbElement
 			JAXBContext jc= JAXBContext.newInstance("songArtifacts.highLevel");
 			JAXBElement<SongType> je= this.obf.createSongMetadata(this.song);
@@ -214,19 +221,21 @@ public final class HighLevelSongFeature extends MP3Info {
 		} catch (JAXBException e) {
 			if(output != null)
 				output.delete();
-			throw new MP3Exception("JAXBException "+e.getMessage(), e);	
+			throw new SongFeatureException("JAXBException "+e.getMessage(), e);	
 		} catch (FindAlbumArtistException e) {
-			throw new MP3Exception("FindAlbumArtistException "+e.getMessage(), e);
+			throw new SongFeatureException("FindAlbumArtistException "+e.getMessage(), e);
+		} catch (DateConverterException e) {
+			throw new SongFeatureException("DateConverterException "+e.getMessage(), e);
 		} catch (NullPointerException e) {
-			throw new MP3Exception("NullPointerException "+e.getMessage(), e);
+			throw new SongFeatureException("NullPointerException "+e.getMessage(), e);
 		} catch (MusicbrainzUrlException e) {
-			throw new MP3Exception("MusicbrainzUrlException "+e.getMessage(), e);
+			throw new SongFeatureException("MusicbrainzUrlException "+e.getMessage(), e);
 		} catch (GetHttpException e) {
-			throw new MP3Exception("GetHttpException "+e.getMessage(), e);
+			throw new SongFeatureException("GetHttpException "+e.getMessage(), e);
 		} catch (CreateDocException e) {
-			throw new MP3Exception("MusicbrainzDocException doc creation problem "+e.getMessage(), e);
+			throw new SongFeatureException("MusicbrainzDocException doc creation problem "+e.getMessage(), e);
 		} catch (Exception e) {
-			throw new MP3Exception("Exception "+e.getMessage(), e);
+			throw new SongFeatureException("Exception "+e.getMessage(), e);
 		}
 		
 		return true;

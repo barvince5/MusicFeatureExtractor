@@ -5,31 +5,42 @@
     
     <complexType name="ArtistType">
     	<sequence>
-            <element name="name" type="string" maxOccurs="1" minOccurs="1">
+            <element name="XMLFileCreation" type="date" maxOccurs="1" minOccurs="1"></element>
+            <element name="name" type="string" maxOccurs="1"
+    			minOccurs="1">
     		</element>
-            <element name="gender" type="xsd2:genderType" maxOccurs="1" minOccurs="0">
+    		<element name="gender" type="xsd2:genderType" maxOccurs="1"
+    			minOccurs="0">
     		</element>
-            <element name="type" type="string" maxOccurs="1" minOccurs="0">
+    		<element name="type" type="string" maxOccurs="1"
+    			minOccurs="0">
     		</element>
-            <element name="country" type="xsd2:countryType" maxOccurs="1" minOccurs="0">
+    		<element name="country" type="xsd2:countryType"
+    			maxOccurs="1" minOccurs="0">
     		</element>
-            <element name="begin" type="string" maxOccurs="1" minOccurs="0">
+    		<element name="begin" type="string" maxOccurs="1"
+    			minOccurs="0">
     		</element>
-            <element name="ended" type="boolean" maxOccurs="1" minOccurs="0">
+    		<element name="ended" type="boolean" maxOccurs="1"
+    			minOccurs="0">
     		</element>
-            <element name="end" type="string" maxOccurs="1" minOccurs="0">
+    		<element name="end" type="string" maxOccurs="1"
+    			minOccurs="0">
     		</element>
-            <element name="disambiguation" type="string" maxOccurs="1" minOccurs="0">
+    		<element name="disambiguation" type="string" maxOccurs="1"
+    			minOccurs="0">
     		</element>
-            <element name="aliasList" type="xsd2:aliasListType"
+    		<element name="aliasList" type="xsd2:aliasListType"
     			maxOccurs="1" minOccurs="0">
     		</element>
     		<element name="biography" type="string" maxOccurs="1"
     			minOccurs="0">
     		</element>
-            <element name="albumList" type="xsd2:albumListType" maxOccurs="1" minOccurs="0"></element>
-            <element name="linkList" type="xsd2:linkListType" maxOccurs="1"
-    			minOccurs="0">
+    		<element name="albumList" type="xsd2:albumListType"
+    			maxOccurs="1" minOccurs="0">
+    		</element>
+    		<element name="linkList" type="xsd2:linkListType"
+    			maxOccurs="1" minOccurs="0">
     		</element>
     	</sequence>
     	<attribute name="mbArtistID" type="string"></attribute>

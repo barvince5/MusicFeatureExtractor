@@ -5,7 +5,8 @@
     
     <complexType name="AlbumType">
     	<sequence>
-    		<element name="title" type="string" maxOccurs="1"
+            <element name="XMLFileCreation" type="date" maxOccurs="1" minOccurs="1"></element>
+            <element name="title" type="string" maxOccurs="1"
     			minOccurs="1">
     		</element>
     		<element name="artist" type="xsd3:artistType" maxOccurs="1"
@@ -20,9 +21,12 @@
     		<element name="trackCount" type="positiveInteger"
     			maxOccurs="1" minOccurs="0">
     		</element>
-            <element name="songList" type="xsd3:songListType" maxOccurs="1" minOccurs="0">
+    		<element name="songList" type="xsd3:songListType"
+    			maxOccurs="1" minOccurs="0">
     		</element>
-            <element name="mediumList" type="xsd3:mediumListType" maxOccurs="1" minOccurs="0"></element>
+    		<element name="mediumList" type="xsd3:mediumListType"
+    			maxOccurs="1" minOccurs="0">
+    		</element>
     	</sequence>
 
     	<attribute name="mbArtistID" type="string"></attribute>
@@ -70,5 +74,5 @@
         		<element name="medium" type="string" maxOccurs="unbounded" minOccurs="1"></element>
         	</sequence>
         </complexType>
-
+        
 </schema>
