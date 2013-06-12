@@ -1,4 +1,4 @@
-package feature.highlevel;
+package feature.highLevel;
 
 import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
 import feature.MP3Info;
