@@ -6,6 +6,7 @@ import httpGET.GetHttpPage;
 
 import java.io.File;
 import java.math.BigInteger;
+import java.util.concurrent.Callable;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -41,7 +42,7 @@ import customException.GetHttpException;
 import customException.MP3Exception;
 import customException.MusicbrainzUrlException;
 
-public class AlbumFeature extends MP3Info {
+public class AlbumFeature extends MP3Info implements Callable<Boolean>{
 
 	private ObjectFactory obf= null;
 	private AlbumType album= null;
@@ -58,31 +59,9 @@ public class AlbumFeature extends MP3Info {
 		this.album= this.obf.createAlbumType();
 		this.getHttp= GetHttpPage.getInstance();
 	}
-
-	public final void stop() {
-		
-	}
 	
-	private final Element getAlbumListNode(String artistName, String albumName) 
-			throws GetHttpException, MusicbrainzUrlException, CreateDocException {
-		
-		String content= "";
-		
-		content= this.getHttp.getWebPageAsString(MusicbrainzUrl.getMbRelease(artistName, albumName));
-		if(content.equals(""))
-			return null;
-		this.albumDoc= CreateDoc.create(content);
-		
-		//if the count is zero, no album was found.
-		Element albumListNode= (Element) this.albumDoc.getElementsByTagName("release-list").item(0);
-		Integer count= Integer.valueOf(albumListNode.getAttributes().getNamedItem("count").getNodeValue());
-		if(count.intValue() == 0)
-			return null;
-		else
-			return albumListNode;
-	}
-	
-	public final boolean start() 
+	@Override
+	public final Boolean call() 
 			throws AlbumFeatureException {
 		
 		String content= "";
@@ -255,5 +234,24 @@ public class AlbumFeature extends MP3Info {
 		}
 		
 		return true;
+	}
+	
+	private final Element getAlbumListNode(String artistName, String albumName) 
+			throws GetHttpException, MusicbrainzUrlException, CreateDocException {
+		
+		String content= "";
+		
+		content= this.getHttp.getWebPageAsString(MusicbrainzUrl.getMbRelease(artistName, albumName));
+		if(content.equals(""))
+			return null;
+		this.albumDoc= CreateDoc.create(content);
+		
+		//if the count is zero, no album was found.
+		Element albumListNode= (Element) this.albumDoc.getElementsByTagName("release-list").item(0);
+		Integer count= Integer.valueOf(albumListNode.getAttributes().getNamedItem("count").getNodeValue());
+		if(count.intValue() == 0)
+			return null;
+		else
+			return albumListNode;
 	}
 }
