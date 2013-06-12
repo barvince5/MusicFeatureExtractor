@@ -4,6 +4,7 @@ import feature.MP3Info;
 import httpGET.GetHttpPage;
 
 import java.io.File;
+import java.util.concurrent.Callable;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -41,7 +42,7 @@ import customException.MP3Exception;
 import customException.CreateDocException;
 import customException.MusicbrainzUrlException;
 
-public class ArtistFeature extends MP3Info {
+public final class ArtistFeature extends MP3Info implements Callable<Boolean> {
 
 	private ObjectFactory obf= null;
 	private ArtistType artist= null;
@@ -59,39 +60,17 @@ public class ArtistFeature extends MP3Info {
 		this.artist= this.obf.createArtistType();
 		this.getHttp= GetHttpPage.getInstance();
 	}
-		
-	public final void stop() {
-		
-	}
-	
-	private final Element getArtistListNode(String artistName) 
-			throws GetHttpException, MusicbrainzUrlException, CreateDocException {
-		
-		String content= "";
-		
-		content= this.getHttp.getWebPageAsString(MusicbrainzUrl.getMbArtistUrl(artistName));
-		if(content.equals(""))
-			return null;
-		this.artistDoc= CreateDoc.create(content);
-		
-		//if the count is zero, no artist was found.
-		Element artistListNode= (Element) this.artistDoc.getElementsByTagName("artist-list").item(0);
-		Integer count= Integer.valueOf(artistListNode.getAttributes().getNamedItem("count").getNodeValue());
-		if(count.intValue() == 0)
-			return null;
-		else
-			return artistListNode;
-	}
-
-	public final boolean start() 
-			throws ArtistFeatureException {
+			
+	@Override
+	public final Boolean call() 
+		throws ArtistFeatureException {
 				
 		String content= "";
 		File output= null;
 		NodeList nodeList= null;
 		
 		try {
-			
+				
 			String title= super.getTitle();
 			if(title.equals(""))
 				return false;
@@ -271,5 +250,24 @@ public class ArtistFeature extends MP3Info {
 		}
 		
 		return true;
+	}
+	
+	private final Element getArtistListNode(String artistName) 
+			throws GetHttpException, MusicbrainzUrlException, CreateDocException {
+		
+		String content= "";
+		
+		content= this.getHttp.getWebPageAsString(MusicbrainzUrl.getMbArtistUrl(artistName));
+		if(content.equals(""))
+			return null;
+		this.artistDoc= CreateDoc.create(content);
+		
+		//if the count is zero, no artist was found.
+		Element artistListNode= (Element) this.artistDoc.getElementsByTagName("artist-list").item(0);
+		Integer count= Integer.valueOf(artistListNode.getAttributes().getNamedItem("count").getNodeValue());
+		if(count.intValue() == 0)
+			return null;
+		else
+			return artistListNode;
 	}
 }

@@ -14,6 +14,7 @@ import httpGET.GetHttpPage;
 
 import java.io.File;
 import java.math.BigInteger;
+import java.util.concurrent.Callable;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -40,7 +41,7 @@ import customException.SongFeatureException;
 import entagged.audioformats.AudioFile;
 import feature.MP3Info;
 
-public final class HighLevelSongFeature extends MP3Info {
+public final class HighLevelSongFeature extends MP3Info implements Callable<Boolean>{
 
 	private SongType song;
 	private ObjectFactory obf;
@@ -54,12 +55,9 @@ public final class HighLevelSongFeature extends MP3Info {
 		this.song= this.obf.createSongType();
 		
 	}
-
-	public final void stop() {
-		
-	}
 	
-	public final boolean start() 
+	@Override
+	public final Boolean call()
 			throws SongFeatureException {
 		
 		GetHttpPage getHttp= GetHttpPage.getInstance();
