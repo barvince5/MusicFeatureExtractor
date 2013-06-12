@@ -1,4 +1,4 @@
-package feature.highlevel;
+package feature.highLevel;
 
 import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
 import songArtifacts.highLevel.AlbumListType;
@@ -41,7 +41,7 @@ import customException.SongFeatureException;
 import entagged.audioformats.AudioFile;
 import feature.MP3Info;
 
-public final class HighLevelSongFeature extends MP3Info implements Callable<Boolean>{
+public final class HighLevelSongFeature extends MP3Info implements Callable<Boolean> {
 
 	private SongType song;
 	private ObjectFactory obf;
@@ -113,16 +113,6 @@ public final class HighLevelSongFeature extends MP3Info implements Callable<Bool
 			//set song title
 
 			this.song.setTitle(recordingNode.getElementsByTagName("title").item(0).getTextContent());
-
-			//set song position
-			nodeList= recordingNode.getElementsByTagName("track");
-			if (nodeList.getLength() != 0) {
-				Element tracknode=(Element) nodeList.item(0);
-				nodeList= tracknode.getElementsByTagName("number");
-				if (nodeList.getLength() != 0)
-					this.song.setPosition(nodeList.item(0).getTextContent());	
-			}
-			
 			
 			//set artist
 			ArtistType artist= this.obf.createArtistType();
@@ -174,6 +164,9 @@ public final class HighLevelSongFeature extends MP3Info implements Callable<Bool
 				this.song.setAlbumList(albumList);
 			
 			AudioFile afile = super.getAudioFile();
+			
+			//set file length (seconds)
+			this.song.setLength(BigInteger.valueOf(afile.getLength()));
 			
 			//set file name
 			this.song.setFileName(afile.getName());

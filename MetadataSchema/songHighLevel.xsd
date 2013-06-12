@@ -9,17 +9,14 @@
             <element name="artist" type="xsd1:artistType" maxOccurs="1"
     			minOccurs="0">
     		</element>
-    		<element name="albumList" type="xsd1:albumListType"
+            <element name="title" type="string" maxOccurs="1" minOccurs="1">
+    		</element>
+            <element name="fileName" type="string" maxOccurs="1" minOccurs="1">
+    		</element>
+            <element name="length" type="positiveInteger" maxOccurs="1" minOccurs="0">
+    		</element>
+            <element name="albumList" type="xsd1:albumListType"
     			maxOccurs="1" minOccurs="0">
-    		</element>
-    		<element name="title" type="string" maxOccurs="1"
-    			minOccurs="1">
-    		</element>
-    		<element name="length" type="positiveInteger" maxOccurs="1"
-    			minOccurs="0">
-    		</element>
-    		<element name="fileName" type="string" maxOccurs="1"
-    			minOccurs="1">
     		</element>
     		<element name="bitrate" type="positiveInteger" maxOccurs="1"
     			minOccurs="1">
@@ -32,9 +29,6 @@
     		</element>
     		<element name="frequency" type="positiveInteger"
     			maxOccurs="1" minOccurs="1">
-    		</element>
-    		<element name="position" type="string" maxOccurs="1"
-    			minOccurs="0">
     		</element>
     	</sequence>
     	<attribute name="mbSongID" type="string">
