@@ -1,31 +1,28 @@
 package main;
 
-import java.io.File;
-import java.io.FilenameFilter;
 
-import mp3.ArtistFeature;
-
-import customException.MP3Exception;
-
+import customException.MasterException;
 
 public class Main {
 
 
-	public static void main(String[] args) throws MP3Exception {
+	public static void main(String[] args) {
 		
-		File dir= new File("/home/sniper/Desktop/music/");
-		File[] foundFiles = dir.listFiles(new FilenameFilter() {
-			@Override
-			public boolean accept(File dir, String name) {
-				return name.endsWith(".mp3");
-			}
-		});
+		try {
+			
+			System.err.println("ARTISTS PHASE: Please wait...");
+			MasterMetadata.artistMetadata("/home/sniper/Desktop/music/");
 		
-		for(File f : foundFiles) {
-			ArtistFeature ar= new ArtistFeature(f);
-			ar.start();
-			System.out.println(f.getName());
+			System.err.println("ALBUMS PHASE: Please wait...");
+			MasterMetadata.albumMetadata("/home/sniper/Desktop/music/");
+			
+			System.err.println("SONGS PHASE: Please wait...");
+			MasterMetadata.songMetadata("/home/sniper/Desktop/music/");
+			
+		} catch (MasterException e) {
+			System.err.println(e.getMessage());
+			System.err.println("MFE is shuting down");
+			MasterMetadata.shutDownMFE();
 		}
 	}
-
 }
