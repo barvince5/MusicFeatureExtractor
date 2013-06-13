@@ -42,7 +42,7 @@ import customException.GetHttpException;
 import customException.MP3Exception;
 import customException.MusicbrainzUrlException;
 
-public class AlbumFeature extends MP3Info implements Callable<Boolean>{
+public class AlbumFeature extends MP3Info implements Callable<Boolean> {
 
 	private ObjectFactory obf= null;
 	private AlbumType album= null;
