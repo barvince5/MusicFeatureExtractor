@@ -21,8 +21,8 @@ public class Main {
 			
 		} catch (MasterException e) {
 			System.err.println(e.getMessage());
-			System.err.println("MFE is shuting down");
 			MasterMetadata.shutDownMFE();
+			System.err.println("MFE is shutting down");
 		}
 	}
 }
