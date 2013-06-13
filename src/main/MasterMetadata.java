@@ -11,6 +11,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import share.log.AlbumLogger;
+import share.log.ArtistLogger;
+import share.log.SongLogger;
+
 import customException.MP3Exception;
 import customException.MasterException;
 
@@ -30,6 +34,7 @@ public final class MasterMetadata {
 	private static File dir= null;
 	private static List<File> fileList= null;
 	private static boolean initFlag= false;
+	private static int blockOffset; //this indicate the head of the current scheduled file block
 	
 	/**
 	 * Private constructor to avoid instantiation.
@@ -106,7 +111,9 @@ public final class MasterMetadata {
 		
 		if(path == null || path.equals(""))
 			throw new MasterException("The path is not null or empty string");
-			
+		
+		MasterMetadata.blockOffset= 0; //just to set end reset it.
+		
 		if(MasterMetadata.initFlag) //If it is already initialized.
 			return;
 		
@@ -161,14 +168,20 @@ public final class MasterMetadata {
 			
 			//Waiting until all tasks are done
 			for(int j= 0; j < length; ++j) {
-				try {
+				try {				
 					res.get(j).get();
 				} catch (ExecutionException e) {
-					//do nothing, just skip this task.
+					//retrieve the file that failed using the blockOffset and jth task.
+					String fileName= MasterMetadata.fileList.get(MasterMetadata.blockOffset+j).getName();
+					ArtistLogger.getInstance().getLog().warning(fileName+" FAILED");
 				} catch (InterruptedException e) {
-					//do nothing, just skip this task.
+					//retrieve the file that failed using the blockOffset and jth task.
+					String fileName= MasterMetadata.fileList.get(MasterMetadata.blockOffset+j).getName();
+					ArtistLogger.getInstance().getLog().warning(fileName+" FAILED");
 				} catch (CancellationException e) {
-					//do nothing, just skip this task.
+					//retrieve the file that failed using the blockOffset and jth task.
+					String fileName= MasterMetadata.fileList.get(MasterMetadata.blockOffset+j).getName();
+					ArtistLogger.getInstance().getLog().warning(fileName+" FAILED");
 				}
 			}
 			
@@ -194,7 +207,8 @@ public final class MasterMetadata {
 			Iterator<File> iter= foundFiles.iterator();
 			while(iter.hasNext()) {
 				//create the list of tasks to do.
-				MasterMetadata.artistTasks.add(new ArtistFeature(iter.next())); 
+				MasterMetadata.artistTasks.add(new ArtistFeature(iter.next()));
+				++MasterMetadata.blockOffset;
 				if(++cnt == maxTask) {
 					MasterMetadata.submitArtistTasks();
 					cnt= 0; //reset the counter
@@ -239,13 +253,19 @@ public final class MasterMetadata {
 			//Waiting until all tasks are done
 			for(int j= 0; j < length; ++j) {
 				try {
-					res.get(j).get();
+					res.get(j).get();	
 				} catch (ExecutionException e) {
-					//do nothing, just skip this task.
+					//retrieve the file that failed using the blockOffset and jth task.
+					String fileName= MasterMetadata.fileList.get(MasterMetadata.blockOffset+j).getName();
+					AlbumLogger.getInstance().getLog().warning(fileName+" FAILED");
 				} catch (InterruptedException e) {
-					//do nothing, just skip this task.
+					//retrieve the file that failed using the blockOffset and jth task.
+					String fileName= MasterMetadata.fileList.get(MasterMetadata.blockOffset+j).getName();
+					AlbumLogger.getInstance().getLog().warning(fileName+" FAILED");
 				} catch (CancellationException e) {
-					//do nothing, just skip this task.
+					//retrieve the file that failed using the blockOffset and jth task.
+					String fileName= MasterMetadata.fileList.get(MasterMetadata.blockOffset+j).getName();
+					AlbumLogger.getInstance().getLog().warning(fileName+" FAILED");
 				}
 			}
 			
@@ -318,11 +338,17 @@ public final class MasterMetadata {
 				try {
 					res.get(j).get();
 				} catch (ExecutionException e) {
-					//do nothing, just skip this task.
+					//retrieve the file that failed using the blockOffset and jth task.
+					String fileName= MasterMetadata.fileList.get(MasterMetadata.blockOffset+j).getName();
+					SongLogger.getInstance().getLog().warning(fileName+" FAILED");
 				} catch (InterruptedException e) {
-					//do nothing, just skip this task.
+					//retrieve the file that failed using the blockOffset and jth task.
+					String fileName= MasterMetadata.fileList.get(MasterMetadata.blockOffset+j).getName();
+					SongLogger.getInstance().getLog().warning(fileName+" FAILED");
 				} catch (CancellationException e) {
-					//do nothing, just skip this task.
+					//retrieve the file that failed using the blockOffset and jth task.
+					String fileName= MasterMetadata.fileList.get(MasterMetadata.blockOffset+j).getName();
+					SongLogger.getInstance().getLog().warning(fileName+" FAILED");
 				}
 			}
 			
