@@ -67,9 +67,7 @@ public abstract class MetaFeatureFactory extends FeatureExtractor {
 	 */
 	public void setParent(DataModel parent) {
 		this.parent = parent;
-		// System.out.println("FE: "+fe_);
 		if (fe_ != null) {
-			// System.out.println("FE: " +this.getClass());
 			fe_.setParent(parent);
 		}
 	}

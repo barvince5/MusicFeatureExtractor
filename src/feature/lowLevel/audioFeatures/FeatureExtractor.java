@@ -169,7 +169,6 @@ public abstract class FeatureExtractor {
 	 */
 	public void setParent(DataModel parent) {
 		this.parent = parent;
-		// System.out.println(this.getClass());
 	}
 
 	/**

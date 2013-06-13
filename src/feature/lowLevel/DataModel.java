@@ -2,8 +2,6 @@ package feature.lowLevel;
 
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -332,23 +330,4 @@ public class DataModel {
 
 		this.recordingFile= file;
 	}	
-	
-	// TODO for testing, to delete
-	public void foo() throws DataModelException {
-		try {
-		FileWriter fw= new FileWriter(new File("out.txt"));
-		for (String k: this.extractedFeatures.keySet()) {
-			fw.write(k+"\n");
-			String[] curr= this.extractedFeatures.get(k);
-			for (String c: curr)
-				fw.write(c+"\n");
-			fw.write("-----------------------\n");
-		}
-		fw.close();
-		} catch (IOException e) {
-			throw new DataModelException();
-		}
-		
-
-	}
 }
