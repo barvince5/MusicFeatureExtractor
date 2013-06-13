@@ -8,6 +8,7 @@
 package feature.lowLevel.extractionTools;
 
 import customException.FFTException;
+import customException.StatisticsException;
 
 
 /**
@@ -66,8 +67,8 @@ public class FFT
 	 */
 	public FFT( double[] real_input, double[] imaginary_input,
 	            boolean inverse_transform, boolean use_hanning_window )
-		throws FFTException
-	{
+		throws FFTException {
+		
 		// Throw an exception if non-matching input signals are provided
 		if (imaginary_input != null)
 			if (real_input.length != imaginary_input.length)
@@ -82,7 +83,12 @@ public class FFT
 		// power of 2. If not, then increase the size of the array using
 		// zero-padding. Also creates a zero filled imaginary component
 		// of the input if none was specified.
-		int valid_size = Statistics.ensureIsPowerOfN(real_input.length, 2);
+		int valid_size= 0;
+		try {
+			valid_size = Statistics.ensureIsPowerOfN(real_input.length, 2);
+		} catch (StatisticsException e) {
+			throw new FFTException("StatisticsException"+ e.getMessage(), e);
+		}
 		if (valid_size != real_input.length)
 		{
 			double[] temp = new double[valid_size];
@@ -108,8 +114,8 @@ public class FFT
 				imaginary_input = temp;
 			}
 		}
-		else if (imaginary_input == null)
-		{
+		else if (imaginary_input == null) {
+			
 			imaginary_input = new double[valid_size];
 			for (int i = 0; i < imaginary_input.length; i++)
 				imaginary_input[i] = 0.0;
@@ -124,10 +130,8 @@ public class FFT
 
 		// Apply a Hanning window to the real values if this option is
 		// selected
-		if (use_hanning_window)
-		{
-			for (int i = 0; i < real_output.length; i++)
-			{
+		if (use_hanning_window) {
+			for (int i = 0; i < real_output.length; i++) {
 				double hanning = 0.5 - 0.5 * Math.cos(2 * Math.PI * i / valid_size);
 				real_output[i] *= hanning;
 			}
@@ -141,10 +145,8 @@ public class FFT
 		// Reorder the input data into reverse binary order
 		double scale = 1.0;
 		int j = 0;
-		for (int i = 0; i < valid_size; ++i)
-		{
-			if (j >= i)
-			{
+		for (int i = 0; i < valid_size; ++i) {
+			if (j >= i) {
 				double tempr = real_output[j] * scale;
 				double tempi = imaginary_output[j] * scale;
 				real_output[j] = real_output[i] * scale;
@@ -153,8 +155,7 @@ public class FFT
 				imaginary_output[i] = tempi;
 			}
 			int m = valid_size / 2;
-			while (m >= 1 && j >= m)
-			{
+			while (m >= 1 && j >= m) {
 				j -= m;
 				m /= 2;
 			}
@@ -166,20 +167,18 @@ public class FFT
 		int step_size;
 		for( max_spectra_for_stage = 1, step_size = 2 * max_spectra_for_stage;
 		     max_spectra_for_stage < valid_size;
-			 max_spectra_for_stage = step_size, step_size = 2 * max_spectra_for_stage)
-		{
+			 max_spectra_for_stage = step_size, step_size = 2 * max_spectra_for_stage) {
 			double delta_angle = forward_transform * Math.PI / max_spectra_for_stage;
 
 			// Loop once for each individual spectra
-			for (int spectra_count = 0; spectra_count < max_spectra_for_stage; ++spectra_count)
-			{
+			for (int spectra_count = 0; spectra_count < max_spectra_for_stage; ++spectra_count)	{
 				double angle = spectra_count * delta_angle;
 				double real_correction = Math.cos(angle);
 				double imag_correction = Math.sin(angle);
 
 				int right = 0;
-				for (int left = spectra_count; left < valid_size; left += step_size)
-				{
+				for (int left = spectra_count; left < valid_size; left += step_size) {
+					
 					right = left + max_spectra_for_stage;
 					double temp_real = real_correction * real_output[right] -
 					                   imag_correction * imaginary_output[right];
@@ -216,11 +215,11 @@ public class FFT
 	 *
 	 * @return	The magnitude of each frequency bin.
 	 */
-	public double[] getMagnitudeSpectrum()
-	{
+	public double[] getMagnitudeSpectrum() {
+		
 		// Only calculate the magnitudes if they have not yet been calculated
-		if (output_magnitude == null)
-		{
+		if (output_magnitude == null) {
+			
 			int number_unfolded_bins = imaginary_output.length / 2;
 			output_magnitude = new double[number_unfolded_bins];
 			for(int i = 0; i < output_magnitude.length; i++)
@@ -244,11 +243,9 @@ public class FFT
 	 *
 	 * @return	The magnitude of each frequency bin.
 	 */
-	public double[] getPowerSpectrum()
-	{
+	public double[] getPowerSpectrum() {
 		// Only calculate the powers if they have not yet been calculated
-		if (output_power == null)
-		{
+		if (output_power == null) {
 			int number_unfolded_bins = imaginary_output.length / 2;
 			output_power = new double[number_unfolded_bins];
 			for(int i = 0; i < output_power.length; i++)
@@ -272,15 +269,12 @@ public class FFT
 	 *
 	 * @return	The phase angle for each frequency bin in degrees.
 	 */
-	public double[] getPhaseAngles()
-	{
+	public double[] getPhaseAngles() {
 		// Only calculate the angles if they have not yet been calculated
-		if (output_angle == null)
-		{
+		if (output_angle == null) {
 			int number_unfolded_bins = imaginary_output.length / 2;
 			output_angle = new double[number_unfolded_bins];
-			for(int i = 0; i < output_angle.length; i++)
-			{
+			for(int i = 0; i < output_angle.length; i++) {
 				if(imaginary_output[i] == 0.0 && real_output[i] == 0.0)
 					output_angle[i] = 0.0;
 				else
@@ -329,19 +323,18 @@ public class FFT
 	 *
 	 * @return	The real values.
 	 */
-	public double[] getRealValues()
-	{
+	public double[] getRealValues() {
+		
 		return real_output;
 	}
 
 
 	/**
-	 * Returns the real values as calculated by the FFT.
+	 * Returns the imaginary values as calculated by the FFT.
 	 *
-	 * @return	The real values.
+	 * @return	The imaginary values.
 	 */
-	public double[] getImaginaryValues()
-	{
+	public double[] getImaginaryValues() {
 		return imaginary_output;
 	}
 }

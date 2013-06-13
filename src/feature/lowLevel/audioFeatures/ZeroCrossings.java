@@ -75,9 +75,7 @@ public class ZeroCrossings
 	 * 								Throws an informative exception if
 	 *								the feature cannot be calculated.
 	 */
-	public double[] extractFeature( double[] samples,
-	                                double sampling_rate,
-	                                double[][] other_feature_values )
+	public double[] extractFeature(double[] samples, double sampling_rate, double[][] other_feature_values)
 		throws FeatureExtractorException {
 		
 		long count = 0;

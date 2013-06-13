@@ -195,6 +195,7 @@ public class Mean extends MetaFeatureFactory {
 	 * Create an identical copy of this feature. This permits FeatureExtractor
 	 * to use the prototype pattern to create new composite features using
 	 * metafeatures.
+	 * @throws FeatureExtractorException 
 	 */
 	public Object clone() {
 		if(fe_ == null){
@@ -203,11 +204,15 @@ public class Mean extends MetaFeatureFactory {
 		if (this.fe_ instanceof MetaFeatureFactory) {
 			Mean ret = new Mean();
 			ret.fe_ = (FeatureExtractor)fe_.clone();
+		
 			try {
 				ret.setWindow(runningAverage);
+			} catch (FeatureExtractorException e) {
+				return null;
 			} catch (Exception e) {
-				e.printStackTrace();
+				return null;
 			}
+		
 			String name = definition.name;
 			String description = definition.description;
 			String[] attributes = definition.attributes;
@@ -215,19 +220,26 @@ public class Mean extends MetaFeatureFactory {
 			ret.definition = new FeatureDefinition(name,description,true,dim,attributes);
 			ret.dependencies = this.dependencies.clone();
 			ret.offsets = this.offsets.clone();
-			try{
+			
+			try {
 				ret.setWindow(runningAverage);
-			}catch(Exception e){
-				e.printStackTrace();
+			} catch (FeatureExtractorException e) {
+				return null;
+			} catch (Exception e) {
+				return null;
 			}
+			
 			return ret;
 		} else {
 			Mean ret = (Mean)defineFeature((FeatureExtractor) fe_.clone());
 			try {
 				ret.setWindow(runningAverage);
+			} catch (FeatureExtractorException e) {
+				return null;
 			} catch (Exception e) {
-				e.printStackTrace();
+				return null;
 			}
+			
 			return ret;
 		}
 	}

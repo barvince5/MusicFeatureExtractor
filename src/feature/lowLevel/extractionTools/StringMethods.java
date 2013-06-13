@@ -27,8 +27,8 @@ public class StringMethods
 	 * @param	file_path The file path from which the file name is to be extracted.
 	 * @return	The name of the file referred to in the parameter.
 	 */
-	public static String convertFilePathToFileName(String file_path)
-	{
+	public static String convertFilePathToFileName(String file_path) {
+		
 		return file_path.substring(file_path.lastIndexOf(File.separator) + 1, file_path.length());
 	}
 
@@ -37,13 +37,14 @@ public class StringMethods
 	 * Returns the name of the directory that the given filename
 	 * is found in. Throws an exception if no valid directory
 	 * separator is present.
+	 * @throws StringMethodsException
 	 */
 	 public static String getDirectoryName(String file_path)
-		 throws Exception
-	{
+		 throws StringMethodsException {
+		 
 		int index_of_last_separator = file_path.lastIndexOf(File.separatorChar);
 		if (index_of_last_separator == -1)
-			throw new Exception(file_path + " does not contain a valid directory separator.");
+			throw new StringMethodsException(file_path + " does not contain a valid directory separator.");
 		return new String(file_path.substring(0, file_path.lastIndexOf(File.separator)) + File.separator);
 	}
 
@@ -58,12 +59,10 @@ public class StringMethods
 	 * @param	filename The name of the file from which the extension is to be removed.
 	 * @return	The name of the file with the extension removed.
 	 */
-	public static String removeExtension(String filename)
-	{
+	public static String removeExtension(String filename) {
 		if (filename.length() < 5)
 			return null;
-		if (filename.charAt(filename.length() - 4) != '.')
-		{
+		if (filename.charAt(filename.length() - 4) != '.') {
 			if (filename.charAt(filename.length() - 5) == '.')
 				return filename.substring(0, (filename.length() - 5));
 			else if (filename.charAt(filename.length() - 3) == '.')
@@ -83,12 +82,12 @@ public class StringMethods
 	 * @param	filename The name of the file from which the extension is to be returned.
 	 * @return	The extension of the file.
 	 */
-	public static String getExtension(String filename)
-	{
+	public static String getExtension(String filename) {
+		
 		if (filename.length() < 5)
 			return null;
-		if (filename.charAt(filename.length() - 4) != '.')
-		{
+		if (filename.charAt(filename.length() - 4) != '.') {
+			
 			if (filename.charAt(filename.length() - 5) == '.')
 				return filename.substring((filename.length() - 5), filename.length());
 			else if (filename.charAt(filename.length() - 3) == '.')
@@ -108,8 +107,8 @@ public class StringMethods
 	 * @param	number_characters	Number of characters in the new string.
 	 * @return	The shortened string.
 	 */
-	public static String getBeginningOfString(String string_to_shorten, int number_characters)
-	{
+	public static String getBeginningOfString(String string_to_shorten, int number_characters) {
+		
 		String copy = new String(string_to_shorten);
 		if (string_to_shorten.length() < number_characters)
 		{
@@ -133,8 +132,8 @@ public class StringMethods
 	 * @param	number_characters	Number of characters in the new string.
 	 * @return	The shortened string.
 	 */
-	public static String getBeginningOfStringWithHyphenFiller(String string_to_shorten, int number_characters)
-	{
+	public static String getBeginningOfStringWithHyphenFiller(String string_to_shorten, int number_characters) {
+		
 		String copy = new String(string_to_shorten);
 		if (string_to_shorten.length() < number_characters)
 		{
@@ -165,8 +164,8 @@ public class StringMethods
 	 * @param	number_to_round		The number that is to be formatted.
 	 * @param	significant_digits	The number of significant digits to use.
 	 */
-	public static String getDoubleInScientificNotation(double number_to_round, int significant_digits)
-	{
+	public static String getDoubleInScientificNotation(double number_to_round, int significant_digits) {
+		
 		if (Double.isNaN(number_to_round))
 			return new String("NaN");
 		if (Double.isInfinite(number_to_round))
@@ -198,8 +197,8 @@ public class StringMethods
 	 * @param	number_to_round	The number that is to be rounded.
 	 * @param	decimal_places	The maximum number of decimal places that will be displayed.
 	 */
-	public static String getRoundedDouble(double number_to_round, int decimal_places)
-	{
+	public static String getRoundedDouble(double number_to_round, int decimal_places) {
+		
 		if (number_to_round == Double.NaN)
 			return new String("NaN");
 		if (number_to_round == Double.NEGATIVE_INFINITY)
@@ -226,8 +225,8 @@ public class StringMethods
 	 * @throws StringMethodsException
 	 */
 	public static int getIndexOfString(String given_name, String[] possible_names)
-		throws StringMethodsException
-	{
+		throws StringMethodsException {
+		
 		for (int i = 0; i < possible_names.length; i++)
 			if (given_name.equals(possible_names[i]))
 				return i;
@@ -243,8 +242,8 @@ public class StringMethods
 	 * @return			A shortened copy of the given strings with duplicates
 	 *					removed.
 	 */
-	public static String[] removeDoubles(String[] strings)
-	{
+	public static String[] removeDoubles(String[] strings) {
+		
 		String[] editable_strings = new String[strings.length];
 		for (int i = 0; i < editable_strings.length; i++)
 			editable_strings[i] = strings[i];

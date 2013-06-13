@@ -7,6 +7,7 @@
 package feature.lowLevel.audioFeatures;
 
 import customException.FeatureExtractorException;
+import customException.StatisticsException;
 import feature.lowLevel.extractionTools.Statistics;
 
 
@@ -83,7 +84,12 @@ public class FFTBinFrequencies
 		// Find the size that an FFT window would be. This is the size
 		// of the given samples, or the next highes power of 2 if it
 		// is not a power of 2.
-		int fft_size = Statistics.ensureIsPowerOfN(samples.length, 2);
+		int fft_size= 0;
+		try {
+			fft_size = Statistics.ensureIsPowerOfN(samples.length, 2);
+		} catch (StatisticsException e) {
+			throw new FeatureExtractorException("StatisticsException "+e.getMessage(), e);
+		}
 
 		// Find the width in Hz of each bin
 		int number_bins = fft_size;

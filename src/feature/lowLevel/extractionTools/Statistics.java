@@ -24,8 +24,8 @@ public class Statistics
 	 * @param	data the which is to be averaged.
 	 * @return	the mean of the given data.
 	 */
-	public static double getAverage(double[] data)
-	{
+	public static double getAverage(double[] data) {
+		
 		if (data.length < 1)
 			return 0.0;
 		double sum = 0.0;
@@ -42,8 +42,8 @@ public class Statistics
 	 * @param	data the which is to be averaged.
 	 * @return	the mean of the given data.
 	 */
-	public static double getAverage(int[] data)
-	{
+	public static double getAverage(int[] data) {
+		
 		if (data.length < 1)
 			return 0.0;
 		double sum = 0.0;
@@ -60,14 +60,14 @@ public class Statistics
 	 * @param	data for which the standard deviation is to be found.
 	 * @return	the standard deviation of the given data.
 	 */
-	public static double getStandardDeviation(double[] data)
-	{
+	public static double getStandardDeviation(double[] data) {
+		
 		if (data.length  < 2)
 			return 0.0;
 		double average = getAverage(data);
 		double sum = 0.0;
-		for (int i = 0; i < data.length; i++)
-		{
+		for (int i = 0; i < data.length; i++) {
+			
 			double diff = data[i] - average;
 			sum = sum + diff * diff;
 		}
@@ -82,14 +82,13 @@ public class Statistics
 	 * @param	data for which the standard deviation is to be found.
 	 * @return	the standard deviation of the given data.
 	 */
-	public static double getStandardDeviation(int[] data)
-	{
+	public static double getStandardDeviation(int[] data) {
+		
 		if (data.length  < 2)
 			return 0.0;
 		double average = getAverage(data);
 		double sum = 0.0;
-		for (int i = 0; i < data.length; i++)
-		{
+		for (int i = 0; i < data.length; i++) {
 			double diff = ((double) data[i]) - average;
 			sum = sum + diff * diff;
 		}
@@ -103,24 +102,20 @@ public class Statistics
 	 * if x is either a factor of a multiple of y (and vice versa, of
 	 * course), and false otherwise.
 	 */
-	public static boolean isFactorOrMultiple(int x, int y, int[] z)
-	{
+	public static boolean isFactorOrMultiple(int x, int y, int[] z) {
+		
 		boolean is_factor_or_multiple = false;
 
-		if (y > x)
-		{
+		if (y > x) {
 			for (int i = 0; i < z.length; i++)
-				if ((x * z[i]) == y)
-				{
+				if ((x * z[i]) == y) {
 					is_factor_or_multiple = true;
 					i = z.length + 1; // exit loop
 				}
 		}
-		else
-		{
+		else {
 			for (int i = 0; i < z.length; i++)
-				if ((y * z[i]) == x)
-				{
+				if ((y * z[i]) == x) {
 					is_factor_or_multiple = true;
 					i = z.length + 1; // exit loop
 				}
@@ -134,8 +129,8 @@ public class Statistics
 	 * Returns the index of the entry of an array of doubles with the largest value.
 	 * The first occurence is returned in the case of a tie.
 	 */
-	public static int getIndexOfLargest(double[] values)
-	{
+	public static int getIndexOfLargest(double[] values) {
+		
 		int max_index = 0;
 		for (int i = 0; i < values.length; i++)
 			if (values[i] > values[max_index])
@@ -148,8 +143,8 @@ public class Statistics
 	 * Returns the index of the entry of an array of doubles with the smallest value.
 	 * The first occurence is returned in the case of a tie.
 	 */
-	public static int getIndexOfSmallest(double[] values)
-	{
+	public static int getIndexOfSmallest(double[] values) {
+		
 		int min_index = 0;
 		for (int i = 0; i < values.length; i++)
 			if (values[i] < values[min_index])
@@ -162,8 +157,8 @@ public class Statistics
 	 * Returns the index of the entry of an array of floats with the largest value.
 	 * The first occurence is returned in the case of a tie.
 	 */
-	public static int getIndexOfLargest(float[] values)
-	{
+	public static int getIndexOfLargest(float[] values)	{
+		
 		int max_index = 0;
 		for (int i = 0; i < values.length; i++)
 			if (values[i] > values[max_index])
@@ -176,8 +171,8 @@ public class Statistics
 	 * Returns the index of the entry of an array of itegers with the largest value.
 	 * The first occurence is returned in the case of a tie.
 	 */
-	public static int getIndexOfLargest(int[] values)
-	{
+	public static int getIndexOfLargest(int[] values) {
+		
 		int max_index = 0;
 		for (int i = 0; i < values.length; i++)
 			if (values[i] > values[max_index])
@@ -192,8 +187,8 @@ public class Statistics
 	 * @throws StatisticsException
 	 */
 	public static double calculateEuclideanDistance(double[] x, double[] y)
-		throws StatisticsException
-	{
+		throws StatisticsException {
+		
 		if (x.length != y.length)
 			throw new StatisticsException("The two given arrays have different sizes.");
 
@@ -207,8 +202,7 @@ public class Statistics
 	/**
 	 * Returns a random integer from 0 to max - 1, based on the uniform distribution.
 	 */
-	public static int generateRandomNumber(int max)
-	{
+	public static int generateRandomNumber(int max) {
 		int random_number = (int) ( ((double) Integer.MAX_VALUE) * Math.random() );
 		return (random_number % max);
 	}
@@ -219,8 +213,8 @@ public class Statistics
 	 * between 0 and <i>number_entries</i> - 1, and no numbers are repeated.
 	 * Ordering of numbers is random.
 	 */
-	public static int[] getRandomOrdering(int number_entries)
-	{
+	public static int[] getRandomOrdering(int number_entries) {
+		
 		// Generate an array of random numbers
 		double[] random_values = new double[number_entries];
 		for (int i = 0; i < random_values.length; i++)
@@ -228,8 +222,7 @@ public class Statistics
 
 		// Fill in the array to return and return it
 		int[] scrambled_values = new int[number_entries];
-		for (int i = 0; i < scrambled_values.length; i++)
-		{
+		for (int i = 0; i < scrambled_values.length; i++) {
 			int largest_index = getIndexOfLargest(random_values);
 			scrambled_values[i] = largest_index;
 			random_values[largest_index] = -1.0; // to avoid double counting
@@ -241,8 +234,8 @@ public class Statistics
 	/**
 	 * Returns the sum of the contents of all of the entries of the given array.
 	 */
-	public static double getArraySum(double[] to_sum)
-	{
+	public static double getArraySum(double[] to_sum) {
+		
 		double sum = 0.0;
 		for (int i = 0; i < to_sum.length; i++)
 			sum += to_sum[i];
@@ -253,8 +246,8 @@ public class Statistics
 	/**
 	 * Return a normalized copy of the the given array. The original array is not altered.
 	 */
-	public static double[] normalize(double[] to_normalize)
-	{
+	public static double[] normalize(double[] to_normalize) {
+		
 		// Copy the to_normalize array
 		double[] normalized = new double[to_normalize.length];
 		for (int i = 0; i < normalized.length; i++)
@@ -275,12 +268,10 @@ public class Statistics
 	 * row (i.e. the sum of each row (first indice) is one after normalization).
 	 * Each row is independant. The original array is not altered.
 	 */
-	public static double[][] normalize(double[][] to_normalize)
-	{
+	public static double[][] normalize(double[][] to_normalize) {
 		// Copy the to_normalize array
 		double[][] normalized = new double[to_normalize.length][];
-		for (int i = 0; i < normalized.length; i++)
-		{
+		for (int i = 0; i < normalized.length; i++) {
 			normalized[i] = new double[to_normalize[i].length];
 			for (int j = 0; j < normalized[i].length; j++)
 				normalized[i][j] = to_normalize[i][j];
@@ -288,8 +279,7 @@ public class Statistics
 
 		// Perform the normalization
 		double[] totals = new double[normalized.length];
-		for (int i = 0; i < normalized.length; i++)
-		{
+		for (int i = 0; i < normalized.length; i++) {
 			totals[i] = 0.0;
 			for (int j = 0; j < normalized[i].length; j++)
 				totals[i] += normalized[i][j];
@@ -310,9 +300,13 @@ public class Statistics
 	 *
 	 * @param	a	The base.
 	 * @param	b	The exponent.
+	 * @throws StatisticsException 
 	 */
-	public static int pow(int a, int b)
-	{
+	public static int pow(int a, int b) 
+			throws StatisticsException {
+		
+		if (b <= 0) 
+			throw new StatisticsException("The exponent must be greater than zero!");
 		int result = a;
 		for (int i = 1; i < b; i++)
 			result *= a;
@@ -327,9 +321,12 @@ public class Statistics
 	 *
 	 * @param	x	The value to find the log of.
 	 * @param	n	The base of the logarithm.
+	 * @throws StatisticsException 
 	 */
-	public static double logBaseN(double x, double n)
-	{
+	public static double logBaseN(double x, double n) throws StatisticsException {
+		
+		if (x < 0 || n < 0) 
+			throw new StatisticsException("Both the value and logarithm base must be greater than zero!");
 		return (Math.log10(x) / Math.log10(n));
 	}
 
@@ -344,8 +341,9 @@ public class Statistics
 	 *
 	 * @param	x	The value to ensure is a power of n.
 	 * @param	n	The power to base x's validation on.
+	 * @throws StatisticsException 
 	 */
-	public static int ensureIsPowerOfN(int x, int n)
+	public static int ensureIsPowerOfN(int x, int n) throws StatisticsException
 	{
 		double log_value = logBaseN((double) x, (double) n);
 		int log_int = (int) log_value;

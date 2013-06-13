@@ -136,7 +136,7 @@ public class Derivative extends MetaFeatureFactory {
 public Object clone() {
 		if(super.fe_ == null){
 			return new Derivative();
-		}else if(super.fe_ instanceof MetaFeatureFactory){
+		} else if(super.fe_ instanceof MetaFeatureFactory){
 			Derivative ret = new Derivative();
 			ret.fe_ = (FeatureExtractor)super.fe_.clone();
 			String name = "Derivative of " + ret.fe_.getFeatureDefinition().name;
@@ -152,7 +152,7 @@ public Object clone() {
 					ret.fe_.getFeatureDefinition().name };
 			ret.offsets = new int[] { 0, -1 };
 			return ret;
-		}else{
+		} else {
 			return (new Derivative()).defineFeature((FeatureExtractor)super.fe_.clone());
 		}
 	}
@@ -175,5 +175,4 @@ public Object clone() {
 		}
 		return super.definition;
 	}
-
 }

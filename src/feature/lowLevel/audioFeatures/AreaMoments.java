@@ -185,6 +185,9 @@ public class AreaMoments extends FeatureExtractor {
 			} catch (FeatureExtractorException e) {
 				throw new FeatureExtractorException("FeatureExtractorException " +
 						"Length of Area Method of Moments must be an integer", e);
+			} catch (Exception e) {
+				throw new FeatureExtractorException("Exception " +
+						"Length of Area Method of Moments must be an integer", e);
 			}
 		}
 	}

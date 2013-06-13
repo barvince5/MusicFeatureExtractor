@@ -104,8 +104,8 @@ public class AudioSamples
 	 *									cannot be extracted from the file.
 	 */
 	public AudioSamples(File audio_file, String unique_identifier, boolean normalize_if_clipped)
-		throws AudioSamplesException
-	{
+		throws AudioSamplesException {
+		
 		if ( !audio_file.exists() )
 			throw new AudioSamplesException("File " + audio_file.getName() + " does not exist.");
 		if ( audio_file.isDirectory() )
@@ -113,15 +113,14 @@ public class AudioSamples
 
 		AudioInputStream audio_input_stream = null;
 
-		try
-		{
+		try {
 			audio_input_stream = AudioSystem.getAudioInputStream(audio_file);
-		}
-		catch (UnsupportedAudioFileException e) {
+		} catch (UnsupportedAudioFileException e) {
 			throw new AudioSamplesException("UnsupportedAudioFileException "+e.getMessage(), e);
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			throw new AudioSamplesException("IOException "+e.getMessage(), e);
+		} catch (Exception e) {
+			throw new AudioSamplesException("Exception "+e.getMessage(), e);
 		}
 
 		AudioInputStream converted_audio = AudioMethods.getConvertedAudioStream(audio_input_stream);
@@ -130,6 +129,8 @@ public class AudioSamples
 			channel_samples = AudioMethods.extractSampleValues(converted_audio);
 		} catch (AudioMethodsException e) {
 			throw new AudioSamplesException("AudioMethodsException "+e.getMessage(), e);
+		} catch (Exception e) {
+			throw new AudioSamplesException("Exception "+e.getMessage(), e);
 		}
 
 		samples = DSPMethods.getSamplesMixedDownIntoOneChannel(channel_samples);
@@ -148,6 +149,8 @@ public class AudioSamples
 			converted_audio.close();
 		} catch (IOException e) {
 			throw new AudioSamplesException("IOException "+e.getMessage(), e);
+		} catch (Exception e) {
+			throw new AudioSamplesException("Exception "+e.getMessage(), e);
 		}
 	}
 
@@ -177,8 +180,8 @@ public class AudioSamples
 	 *									cannot be extracted from the AudioInputStream.
 	 */
 	public AudioSamples(AudioInputStream audio_input_stream, String unique_identifier, boolean normalize_if_clipped)
-		throws AudioSamplesException
-	{
+		throws AudioSamplesException {
+		
 		if (audio_input_stream == null)
 			throw new AudioSamplesException("Given AudioInputStream is empty.");
 
@@ -190,6 +193,8 @@ public class AudioSamples
 			channel_samples = AudioMethods.extractSampleValues(converted_audio);
 		} catch (AudioMethodsException e) {
 			throw new AudioSamplesException("AudioMethodsException "+e.getMessage(), e);
+		} catch (Exception e) {
+			throw new AudioSamplesException("Exception "+e.getMessage(), e);
 		}
 
 		samples = DSPMethods.getSamplesMixedDownIntoOneChannel(channel_samples);
@@ -206,6 +211,8 @@ public class AudioSamples
 			converted_audio.close();
 		} catch (IOException e) {
 			throw new AudioSamplesException("IOException "+e.getMessage(), e);
+		} catch (Exception e) {
+			throw new AudioSamplesException("Exception "+e.getMessage(), e);
 		}
 	}
 
@@ -239,8 +246,8 @@ public class AudioSamples
 	 */
 	public AudioSamples(double[][] audio_samples, AudioFormat audio_format, String unique_identifier,
 		                 boolean normalize_if_clipped)
-		throws AudioSamplesException
-	{
+		throws AudioSamplesException {
+		
 		if (audio_samples == null)
 			throw new AudioSamplesException("Given audio samples array is empty.");
 		for (int chan = 0; chan < audio_samples.length; chan++)
@@ -342,31 +349,30 @@ public class AudioSamples
 	 *						be made.
 	 */
 	public AudioSamples getCopyOfAudioSamples()
-		throws AudioSamplesException
-	{
+		throws AudioSamplesException {
+		
 		String new_unique_ID = null;
 
 		double[][] new_channel_samples = null;
-		if (channel_samples != null)
-		{
+		if (channel_samples != null) {
+			
 			new_channel_samples = new double[channel_samples.length][];
-			for (int i = 0; i < new_channel_samples.length; i++)
-			{
+			for (int i = 0; i < new_channel_samples.length; i++) {
+				
 				new_channel_samples[i] = new double[channel_samples[i].length];
 				for (int j = 0; j < new_channel_samples[i].length; j++)
 					new_channel_samples[i][j] = channel_samples[i][j];
 			}
 		}
-		else
-		{
+		else {
+			
 			new_channel_samples = new double[1][samples.length];
 			for (int i = 0; i < samples.length; i++)
 				new_channel_samples[0][i] = samples[i];
 		}
 
 		AudioFormat new_audio_format = null;
-		if (audio_format != null)
-		{
+		if (audio_format != null) {
 			new_audio_format = new AudioFormat( audio_format.getEncoding(),
 												audio_format.getSampleRate(),
 				                                audio_format.getSampleSizeInBits(),
@@ -387,8 +393,8 @@ public class AudioSamples
 	 *
 	 * @return A formatted description of the recording.
 	 */
-	public String getRecordingInfo()
-	{
+	public String getRecordingInfo() {
+		
 		String return_string = AudioMethods.getAudioFormatData(audio_format);
 
 		String number_samples = getNumberSamplesPerChannel() + " samples\n";
@@ -407,8 +413,8 @@ public class AudioSamples
 	 *
 	 * @return	The identifier of this object.
 	 */
-	public String getUniqueIdentifier()
-	{
+	public String getUniqueIdentifier() {
+		
 		return unique_ID;
 	}
 
@@ -418,8 +424,8 @@ public class AudioSamples
 	 *
 	 * @return	The AudioFormat associated with the stored samples.
 	 */
-	public AudioFormat getAudioFormat()
-	{
+	public AudioFormat getAudioFormat() {
+		
 		return audio_format;
 	}
 
@@ -430,8 +436,8 @@ public class AudioSamples
 	 * @return	The sampling rate associated with the stored samples in the
 	 *			form of a float.
 	 */
-	public float getSamplingRate()
-	{
+	public float getSamplingRate() {
+		
 		return audio_format.getSampleRate();
 	}
 
@@ -442,8 +448,8 @@ public class AudioSamples
 	 * @return	The sampling rate associated with the stored samples in the
 	 *			form of a double.
 	 */
-	public double getSamplingRateAsDouble()
-	{
+	public double getSamplingRateAsDouble() {
+		
 		return (new Float(audio_format.getSampleRate())).doubleValue();
 	}
 
@@ -453,8 +459,8 @@ public class AudioSamples
 	 *
 	 * @return	The total number of samples per channel in the stored audio.
 	 */
-	public int getNumberSamplesPerChannel()
-	{
+	public int getNumberSamplesPerChannel() {
+		
 		return samples.length;
 	}
 
@@ -464,8 +470,8 @@ public class AudioSamples
 	 *
 	 * @return	The length of the stored audio in seconds.
 	 */
-	public double getDuration()
-	{
+	public double getDuration() {
+		
 		return convertSampleIndexToTime(samples.length - 1);
 	}
 
@@ -475,8 +481,8 @@ public class AudioSamples
 	 *
 	 * @return	The number of channels of stored audio.
 	 */
-	public int getNumberChannels()
-	{
+	public int getNumberChannels() {
+		
 		if (channel_samples == null)
 			return 1;
 		else
@@ -492,8 +498,8 @@ public class AudioSamples
 	 * @return	The audio samples stored in this object. These have a minimum
 	 *          value of -1 and a maximum value of +1.
 	 */
-	public double[] getSamplesMixedDown()
-	{
+	public double[] getSamplesMixedDown() {
+		
 		return samples;
 	}
 
@@ -521,8 +527,8 @@ public class AudioSamples
 	 *                          ranges.
 	 */
 	public double[] getSamplesMixedDown(int start_sample, int end_sample)
-		throws AudioSamplesException
-	{
+		throws AudioSamplesException {
+		
 		if (start_sample < 0)
 			throw new AudioSamplesException( "Requested audio starting at sample " + start_sample +
 			                     "\nStart sample indice must be 0 or greater." );
@@ -540,6 +546,7 @@ public class AudioSamples
 		double[] sample_segment = new double[number_samples];
 		for (int samp = start_sample; samp <= end_sample; samp++)
 			sample_segment[samp - start_sample] = samples[samp];
+		
 		return sample_segment;
 	}
 
@@ -566,8 +573,8 @@ public class AudioSamples
 	 *							times are outside acceptable ranges.
 	 */
 	public double[] getSamplesMixedDown(double start_time, double end_time)
-		throws AudioSamplesException
-	{
+		throws AudioSamplesException {
+		
 		int start_sample = convertTimeToSampleIndex(start_time);
 		int end_sample = convertTimeToSampleIndex(end_time);
 		return getSamplesMixedDown(start_sample, end_sample);
@@ -597,8 +604,8 @@ public class AudioSamples
 	 *							is specified.
 	 */
 	public double[][] getSampleWindowsMixedDown(int window_size)
-		throws AudioSamplesException
-	{
+		throws AudioSamplesException {
+		
 		if (window_size < 1)
 			throw new AudioSamplesException( "Window size of " + window_size + " specified.\n" +
 			                     "This value must be above 0." );
@@ -608,17 +615,13 @@ public class AudioSamples
 			number_windows++;
 
 		double[][] windowed_samples = new double[number_windows][window_size];
-		for (int win = 0; win < number_windows; win++)
-		{
-			if (win != number_windows - 1)
-			{
+		for (int win = 0; win < number_windows; win++) {
+			if (win != number_windows - 1)	{
 				for (int samp = 0; samp < window_size; samp++)
 					windowed_samples[win][samp] = samples[win * window_size + samp];
 			}
-			else
-			{
-				for (int samp = 0; samp < window_size; samp++)
-				{
+			else {
+				for (int samp = 0; samp < window_size; samp++) {
 					if (win * window_size + samp < samples.length)
 						windowed_samples[win][samp] = samples[win * window_size + samp];
 					else
@@ -654,8 +657,8 @@ public class AudioSamples
 	 *							is specified.
 	 */
 	public double[][] getSampleWindowsMixedDown(double window_duration)
-		throws AudioSamplesException
-	{
+		throws AudioSamplesException {
+		
 		int window_size = convertTimeToSampleIndex(window_duration);
 		return getSampleWindowsMixedDown(window_size);
 	}
@@ -674,8 +677,8 @@ public class AudioSamples
 	 *							during conversion.
 	 */
 	public AudioInputStream getAudioInputStreamMixedDown()
-		throws AudioSamplesException
-	{
+		throws AudioSamplesException {
+		
 		// Specify that only one channel is used
 		AudioFormat mixed_down_audio_format = new AudioFormat( audio_format.getSampleRate(),
 								                               audio_format.getSampleSizeInBits(),
@@ -693,6 +696,8 @@ public class AudioSamples
 			audio_input_stream = AudioMethods.convertToAudioInputStream(samples_to_convert, mixed_down_audio_format);
 		} catch (AudioMethodsException e) {
 			throw new AudioSamplesException("AudioMethodsException "+e.getMessage(), e);
+		} catch (Exception e) {
+			throw new AudioSamplesException("Exception "+e.getMessage(), e);
 		}
 
 		// Return the results
@@ -719,8 +724,8 @@ public class AudioSamples
 	 *                          ranges or if error occurs during conversion.
 	 */
 	public AudioInputStream getAudioInputStreamMixedDown(int start_sample, int end_sample)
-		throws AudioSamplesException
-	{
+		throws AudioSamplesException {
+		
 		// Specify that only one channel is used
 		AudioFormat mixed_down_audio_format = new AudioFormat( audio_format.getSampleRate(),
 								                               audio_format.getSampleSizeInBits(),
@@ -741,6 +746,8 @@ public class AudioSamples
 			audio_input_stream = AudioMethods.convertToAudioInputStream(samples_to_convert, mixed_down_audio_format);
 		} catch (AudioMethodsException e) {
 			throw new AudioSamplesException("AudioMethodsException "+e.getMessage(), e);
+		} catch (Exception e) {
+			throw new AudioSamplesException("Exception "+e.getMessage(), e);
 		}
 
 		// Return the results
@@ -768,8 +775,8 @@ public class AudioSamples
 	 *                          ranges or if error occurs during conversion.
 	 */
 	public AudioInputStream getAudioInputStreamMixedDown(double start_time, double end_time)
-		throws AudioSamplesException
-	{
+		throws AudioSamplesException {
+		
 		// Specify that only one channel is used
 		AudioFormat mixed_down_audio_format = new AudioFormat( audio_format.getSampleRate(),
 								                               audio_format.getSampleSizeInBits(),
@@ -790,6 +797,8 @@ public class AudioSamples
 			audio_input_stream = AudioMethods.convertToAudioInputStream(samples_to_convert, mixed_down_audio_format);
 		} catch (AudioMethodsException e) {
 			throw new AudioSamplesException("AudioMethodsException "+e.getMessage(), e);
+		} catch (Exception e) {
+			throw new AudioSamplesException("Exception "+e.getMessage(), e);
 		}
 
 		// Return the resuls
@@ -805,10 +814,9 @@ public class AudioSamples
 	 *          to the channel and the second indice corresponds to the sample
 	 *          number.
 	 */
-	public double[][] getSamplesChannelSegregated()
-	{
-		if (channel_samples == null)
-		{
+	public double[][] getSamplesChannelSegregated() {
+		
+		if (channel_samples == null) {
 			double[][] formatted_samples = new double[1][];
 			formatted_samples[0] = samples;
 			return formatted_samples;
@@ -855,8 +863,8 @@ public class AudioSamples
 		int number_samples = end_sample - start_sample + 1;
 
 		// Case where only one channel of audio is present
-		if (channel_samples == null)
-		{
+		if (channel_samples == null) {
+			
 			double[][] sample_segment = new double[1][number_samples];
 			for (int samp = start_sample; samp <= end_sample; samp++)
 				sample_segment[0][samp - start_sample] = samples[samp];
@@ -864,8 +872,8 @@ public class AudioSamples
 		}
 
 		// Case where multiple channels of audio are present
-		else
-		{
+		else {
+			
 			double[][] sample_segment = new double[channel_samples.length][number_samples];
 			for (int chan = 0; chan < channel_samples.length; chan++)
 				for (int samp = start_sample; samp <= end_sample; samp++)
@@ -923,10 +931,9 @@ public class AudioSamples
 	 *							is specified.
 	 */
 	public double[][][] getSampleWindowsChannelSegregated(int window_size)
-		throws AudioSamplesException
-	{
-		if (channel_samples == null)
-		{
+		throws AudioSamplesException {
+		
+		if (channel_samples == null) {
 			double[][][] windowed_samples = new double[1][][];
 			windowed_samples[0] = getSampleWindowsMixedDown(window_size);
 			return windowed_samples;
@@ -942,17 +949,13 @@ public class AudioSamples
 
 		double[][][] windowed_samples = new double[channel_samples.length][number_windows][window_size];
 		for (int chan = 0; chan < channel_samples.length; chan++)
-			for (int win = 0; win < number_windows; win++)
-			{
-				if (win != number_windows - 1)
-				{
+			for (int win = 0; win < number_windows; win++) {
+				if (win != number_windows - 1)	{
 					for (int samp = 0; samp < window_size; samp++)
 						windowed_samples[chan][win][samp] = channel_samples[chan][win * window_size + samp];
 				}
-				else
-				{
-					for (int samp = 0; samp < window_size; samp++)
-					{
+				else {
+					for (int samp = 0; samp < window_size; samp++) {
 						if (win * window_size + samp < samples.length)
 							windowed_samples[chan][win][samp] = channel_samples[chan][win * window_size + samp];
 						else
@@ -1002,8 +1005,8 @@ public class AudioSamples
 	 *							during conversion.
 	 */
 	public AudioInputStream getAudioInputStreamChannelSegregated()
-		throws AudioSamplesException
-	{
+		throws AudioSamplesException {
+		
 		// Extract samples from samples field if only one channel present
 		double[][] samples_to_convert = getSamplesChannelSegregated();
 
@@ -1013,6 +1016,8 @@ public class AudioSamples
 			audio_input_stream = AudioMethods.convertToAudioInputStream(samples_to_convert, audio_format);
 		} catch (AudioMethodsException e) {
 			throw new AudioSamplesException("AudioMethodsException "+e.getMessage(), e);
+		} catch (Exception e) {
+			throw new AudioSamplesException("Exception "+e.getMessage(), e);
 		}
 
 		// Return the results
@@ -1048,6 +1053,8 @@ public class AudioSamples
 			audio_input_stream = AudioMethods.convertToAudioInputStream(samples_to_convert, audio_format);
 		} catch (AudioMethodsException e) {
 			throw new AudioSamplesException("AudioMethodsException "+e.getMessage(), e);
+		} catch (Exception e) {
+			throw new AudioSamplesException("Exception "+e.getMessage(), e);
 		}
 
 		// Return the results
@@ -1084,6 +1091,8 @@ public class AudioSamples
 			audio_input_stream = AudioMethods.convertToAudioInputStream(samples_to_convert, audio_format);
 		} catch (AudioMethodsException e) {
 			throw new AudioSamplesException("AudioMethodsException "+e.getMessage(), e);
+		} catch (Exception e) {
+			throw new AudioSamplesException("Exception "+e.getMessage(), e);
 		}
 
 		// Return the resuls
@@ -1148,6 +1157,8 @@ public class AudioSamples
 			AudioSystem.write(audio_input_stream, save_file_type, save_file);
 		} catch (IOException e) {
 			throw new AudioSamplesException("IOException "+e.getMessage(), e);
+		} catch (Exception e) {
+			throw new AudioSamplesException("Exception "+e.getMessage(), e);
 		}
 	}
 
@@ -1175,15 +1186,13 @@ public class AudioSamples
 	public double getMaximumAmplitude()
 	{
 		double max_amplitude = 0.0;
-		if (channel_samples != null)
-		{
+		if (channel_samples != null) {
 			for (int chan = 0; chan < channel_samples.length; chan++)
 				for (int samp = 0; samp < channel_samples[chan].length; samp++)
 					if (Math.abs(channel_samples[chan][samp]) > max_amplitude)
 						max_amplitude = Math.abs(channel_samples[chan][samp]);
 		}
-		else
-		{
+		else {
 			for (int samp = 0; samp < samples.length; samp++)
 				if (Math.abs(samples[samp]) > max_amplitude)
 					max_amplitude = Math.abs(samples[samp]);
@@ -1204,8 +1213,7 @@ public class AudioSamples
 	{
 		double max_difference = -1.0;
 		for (int samp = 0; samp < samples.length; samp++)
-			if (Math.abs(samples[samp]) > 1.0)
-			{
+			if (Math.abs(samples[samp]) > 1.0) {
 				double difference = Math.abs(samples[samp]) - 1.0;
 				if (difference > max_difference)
 					max_difference = difference;
@@ -1223,21 +1231,18 @@ public class AudioSamples
 	 * @return	The maximum deviation from the permissible sample values. -1 if
 	 *			all sample values fall within the allowable range.
 	 */
-	public double checkChannelSegregatedSamplesForClipping()
-	{
+	public double checkChannelSegregatedSamplesForClipping() {
+		
 		double max_difference = -1.0;
-		if (channel_samples != null)
-		{
+		if (channel_samples != null) {
 			for (int chan = 0; chan < channel_samples.length; chan++)
 				for (int samp = 0; samp < channel_samples[chan].length; samp++)
-					if (Math.abs(channel_samples[chan][samp]) > 1.0)
-					{
+					if (Math.abs(channel_samples[chan][samp]) > 1.0) {
 						double difference = Math.abs(channel_samples[chan][samp]) - 1.0;
 						if (difference > max_difference)
 							max_difference = difference;
 					}
-		}
-		else
+		} else
 			max_difference = checkMixedDownSamplesForClipping();
 		return max_difference;
 	}
@@ -1247,8 +1252,8 @@ public class AudioSamples
 	 * Normalizes the samples mixed down into one channel so that the absolute value
 	 * of the highest sample amplitude is 1. Does nothing if all samples are 0.
 	 */
-	public void normalizeMixedDownSamples()
-	{
+	public void normalizeMixedDownSamples() {
+		
 		samples = DSPMethods.normalizeSamples(samples);
 	}
 
@@ -1257,8 +1262,8 @@ public class AudioSamples
 	 * Normalizes the channel segregated samples so that the absolute value
 	 * of the highest sample amplitude is 1. Does nothing if all samples are 0.
 	 */
-	public void normalizeChannelSegretatedSamples()
-	{
+	public void normalizeChannelSegretatedSamples() {
+		
 		if (channel_samples != null)
 			channel_samples = DSPMethods.normalizeSamples(channel_samples);
 		else
@@ -1271,8 +1276,8 @@ public class AudioSamples
 	 * down into one channel so that the absolute value of the highest sample
 	 * amplitude is 1. Does nothing if all samples are 0.
 	 */
-	public void normalize()
-	{
+	public void normalize() {
+		
 		normalizeChannelSegretatedSamples();
 		if (channel_samples != null)
 			normalizeMixedDownSamples();
@@ -1312,21 +1317,16 @@ public class AudioSamples
 		}
 
 		// Update the samples and channel_samples fields
-		if (channel_samples == null)
-		{
-			if (new_samples.length != 1)
-			{
+		if (channel_samples == null) {
+			if (new_samples.length != 1) {
 				throw new AudioSamplesException( "Given samples have " + new_samples.length + " channels.\n" +
 				                     "Only one channel should be present." );
 			}
 			samples = new double[number_samples];
 			for (int samp = 0; samp < samples.length; samp++)
 				samples[samp] = new_samples[0][samp];
-		}
-		else
-		{
-			if (new_samples.length != channel_samples.length)
-			{
+		} else {
+			if (new_samples.length != channel_samples.length) {
 				throw new AudioSamplesException( "Given samples have " + new_samples.length + " channels.\n" +
 				                     channel_samples.length + " channel should be present." );
 			}
@@ -1355,8 +1355,8 @@ public class AudioSamples
 	 * @return					The default AudioFormat with the specified sampling
 	 *							rate.
 	 */
-	private AudioFormat getDefaultAudioFormat(float sampling_rate)
-	{
+	private AudioFormat getDefaultAudioFormat(float sampling_rate) {
+		
 		int bit_depth = 16;
 		boolean signed = true;
 		boolean big_endian = true;
@@ -1382,8 +1382,8 @@ public class AudioSamples
 	 *							given sample index is outside the duration
 	 *							of the audio.
 	 */
-	private double convertSampleIndexToTime(int sample_index)
-	{
+	private double convertSampleIndexToTime(int sample_index) {
+		
 		if (sample_index < 0)
 			sample_index = 0;
 		else if (sample_index >= samples.length)
@@ -1405,8 +1405,8 @@ public class AudioSamples
 	 *					nearest sample if the given time is outside the duration
 	 *                  of the audio.
 	 */
-	private int convertTimeToSampleIndex(double time)
-	{
+	private int convertTimeToSampleIndex(double time) {
+		
 		int sample_index = (int) (time * audio_format.getSampleRate());
 		if (sample_index < 0)
 			return 0;

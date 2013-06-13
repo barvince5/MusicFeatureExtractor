@@ -83,17 +83,14 @@ public class SpectralFlux
 	 * 								Throws an informative exception if
 	 *								the feature cannot be calculated.
 	 */
-	public double[] extractFeature( double[] samples,
-	                                double sampling_rate,
-	                                double[][] other_feature_values )
-		throws FeatureExtractorException
-	{
+	public double[] extractFeature(double[] samples, double sampling_rate, double[][] other_feature_values)
+		throws FeatureExtractorException {
+		
 		double[] this_magnitude_spectrum = other_feature_values[0];
 		double[] previous_magnitude_spectrum = other_feature_values[1];
 
 		double sum = 0.0;
-		for (int bin = 0; bin < this_magnitude_spectrum.length; bin++)
-		{
+		for (int bin = 0; bin < this_magnitude_spectrum.length; bin++) 	{
 			double difference = this_magnitude_spectrum[bin]
 			                    - previous_magnitude_spectrum[bin];
 			double differences_squared = difference * difference;

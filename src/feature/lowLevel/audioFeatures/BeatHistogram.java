@@ -165,8 +165,11 @@ public class BeatHistogram extends FeatureExtractor {
 			try {
 				int type = Integer.parseInt(value);
 				setWindowLength(type);
+			} catch (NumberFormatException e) {
+				throw new FeatureExtractorException("NumberFormatException " +
+						"Length of Beat Histogram must be an integer", e);
 			} catch (Exception e) {
-				throw new FeatureExtractorException("FeatureExtractorException " +
+				throw new FeatureExtractorException("Exception " +
 						"Length of Beat Histogram must be an integer", e);
 			}
 		}

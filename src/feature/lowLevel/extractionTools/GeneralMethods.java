@@ -26,8 +26,8 @@ public class GeneralMethods
 	 * @return			A shortened array with all null entries removed,
 	 *					or null.
 	 */
-	public static Object[] removeNullEntriesFromArray(Object[] array)
-	{
+	public static Object[] removeNullEntriesFromArray(Object[] array) {
+		
 		if (array == null)
 			return null;
 
@@ -43,8 +43,7 @@ public class GeneralMethods
 		Object[] new_array = new Object[number_valid_entries];
 		int current_index = 0;
 		for (int i = 0; i < array.length; i++)
-			if (array[i] != null)
-			{
+			if (array[i] != null) {
 				new_array[current_index] = array[i];
 				current_index++;
 			}
@@ -60,8 +59,8 @@ public class GeneralMethods
 	 * @param	given_array	The array to copy
 	 * @return				A copy of the given array.
 	 */
-	public static Object[] getCopyOfArray(Object[] given_array)
-	{
+	public static Object[] getCopyOfArray(Object[] given_array) {
+		
 		Object[] new_array = new Object[given_array.length];
 		for (int i = 0; i < new_array.length; i++)
 			new_array[i] = given_array[i];
@@ -77,8 +76,8 @@ public class GeneralMethods
 	 * @param	array_2 The second array to concatenate.
 	 * @return			array_1 and array_2 combined into 1 array.
 	 */
-	public static Object[] concatenateArray(Object[] array_1, Object[] array_2)
-	{
+	public static Object[] concatenateArray(Object[] array_1, Object[] array_2) {
+		
 		int length_1 = array_1.length;
 		int length_2 = array_2.length;
 		Object[] new_array = new Object[length_1 + length_2];

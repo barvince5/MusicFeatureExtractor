@@ -81,15 +81,12 @@ public class StrengthOfStrongestBeat
 	 * 								Throws an informative exception if
 	 *								the feature cannot be calculated.
 	 */
-	public double[] extractFeature( double[] samples,
-	                                double sampling_rate,
-	                                double[][] other_feature_values )
-		throws FeatureExtractorException
-	{
+	public double[] extractFeature(double[] samples, double sampling_rate, double[][] other_feature_values)
+			throws FeatureExtractorException {
+	
 		double[] beat_histogram = other_feature_values[0];
 
-		if (beat_histogram != null)
-		{
+		if (beat_histogram != null) {
 			double beat_sum = other_feature_values[1][0];
 			int highest_bin = Statistics.getIndexOfLargest(beat_histogram);
 			double highest_strength = beat_histogram[highest_bin];

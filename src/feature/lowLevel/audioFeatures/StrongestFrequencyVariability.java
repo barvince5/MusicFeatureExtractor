@@ -84,11 +84,9 @@ public class StrongestFrequencyVariability
 	 * 								Throws an informative exception if
 	 *								the feature cannot be calculated.
 	 */
-	public double[] extractFeature( double[] samples,
-	                                double sampling_rate,
-	                                double[][] other_feature_values )
-		throws FeatureExtractorException
-	{
+	public double[] extractFeature(double[] samples, double sampling_rate, double[][] other_feature_values)
+		throws FeatureExtractorException {
+		
 		double[] freq = other_feature_values[0];
 		double std_dev = Statistics.getStandardDeviation(freq);
 

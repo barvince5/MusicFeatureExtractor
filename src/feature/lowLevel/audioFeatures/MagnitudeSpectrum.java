@@ -93,6 +93,8 @@ public class MagnitudeSpectrum
 			fft = new FFT(samples, null, false, true);
 		} catch (FFTException e) {
 			throw new FeatureExtractorException("FFTException "+e.getMessage(), e);
+		} catch (Exception e) {
+			throw new FeatureExtractorException("Exception "+e.getMessage(), e);
 		}
 		return fft.getMagnitudeSpectrum();
 	}

@@ -89,6 +89,8 @@ public class PowerSpectrum
 			spectrum= fft.getPowerSpectrum();
 		} catch (FFTException e) {
 			throw new FeatureExtractorException("FFTException "+e.getMessage(), e);
+		} catch (Exception e) {
+			throw new FeatureExtractorException("Exception "+e.getMessage(), e);
 		}
 		return spectrum;
 	}

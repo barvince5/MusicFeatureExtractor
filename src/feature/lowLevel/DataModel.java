@@ -216,6 +216,8 @@ public class DataModel {
 			
 		} catch (FeatureProcessorException e) {
 			throw new DataModelException("LowLevelExtractionException "+e.getMessage(), e);
+		} catch (Exception e) {
+			throw new DataModelException("Exception "+e.getMessage(), e);
 		}
 	}
 
@@ -318,6 +320,8 @@ public class DataModel {
 			this.recordingFile= new File(fileName);
 		} catch (NullPointerException e) {
 			throw new DataModelException("NullPointerException "+e.getMessage(), e);
+		} catch (Exception e) {
+			throw new DataModelException("Exception "+e.getMessage(), e);
 		}
 	}
 

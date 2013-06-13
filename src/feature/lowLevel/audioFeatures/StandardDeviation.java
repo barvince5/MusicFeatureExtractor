@@ -184,6 +184,8 @@ public class StandardDeviation extends MetaFeatureFactory {
 				}
 			} catch (NumberFormatException e) {
 				throw new FeatureExtractorException("NumberFormatException "+e.getMessage(), e);
+			} catch (Exception e) {
+				throw new FeatureExtractorException("Exception "+e.getMessage(), e);
 			}
 		} else if (fe_ != null) {
 			fe_.setElement(index, value);

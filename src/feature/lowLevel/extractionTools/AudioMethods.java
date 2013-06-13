@@ -286,21 +286,19 @@ public class AudioMethods
 	 *                      an unsupported file format.
 	 */
 	public static AudioInputStream getInputStream( File audio_file )
-		throws AudioMethodsException
-	{
+		throws AudioMethodsException {
+		
 		AudioInputStream audio_input_stream = null;
-		try
-		{
+		try	{
 			audio_input_stream = AudioSystem.getAudioInputStream(audio_file);
+		} catch (UnsupportedAudioFileException e) {
+			throw new AudioMethodsException("File " + audio_file.getName() + " has an unsupported audio format.", e);
+		} catch (IOException e)	{
+			throw new AudioMethodsException("File " + audio_file.getName() + " is not readable.", e);
+		} catch (Exception e)	{
+			throw new AudioMethodsException("File " + audio_file.getName() + " is not readable.", e);
 		}
-		catch (UnsupportedAudioFileException ex)
-		{
-			throw new AudioMethodsException("File " + audio_file.getName() + " has an unsupported audio format.");
-		}
-		catch (IOException ex)
-		{
-			throw new AudioMethodsException("File " + audio_file.getName() + " is not readable.");
-		}
+		
 		return audio_input_stream;
 	}
 
@@ -438,14 +436,13 @@ public class AudioMethods
 
 		// Convert the bytes to double samples
 		ByteBuffer byte_buffer = ByteBuffer.wrap(audio_bytes);
-		if (bit_depth == 8)
-		{
+		if (bit_depth == 8) {
+			
 			for (int samp = 0; samp < number_samples; samp++)
 				for (int chan = 0; chan < number_of_channels; chan++)
 					sample_values[chan][samp] = (double) byte_buffer.get() / max_sample_value;
-		}
-		else if (bit_depth == 16)
-		{
+		} else if (bit_depth == 16)	{
+			
 			ShortBuffer short_buffer = byte_buffer.asShortBuffer();
 			for (int samp = 0; samp < number_samples; samp++)
 				for (int chan = 0; chan < number_of_channels; chan++)
@@ -473,6 +470,7 @@ public class AudioMethods
 	 */
 	public static byte[] getBytesFromAudioInputStream(AudioInputStream audio_input_stream)
 		throws AudioMethodsException {
+		
 		// Calculate the buffer size to use
 		float buffer_duration_in_seconds = 0.25F;
 		int buffer_size = AudioMethods.getNumberBytesNeeded( buffer_duration_in_seconds,
@@ -480,19 +478,24 @@ public class AudioMethods
 		byte rw_buffer[] = new byte[buffer_size + 2];
 		
 		byte[] results= null;
-		try{
+		try {
+			
 			// Read the bytes into the rw_buffer and then into the ByteArrayOutputStream
 			ByteArrayOutputStream byte_array_output_stream = new ByteArrayOutputStream();
 			int position = audio_input_stream.read(rw_buffer, 0, rw_buffer.length);
-			while (position > 0)
-			{
+			
+			while (position > 0) {
 				byte_array_output_stream.write(rw_buffer, 0, position);
 				position = audio_input_stream.read(rw_buffer, 0, rw_buffer.length);
 			}
+			
 			results = byte_array_output_stream.toByteArray();
 				byte_array_output_stream.close();
+
 		} catch (IOException e) {
 			throw new AudioMethodsException("IOException "+e.getMessage(), e);
+		} catch (Exception e) {
+			throw new AudioMethodsException("Exception "+e.getMessage(), e);
 		}
 
 		// Return the results
@@ -510,9 +513,8 @@ public class AudioMethods
 	 *								to be stored.
 	 * @return						The number of bytes needed to store the samples.
 	 */
-	public static int getNumberBytesNeeded( double duration_in_seconds,
-	                                        AudioFormat audio_format )
-	{
+	public static int getNumberBytesNeeded(double duration_in_seconds, AudioFormat audio_format) {
+		
 		int frame_size_in_bytes = audio_format.getFrameSize();
 		float frame_rate = audio_format.getFrameRate();
 		return (int) (frame_size_in_bytes * frame_rate * duration_in_seconds);
@@ -528,9 +530,8 @@ public class AudioMethods
 	 *								to be stored.
 	 * @return						The number of bytes needed to store the samples.
 	 */
-	public static int getNumberBytesNeeded( int number_samples,
-	                                        AudioFormat audio_format )
-	{
+	public static int getNumberBytesNeeded(int number_samples, AudioFormat audio_format) {
+		
 		int number_bytes_per_sample = audio_format.getSampleSizeInBits() / 8;
 		int number_channels = audio_format.getChannels();
 		return (number_samples * number_bytes_per_sample * number_channels);
@@ -550,10 +551,9 @@ public class AudioMethods
 	 * 							Throws an exception if an error occurs during
 	 *							conversion.
 	 */
-	public static AudioInputStream convertToAudioInputStream( double[][] samples,
-															  AudioFormat audio_format )
-		throws AudioMethodsException
-	{
+	public static AudioInputStream convertToAudioInputStream(double[][] samples, AudioFormat audio_format)
+		throws AudioMethodsException {
+		
 		int number_bytes_needed = getNumberBytesNeeded(samples[0].length, audio_format);
 		byte[] audio_bytes = new byte[number_bytes_needed];
 		writeSamplesToBuffer(samples, audio_format.getSampleSizeInBits(), audio_bytes);
@@ -580,8 +580,8 @@ public class AudioMethods
 	 * @throws AudioMethodsException
 	 */
 	public static void writeSamplesToBuffer(double[][] sample_values, int bit_depth, byte[] buffer)
-		throws AudioMethodsException
-	{
+		throws AudioMethodsException {
+		
 		// Throw exceptions for invalid parameters
 		if (sample_values == null)
 			throw new AudioMethodsException( "Empty set of samples to write provided." );
@@ -604,21 +604,17 @@ public class AudioMethods
 
 		// Write samples to buffer (by way of byte_buffer)
 		// Only works for bit depths of 8 or 16 bits and big endian signed samples
-		if (bit_depth == 8)
-		{
+		if (bit_depth == 8) {
 			for (int samp = 0; samp < sample_values[0].length; samp++)
-				for (int chan = 0; chan < sample_values.length; chan++)
-				{
+				for (int chan = 0; chan < sample_values.length; chan++)	{
 					double sample_value = sample_values[chan][samp] * max_sample_value;
 					byte_buffer.put( (byte) sample_value );
 				}
 		}
-		else if (bit_depth == 16)
-		{
+		else if (bit_depth == 16) {
 			ShortBuffer short_buffer = byte_buffer.asShortBuffer();
 			for (int samp = 0; samp < sample_values[0].length; samp++)
-				for (int chan = 0; chan < sample_values.length; chan++)
-				{
+				for (int chan = 0; chan < sample_values.length; chan++)	{
 					double sample_value = sample_values[chan][samp] * max_sample_value;
 					short_buffer.put( (short) sample_value );
 				}
@@ -641,19 +637,17 @@ public class AudioMethods
 	 * 								If a null parameter is passed.
 	 */
 	public static double[][] clipSamples(double[][] original_samples)
-		throws AudioMethodsException
-	{
+		throws AudioMethodsException {
+		
 		// Throw exceptions for invalid parameters
 		if (original_samples == null)
 			throw new AudioMethodsException("Empty set of samples to provided.");
 
 		// Perform clipping
 		double[][] clipped_samples = new double[original_samples.length][];
-		for (int chan = 0; chan < clipped_samples.length; chan++)
-		{
+		for (int chan = 0; chan < clipped_samples.length; chan++) {
 			clipped_samples[chan] = new double[original_samples[chan].length];
-			for (int samp = 0; samp < clipped_samples[chan].length; samp++)
-			{
+			for (int samp = 0; samp < clipped_samples[chan].length; samp++) {
 				if (original_samples[chan][samp] < -1.0)
 					 clipped_samples[chan][samp] = -1.0;
 				else if (original_samples[chan][samp] > 1.0)
@@ -674,8 +668,8 @@ public class AudioMethods
 	 * @param	bit_depth	The bit depth to examine.
 	 * @return				The maximum possible positive sample value as a double.
 	 */
-	public static double findMaximumSampleValue(int bit_depth)
-	{
+	public static double findMaximumSampleValue(int bit_depth) {
+		
 		int max_sample_value_int = 1;
 		for (int i = 0; i < (bit_depth - 1); i++)
 			max_sample_value_int *= 2;
@@ -693,24 +687,25 @@ public class AudioMethods
 	 * @param	audio_format		The <i>AudioFormat</i> of the <i>audio</i>.
 	 * @param	save_file			The file to save the audio to.
 	 * @param	file_type			The type of audio file to save to.
-	 * @throws	Exception			Throws an exception if an error writing to the file
+	 * @throws	AudioMethodsException			
+	 * 								Throws an exception if an error writing to the file
 	 *								occurs of if null parameters are passed.
 	 */
 	public static void saveByteArrayOutputStream( ByteArrayOutputStream audio,
 	                                              AudioFormat audio_format,
 	                                              File save_file,
 	                                              AudioFileFormat.Type file_type )
-		throws Exception
+		throws AudioMethodsException
 	{
 		// Throw exeptions for null parameters
 		if (audio == null)
-			throw new Exception("No audio data provided to save.");
+			throw new AudioMethodsException("No audio data provided to save.");
 		if (audio_format == null)
-			throw new Exception("No audio format provided for saving.");
+			throw new AudioMethodsException("No audio format provided for saving.");
 		if (save_file == null)
-			throw new Exception("No file provided for saving.");
+			throw new AudioMethodsException("No file provided for saving.");
 		if (file_type == null)
-			throw new Exception("No audio file format provided for saving.");
+			throw new AudioMethodsException("No audio file format provided for saving.");
 
 		// Find the number of sample frames
 		int number_bytes = audio.size();
@@ -735,20 +730,26 @@ public class AudioMethods
 	 * @param	audio_input_stream	The audio data to be recorded.
 	 * @param	file_to_save_to		The file to save the audio to.
 	 * @param	file_type			The type of audio file to save to.
-	 * @throws	Exception			Throws an exception if an error writing to the file
+	 * @throws	AudioMethodsException
+	 * 								Throws an exception if an error writing to the file
 	 *								occurs of if null parameters are passed.
 	 */
 	public static void saveToFile( AudioInputStream audio_input_stream,
 	                               File file_to_save_to,
 	                               AudioFileFormat.Type file_type )
-		throws Exception
-	{
+		throws AudioMethodsException {
 		if (audio_input_stream == null)
-			throw new Exception("No audio provided to save.");
+			throw new AudioMethodsException("No audio provided to save.");
 		if (file_to_save_to == null)
-			throw new Exception("No file provided to save to.");
+			throw new AudioMethodsException("No file provided to save to.");
 		if (file_type == null)
-			throw new Exception("No file type to save to specified.");
-		AudioSystem.write(audio_input_stream, file_type, file_to_save_to);
+			throw new AudioMethodsException("No file type to save to specified.");
+		try {
+			AudioSystem.write(audio_input_stream, file_type, file_to_save_to);
+		} catch (IOException e) {
+			throw new AudioMethodsException("IOException "+e.getMessage(), e);
+		} catch (Exception e) {
+			throw new AudioMethodsException("Exception "+e.getMessage(), e);
+		}
 	}
 }

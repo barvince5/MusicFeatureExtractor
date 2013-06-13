@@ -81,7 +81,8 @@ public class FractionOfLowEnergyWindows extends FeatureExtractor {
 	 *             calculated.
 	 */
 	public double[] extractFeature(double[] samples, double sampling_rate,
-			double[][] other_feature_values) throws FeatureExtractorException {
+			double[][] other_feature_values) 
+					throws FeatureExtractorException {
 		double average = 0.0;
 		for (int i = 0; i < other_feature_values.length; i++)
 			average += other_feature_values[i][0];
@@ -131,7 +132,8 @@ public class FractionOfLowEnergyWindows extends FeatureExtractor {
 	 *            which of AreaMoment's attributes should be edited.
 	 * @throws FeatureExtractorException
 	 */
-	public String getElement(int index) throws FeatureExtractorException {
+	public String getElement(int index) 
+			throws FeatureExtractorException {
 		if (index != 0) {
 			throw new FeatureExtractorException("INTERNAL ERROR: invalid index " + index
 					+ " sent to FractionOfLowEnergyFrames:getElement");
@@ -152,7 +154,8 @@ public class FractionOfLowEnergyWindows extends FeatureExtractor {
 	 *            new value of the attribute
 	 * @throws FeatureExtractorException
 	 */
-	public void setElement(int index, String value) throws FeatureExtractorException {
+	public void setElement(int index, String value) 
+			throws FeatureExtractorException {
 		if (index != 0) {
 			throw new FeatureExtractorException("INTERNAL ERROR: invalid index " + index
 					+ " sent to FractionOfLowEnergyFrames:setElement");
@@ -161,6 +164,9 @@ public class FractionOfLowEnergyWindows extends FeatureExtractor {
 				int type = Integer.parseInt(value);
 				setWindow(type);
 			} catch (FeatureExtractorException e) {
+				throw new FeatureExtractorException(
+						"Length of Fraction Of Low Energy Frames's window must be an integer", e);
+			} catch (Exception e) {
 				throw new FeatureExtractorException(
 						"Length of Fraction Of Low Energy Frames's window must be an integer", e);
 			}

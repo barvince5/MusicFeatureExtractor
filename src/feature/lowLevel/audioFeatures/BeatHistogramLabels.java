@@ -159,6 +159,9 @@ public class BeatHistogramLabels
 			try {
 				int type = Integer.parseInt(value);
 				setBinNumber(type);
+			} catch (NumberFormatException e) {
+				throw new FeatureExtractorException(
+						"Length of BeatHistogramLabels must be an integer");
 			} catch (Exception e) {
 				throw new FeatureExtractorException(
 						"Length of BeatHistogramLabels must be an integer");

@@ -87,18 +87,18 @@ public class SpectralCentroid
 
 		double total = 0.0;
 		double weighted_total = 0.0;
-		for (int bin = 0; bin < pow_spectrum.length; bin++)
-		{
+		for (int bin = 0; bin < pow_spectrum.length; bin++) {
 			weighted_total += bin * pow_spectrum[bin];
 			total += pow_spectrum[bin];
 		}
 
 		double[] result = new double[1];
-		if(total != 0.0){
+		if(total != 0.0) {
 			result[0] = weighted_total / total;
-		}else{
+		} else {
 			result[0] = 0.0;
 		}
+		
 		return result;
 	}
 

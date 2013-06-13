@@ -75,11 +75,9 @@ public class SpectralVariability
 	 * 								Throws an informative exception if
 	 *								the feature cannot be calculated.
 	 */
-	public double[] extractFeature( double[] samples,
-	                                double sampling_rate,
-	                                double[][] other_feature_values )
-		throws FeatureExtractorException
-	{
+	public double[] extractFeature(double[] samples, double sampling_rate, double[][] other_feature_values)
+		throws FeatureExtractorException {
+		
 		double[] mag_spec = other_feature_values[0];
 		double variance = Statistics.getStandardDeviation(mag_spec);
 

@@ -148,8 +148,10 @@ public class PeakFinder extends FeatureExtractor {
 		PeakFinder ret = new PeakFinder();
 		try {
 			ret.setPeakThreshold(peakThreshold);
+		} catch (FeatureExtractorException e) {
+			return null;
 		} catch (Exception e) {
-			e.printStackTrace();
+			return null;
 		}
 		return ret;
 	}

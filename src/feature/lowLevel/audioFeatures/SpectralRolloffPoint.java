@@ -149,11 +149,11 @@ public class SpectralRolloffPoint extends FeatureExtractor {
 				double type = Double.parseDouble(value);
 				setCutoff(type);
 			} catch (NumberFormatException e) {
-					throw new FeatureExtractorException("NumberFormatException "
-							+ e.getMessage(), e);
+				throw new FeatureExtractorException("NumberFormatException "+ e.getMessage(), e);
 			} catch (FeatureExtractorException e) {
-				throw new FeatureExtractorException(
-						"Length of Area Method of Moments must be an integer", e);
+				throw new FeatureExtractorException(e.getMessage(), e);
+			} catch (Exception e) {
+				throw new FeatureExtractorException("Exception "+e.getMessage(), e);
 			} 
 		}
 	}
@@ -172,8 +172,7 @@ public class SpectralRolloffPoint extends FeatureExtractor {
 		if (Double.isInfinite(c) || Double.isNaN(c)) {
 			throw new FeatureExtractorException("SpectralRolloff cutoff must be a real number");
 		} else if ((c <= 0.0) || (c >= 1.0)) {
-			throw new FeatureExtractorException(
-					"SpectralRolloff cutoff must be gretaer than 0 and less than 1");
+			throw new FeatureExtractorException("SpectralRolloff cutoff must be gretaer than 0 and less than 1");
 		} else {
 			cutoff = c;
 		}
