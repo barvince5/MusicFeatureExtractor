@@ -49,13 +49,13 @@ public class StandardDeviation extends MetaFeatureFactory {
 			ret.fe_ = fe;
 		}
 		String name = "Standard Deviation of "
-				+ ret.fe_.getFeatureDefinition().name;
+				+ ret.fe_.getFeatureDefinition().getName();
 		String description = "Standard Deviation of "
-				+ ret.fe_.getFeatureDefinition().name + "."
+				+ ret.fe_.getFeatureDefinition().getName() + "."
 				// + System.getProperty("line.separator")
-				+ ret.fe_.getFeatureDefinition().description;
+				+ ret.fe_.getFeatureDefinition().getDescription();
 
-		String[] oldAttributes = fe.getFeatureDefinition().attributes;
+		String[] oldAttributes = fe.getFeatureDefinition().getAttributes();
 		String[] myAttributes = new String[oldAttributes.length + 1];
 		for (int i = 0; i < oldAttributes.length; ++i) {
 			myAttributes[i] = oldAttributes[i];
@@ -63,11 +63,11 @@ public class StandardDeviation extends MetaFeatureFactory {
 		myAttributes[myAttributes.length - 1] = "Size of Window to calculate accross";
 
 		ret.definition = new FeatureDefinition(name, description, true, ret.fe_
-				.getFeatureDefinition().dimensions, myAttributes);
+				.getFeatureDefinition().getDimensions(), myAttributes);
 		ret.dependencies = new String[sampleWidth];
 		ret.offsets = new int[sampleWidth];
 		for (int i = 0; i < sampleWidth; ++i) {
-			ret.dependencies[i] = ret.fe_.getFeatureDefinition().name;
+			ret.dependencies[i] = ret.fe_.getFeatureDefinition().getName();
 			ret.offsets[i] = 0 - i;
 		}
 		return ret;
@@ -123,7 +123,7 @@ public class StandardDeviation extends MetaFeatureFactory {
 			sampleWidth = n;
 			String tmp;
 			if (fe_ != null) {
-				tmp = fe_.getFeatureDefinition().name;
+				tmp = fe_.getFeatureDefinition().getName();
 				dependencies = new String[sampleWidth];
 				offsets = new int[sampleWidth];
 				for (int i = 0; i < sampleWidth; ++i) {
@@ -148,10 +148,10 @@ public class StandardDeviation extends MetaFeatureFactory {
 	 */
 	public String getElement(int index) 
 			throws FeatureExtractorException {
-		if ((index >= definition.attributes.length) || (index < 0)) {
+		if ((index >= definition.getAttributes().length) || (index < 0)) {
 			throw new FeatureExtractorException("INTERNAL ERROR: Request for an invalid index "
 					+ index);
-		} else if (index == definition.attributes.length - 1) {
+		} else if (index == definition.getAttributes().length - 1) {
 			return Integer.toString(sampleWidth);
 		} else if (fe_ != null) {
 			return fe_.getElement(index);
@@ -171,10 +171,10 @@ public class StandardDeviation extends MetaFeatureFactory {
 	 */
 	public void setElement(int index, String value) 
 			throws FeatureExtractorException {
-		if ((index >= definition.attributes.length) || (index < 0)) {
+		if ((index >= definition.getAttributes().length) || (index < 0)) {
 			throw new FeatureExtractorException("INTERNAL ERROR: Request for an invalid index "
 					+ index);
-		} else if (index == definition.attributes.length - 1) {
+		} else if (index == definition.getAttributes().length - 1) {
 			try {
 				int type = Integer.parseInt(value);
 				if (type <= 1) {
@@ -205,7 +205,7 @@ public class StandardDeviation extends MetaFeatureFactory {
 		}else if (fe_ instanceof MetaFeatureFactory) {
 			StandardDeviation ret = new StandardDeviation();
 			ret.fe_ = (FeatureExtractor)fe_.clone();
-			ret.definition = new FeatureDefinition(definition.name,definition.description,true,definition.dimensions,definition.attributes.clone());
+			ret.definition = new FeatureDefinition(definition.getName(),definition.getDescription(),true,definition.getDimensions(),definition.getAttributes().clone());
 			try {
 				ret.setWindow(sampleWidth);
 			} catch (Exception e) {
@@ -231,8 +231,8 @@ public class StandardDeviation extends MetaFeatureFactory {
 	 * 05-08-05 LPC is the only feature that requires this.
 	 */
 	public FeatureDefinition getFeatureDefinition() {
-		String name = definition.name;
-		String description = definition.description;
+		String name = definition.getName();
+		String description = definition.getDescription();
 		String[] attributes;
 		int dimensions;
 		FeatureDefinition childFD = null;
@@ -241,12 +241,12 @@ public class StandardDeviation extends MetaFeatureFactory {
 		} else {
 			return definition;
 		}
-		attributes = new String[childFD.attributes.length + 1];
-		for (int i = 0; i < childFD.attributes.length; ++i) {
-			attributes[i] = childFD.attributes[i];
+		attributes = new String[childFD.getAttributes().length + 1];
+		for (int i = 0; i < childFD.getAttributes().length; ++i) {
+			attributes[i] = childFD.getAttributes()[i];
 		}
 		attributes[attributes.length - 1] = "Size of Window for Standard Deviation";
-		dimensions = childFD.dimensions;
+		dimensions = childFD.getDimensions();
 		definition = new FeatureDefinition(name, description, true, dimensions,
 				attributes);
 		return definition;

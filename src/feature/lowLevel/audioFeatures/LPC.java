@@ -240,9 +240,9 @@ public class LPC extends FeatureExtractor {
 					+ " provided");
 		} else {
 			numDimensions = n;
-			String name = definition.name;
-			String description = definition.description;
-			String[] attributes = definition.attributes;
+			String name = definition.getName();
+			String description = definition.getDescription();
+			String[] attributes = definition.getAttributes();
 			definition = new FeatureDefinition(name, description, true,
 					numDimensions, attributes);
 		}

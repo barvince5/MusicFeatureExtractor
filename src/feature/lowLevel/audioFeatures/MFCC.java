@@ -88,9 +88,9 @@ public class MFCC extends FeatureExtractor {
 		case 0:
 			try {
 				fe.numCepstra = Integer.parseInt(value);
-				String name = definition.name;
-				String description = definition.description;
-				String[] attributes = definition.attributes;
+				String name = definition.getName();
+				String description = definition.getDescription();
+				String[] attributes = definition.getAttributes();
 				definition = new FeatureDefinition(name, description, true,
 						fe.numCepstra, attributes);
 			} catch (NumberFormatException e) {

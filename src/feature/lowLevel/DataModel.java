@@ -154,7 +154,7 @@ public class DataModel {
 			isPrimaryList.add(new Boolean(true));
 			tmpF.setParent(this);
 			
-			if (tmpF.getFeatureDefinition().dimensions != 0) {
+			if (tmpF.getFeatureDefinition().getDimensions() != 0) {
 				
 				Iterator<MetaFeatureFactory> lM = listMFF.iterator();
 				while (lM.hasNext()) {
@@ -246,7 +246,7 @@ public class DataModel {
 			for (int v=0; v<totValues; ++v)
 				values[v] = StringMethods.getDoubleInScientificNotation(results[i][v], maxDigits);
 			
-			this.extractedFeatures.put(definitions[i].name, values);
+			this.extractedFeatures.put(definitions[i].getName(), values);
 		}
 	}
 	

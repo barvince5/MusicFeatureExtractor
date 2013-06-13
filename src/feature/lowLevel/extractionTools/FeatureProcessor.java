@@ -198,7 +198,7 @@ public class FeatureProcessor {
 		// Find the names of all features
 		String[] all_feature_names = new String[all_feature_extractors.length];
 		for (int feat = 0; feat < all_feature_extractors.length; feat++)
-			all_feature_names[feat] = all_feature_extractors[feat].getFeatureDefinition().name;
+			all_feature_names[feat] = all_feature_extractors[feat].getFeatureDefinition().getName();
 
 		// Find dependencies of all features marked to be extracted.
 		// Mark as null if features are not to be extracted. Note that will also
@@ -314,7 +314,7 @@ public class FeatureProcessor {
 		this.feature_extractor_dependencies = new int[this.feature_extractors.length][];
 		String[] feature_names = new String[this.feature_extractors.length];
 		for (int feat = 0; feat < feature_names.length; feat++) {
-			feature_names[feat] = this.feature_extractors[feat].getFeatureDefinition().name;
+			feature_names[feat] = this.feature_extractors[feat].getFeatureDefinition().getName();
 		}
 		
 		String[][] feature_dependencies_str = new String[this.feature_extractors.length][];
@@ -545,16 +545,16 @@ public class FeatureProcessor {
 				FeatureDefinition this_def = feature_extractors[feat]
 						.getFeatureDefinition();
 				FeatureDefinition average_definition = new FeatureDefinition(
-						this_def.name + " Overall Average",
-						this_def.description
+						this_def.getName() + " Overall Average",
+						this_def.getDescription()
 								+ "\nThis is the overall average over all windows.",
-						this_def.is_sequential,
+						this_def.isSequential(),
 						window_feature_values[window_feature_values.length - 1][feat].length);
 				FeatureDefinition stdv_definition = new FeatureDefinition(
-						this_def.name + " Overall Standard Deviation",
-						this_def.description
+						this_def.getName() + " Overall Standard Deviation",
+						this_def.getDescription()
 								+ "\nThis is the overall standard deviation over all windows.",
-						this_def.is_sequential,
+						this_def.isSequential(),
 						window_feature_values[window_feature_values.length - 1][feat].length);
 
 				// Find the averages and standard deviations

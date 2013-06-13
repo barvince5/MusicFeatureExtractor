@@ -29,26 +29,26 @@ public class FeatureDefinition implements Serializable {
 	 * The name of the feature. This name should be unique among each set of
 	 * features.
 	 */
-	public String name;
+	private String name;
 
 	/**
 	 * A description of what the feature represents. May be left as an empty
 	 * string.
 	 */
-	public String description;
+	private String description;
 
 	/**
 	 * Specifies whether a feature can be applied to sub-section of a data set
 	 * (e.g. a window of audio). A value of true means that it can, and a value
 	 * of false means that only one feature value may be extracted per data set.
 	 */
-	public boolean is_sequential;
+	private boolean is_sequential;
 
 	/**
 	 * The number of values that exist for the feature for a given section of a
 	 * data set. This value will be 1, except for multi-dimensional features.
 	 */
-	public int dimensions;
+	private int dimensions;
 
 	/**
 	 * An identifier for use in serialization.
@@ -58,7 +58,7 @@ public class FeatureDefinition implements Serializable {
 	/**
 	 * names of each editable attribute this feature has
 	 */
-	public String[] attributes;
+	private String[] attributes;
 
 	/* CONSTRUCTORS *********************************************************** */
 
@@ -160,5 +160,45 @@ public class FeatureDefinition implements Serializable {
 		for (int i = 0; i < definitions.length; i++)
 			combined_descriptions += definitions[i].getFeatureDescription();
 		return combined_descriptions;
+	}
+	
+	/**
+	 * Gets the Feature name.
+	 * @return name
+	 */
+	public String getName() {
+		return this.name;
+	}
+
+	/**
+	 * Gets the Feature description.
+	 * @return description
+	 */
+	public String getDescription() {
+		return this.description;
+	}
+
+	/**
+	 * Returns true if the Feature is sequential, false otherwise.
+	 * @return is_sequential
+	 */	
+	public boolean isSequential() {
+		return this.is_sequential;
+	}
+
+	/**
+	 * Gets the Feature dimension.
+	 * @return dimension
+	 */
+	public int getDimensions() {
+		return this.dimensions;
+	}
+
+	/**
+	 * Gets the Feature attributes.
+	 * @return attributes
+	 */
+	public String[] getAttributes() {
+		return this.attributes;
 	}
 }

@@ -49,13 +49,13 @@ public class Mean extends MetaFeatureFactory {
 			tmp.fe_ = fe;
 		}
 			tmp.fe_ = fe;
-			String name = "Running Mean of " + fe.getFeatureDefinition().name;
+			String name = "Running Mean of " + fe.getFeatureDefinition().getName();
 			String description = "Running Mean of "
-					+ fe.getFeatureDefinition().name + ". "
+					+ fe.getFeatureDefinition().getName() + ". "
 //					+ System.getProperty("line.separator")
-					+ fe.getFeatureDefinition().description;
+					+ fe.getFeatureDefinition().getDescription();
 
-			String[] oldAttributes = fe.getFeatureDefinition().attributes;
+			String[] oldAttributes = fe.getFeatureDefinition().getAttributes();
 			String[] myAttributes = new String[oldAttributes.length + 1];
 			for (int i = 0; i < oldAttributes.length; ++i) {
 				myAttributes[i] = oldAttributes[i];
@@ -63,11 +63,11 @@ public class Mean extends MetaFeatureFactory {
 			myAttributes[myAttributes.length - 1] = "Size of Window to Average accross";
 
 			tmp.definition = new FeatureDefinition(name, description, true, fe
-					.getFeatureDefinition().dimensions, myAttributes);
+					.getFeatureDefinition().getDimensions(), myAttributes);
 			tmp.dependencies = new String[runningAverage];
 			tmp.offsets = new int[runningAverage];
 			for (int i = 0; i < runningAverage; ++i) {
-				tmp.dependencies[i] = fe.getFeatureDefinition().name;
+				tmp.dependencies[i] = fe.getFeatureDefinition().getName();
 				tmp.offsets[i] = 0 - i;
 			}
 			return tmp;
@@ -113,7 +113,7 @@ public class Mean extends MetaFeatureFactory {
 		} else {
 			runningAverage = n;
 			if (fe_ != null) {
-				String tmp = fe_.getFeatureDefinition().name;
+				String tmp = fe_.getFeatureDefinition().getName();
 				dependencies = new String[runningAverage];
 				offsets = new int[runningAverage];
 				for (int i = 0; i < runningAverage; ++i) {
@@ -141,10 +141,10 @@ public class Mean extends MetaFeatureFactory {
 	 * @throws FeatureExtractorException
 	 */
 	public String getElement(int index) throws FeatureExtractorException {
-		if ((index >= definition.attributes.length) || (index < 0)) {
+		if ((index >= definition.getAttributes().length) || (index < 0)) {
 			throw new FeatureExtractorException("INTERNAL ERROR: Request for an invalid index "
 					+ index);
-		} else if (index == definition.attributes.length - 1) {
+		} else if (index == definition.getAttributes().length - 1) {
 			return Integer.toString(runningAverage);
 		} else if (fe_ != null) {
 			return fe_.getElement(index);
@@ -169,10 +169,10 @@ public class Mean extends MetaFeatureFactory {
 	 * @throws FeatureExtractorException
 	 */
 	public void setElement(int index, String value) throws FeatureExtractorException {
-		if ((index >= definition.attributes.length) || (index < 0)) {
+		if ((index >= definition.getAttributes().length) || (index < 0)) {
 			throw new FeatureExtractorException("INTERNAL ERROR: Request for an invalid index "
 					+ index);
-		} else if (index == definition.attributes.length - 1) {
+		} else if (index == definition.getAttributes().length - 1) {
 			try {
 				int type = Integer.parseInt(value);
 				if (type <= 1) {
@@ -213,10 +213,10 @@ public class Mean extends MetaFeatureFactory {
 				return null;
 			}
 		
-			String name = definition.name;
-			String description = definition.description;
-			String[] attributes = definition.attributes;
-			int dim = definition.dimensions;
+			String name = definition.getName();
+			String description = definition.getDescription();
+			String[] attributes = definition.getAttributes();
+			int dim = definition.getDimensions();
 			ret.definition = new FeatureDefinition(name,description,true,dim,attributes);
 			ret.dependencies = this.dependencies.clone();
 			ret.offsets = this.offsets.clone();
@@ -252,8 +252,8 @@ public class Mean extends MetaFeatureFactory {
 	 * 05-08-05 LPC is the only feature that requires this.
 	 */
 	public FeatureDefinition getFeatureDefinition() {
-		String name = definition.name;
-		String description = definition.description;
+		String name = definition.getName();
+		String description = definition.getDescription();
 		String[] attributes;
 		int dimensions;
 		FeatureDefinition childFD=null;
@@ -262,12 +262,12 @@ public class Mean extends MetaFeatureFactory {
 		}else{
 			return definition;
 		}
-		attributes = new String[childFD.attributes.length + 1];
-		for(int i=0;i<childFD.attributes.length;++i){
-			attributes[i] = childFD.attributes[i];
+		attributes = new String[childFD.getAttributes().length + 1];
+		for(int i=0;i<childFD.getAttributes().length;++i){
+			attributes[i] = childFD.getAttributes()[i];
 		}
 		attributes[attributes.length-1] = "Size of Window to Average accross";
-		dimensions = childFD.dimensions;
+		dimensions = childFD.getDimensions();
 		definition = new FeatureDefinition(name,description,true,dimensions,attributes);
 		return definition;
 	}

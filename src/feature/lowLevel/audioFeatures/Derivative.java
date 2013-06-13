@@ -48,15 +48,15 @@ public class Derivative extends MetaFeatureFactory {
 		} else {
 			tmp.fe_ = fe;
 		}
-		String name = "Derivative of " + tmp.fe_.getFeatureDefinition().name;
-		String description = "Derivative of " + tmp.fe_.getFeatureDefinition().name
-				+ "." + tmp.fe_.getFeatureDefinition().description;
-		String[] oldAttributes = tmp.fe_.getFeatureDefinition().attributes;
+		String name = "Derivative of " + tmp.fe_.getFeatureDefinition().getName();
+		String description = "Derivative of " + tmp.fe_.getFeatureDefinition().getName()
+				+ "." + tmp.fe_.getFeatureDefinition().getDescription();
+		String[] oldAttributes = tmp.fe_.getFeatureDefinition().getAttributes();
 		tmp.definition = new FeatureDefinition(name, description, true, tmp.fe_
-				.getFeatureDefinition().dimensions, oldAttributes);
+				.getFeatureDefinition().getDimensions(), oldAttributes);
 
-		tmp.dependencies = new String[] { tmp.fe_.getFeatureDefinition().name,
-				tmp.fe_.getFeatureDefinition().name };
+		tmp.dependencies = new String[] { tmp.fe_.getFeatureDefinition().getName(),
+				tmp.fe_.getFeatureDefinition().getName() };
 		tmp.offsets = new int[] { 0, -1 };
 		return tmp;
 	}
@@ -96,7 +96,7 @@ public class Derivative extends MetaFeatureFactory {
 	 * @throws FeatureExtractorException
 	 */
 	public String getElement(int index) throws FeatureExtractorException {
-		if ((index >= definition.attributes.length) || (index < 0)) {
+		if ((index >= definition.getAttributes().length) || (index < 0)) {
 			throw new FeatureExtractorException("INTERNAL ERROR: Request for an invalid index "
 					+ index);
 		} else {
@@ -120,7 +120,7 @@ public class Derivative extends MetaFeatureFactory {
 	 * @throws FeatureExtractorException
 	 */
 	public void setElement(int index, String value) throws FeatureExtractorException {
-		if ((index >= definition.attributes.length) || (index < 0)) {
+		if ((index >= definition.getAttributes().length) || (index < 0)) {
 			throw new FeatureExtractorException("INTERNAL ERROR: Request for an invalid index "
 					+ index);
 		} else {
@@ -139,17 +139,15 @@ public Object clone() {
 		} else if(super.fe_ instanceof MetaFeatureFactory){
 			Derivative ret = new Derivative();
 			ret.fe_ = (FeatureExtractor)super.fe_.clone();
-			String name = "Derivative of " + ret.fe_.getFeatureDefinition().name;
-			String description = "Derivative of " + ret.fe_.getFeatureDefinition().name
-					+ "."
-					// + System.getProperty("line.separator")
-					+ ret.fe_.getFeatureDefinition().description;
-			String[] oldAttributes = ret.fe_.getFeatureDefinition().attributes;
+			String name = "Derivative of " + ret.fe_.getFeatureDefinition().getName();
+			String description = "Derivative of " + ret.fe_.getFeatureDefinition().getName()
+					+ "." + ret.fe_.getFeatureDefinition().getDescription();
+			String[] oldAttributes = ret.fe_.getFeatureDefinition().getAttributes();
 			ret.definition = new FeatureDefinition(name, description, true, ret.fe_
-					.getFeatureDefinition().dimensions, oldAttributes);
+					.getFeatureDefinition().getDimensions(), oldAttributes);
 
-			ret.dependencies = new String[] { ret.fe_.getFeatureDefinition().name,
-					ret.fe_.getFeatureDefinition().name };
+			ret.dependencies = new String[] { ret.fe_.getFeatureDefinition().getName(),
+					ret.fe_.getFeatureDefinition().getName() };
 			ret.offsets = new int[] { 0, -1 };
 			return ret;
 		} else {
@@ -165,13 +163,13 @@ public Object clone() {
 	 */
 	public FeatureDefinition getFeatureDefinition() {
 		if ((super.fe_ != null)&&(super.fe_ instanceof MetaFeatureFactory)) {
-			String[] oldAttributes = super.fe_.getFeatureDefinition().attributes;
-			super.definition = new FeatureDefinition(definition.name, definition.description, true, 
-					super.fe_.getFeatureDefinition().dimensions, oldAttributes);
+			String[] oldAttributes = super.fe_.getFeatureDefinition().getAttributes();
+			super.definition = new FeatureDefinition(definition.getName(), definition.getDescription(), true, 
+					super.fe_.getFeatureDefinition().getDimensions(), oldAttributes);
 		} else if (super.fe_ != null) {
-			String[] oldAttributes = fe_.getFeatureDefinition().attributes;
-			super.definition = new FeatureDefinition(definition.name, definition.description, true, 
-					super.fe_.getFeatureDefinition().dimensions, oldAttributes);
+			String[] oldAttributes = fe_.getFeatureDefinition().getAttributes();
+			super.definition = new FeatureDefinition(definition.getName(), definition.getDescription(), true, 
+					super.fe_.getFeatureDefinition().getDimensions(), oldAttributes);
 		}
 		return super.definition;
 	}
