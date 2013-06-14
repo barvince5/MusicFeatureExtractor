@@ -24,7 +24,7 @@ public final class SongLogger {
 		
 		try {
 			
-			fh = new FileHandler("Song_" + new Date().toString());
+			fh = new FileHandler("SongLog " + new Date().toString());
 			SongLogger.log.addHandler(fh);
 			SongLogger.log.setUseParentHandlers(false);
 			

@@ -24,7 +24,7 @@ public final class AlbumLogger {
 		
 		try {
 			
-			fh = new FileHandler("Album_" + new Date().toString());
+			fh = new FileHandler("AlbumLog " + new Date().toString());
 			AlbumLogger.log.addHandler(fh);
 			AlbumLogger.log.setUseParentHandlers(false);
 			

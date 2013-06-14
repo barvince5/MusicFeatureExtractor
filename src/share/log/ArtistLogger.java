@@ -27,7 +27,7 @@ public final class ArtistLogger {
 		
 		try {
 			
-			fh = new FileHandler("Artist_" + new Date().toString());
+			fh = new FileHandler("ArtistLog " + new Date().toString());
 			ArtistLogger.log.addHandler(fh);
 			ArtistLogger.log.setUseParentHandlers(false);
 			
