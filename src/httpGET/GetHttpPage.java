@@ -22,6 +22,7 @@ public final class GetHttpPage {
 	
 	private static Object lock;
 	private static int timeOut, wait;
+	private static long minTime;
 	private static GetHttpPage instance= null;
 	
 	/**
@@ -32,6 +33,7 @@ public final class GetHttpPage {
 		GetHttpPage.wait= 1000; 	// 1000 milli second is the default value.
 		GetHttpPage.timeOut= 7000; 	// 7000 milli seconds is the default value
 		GetHttpPage.lock= new Object();
+		GetHttpPage.minTime= 1000000000; //in nano second. (it is one second)
 	}
 	
 	/**
@@ -102,9 +104,12 @@ public final class GetHttpPage {
 			conn.setConnectTimeout(GetHttpPage.timeOut);
 			
 			synchronized(GetHttpPage.lock) {
+				long startTime = System.nanoTime();  
 				rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+				long estimatedTime = System.nanoTime() - startTime;
 				try {
-					Thread.sleep(GetHttpPage.wait);
+					if(estimatedTime < minTime)
+						Thread.sleep(GetHttpPage.wait);
 				} catch(InterruptedException e) {
 					return result; // Do nothing, just return
 				}
