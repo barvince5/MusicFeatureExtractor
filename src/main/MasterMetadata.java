@@ -1,14 +1,20 @@
 package main;
 
 import java.io.File;
-import java.io.FilenameFilter;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.logging.Logger;
+
+import share.log.AlbumLogger;
+import share.log.ArtistLogger;
+import share.log.SongLogger;
 
 import customException.MP3Exception;
 import customException.MasterException;
@@ -20,13 +26,16 @@ import feature.highLevel.HighLevelSongFeature;
 public final class MasterMetadata {
 	
 	private final static int maxTask= 10, nThread= 4;
-	private static String path= "";
 	private static ExecutorService artistES= null;
 	private static ExecutorService albumES= null;
 	private static ExecutorService songES= null;
-	private static ArrayBlockingQueue<ArtistFeature> artistTasks= null;
-	private static ArrayBlockingQueue<AlbumFeature> albumTasks= null;
-	private static ArrayBlockingQueue<HighLevelSongFeature> songTasks= null;
+	private static ArrayList<ArtistFeature> artistTasks= null;
+	private static ArrayList<AlbumFeature> albumTasks= null;
+	private static ArrayList<HighLevelSongFeature> songTasks= null;
+	private static File dir= null;
+	private static List<File> fileList= null;
+	private static boolean initFlag= false;
+	private static int blockOffset; //this indicate the head of the current scheduled file block
 	
 	/**
 	 * Private constructor to avoid instantiation.
@@ -35,69 +44,119 @@ public final class MasterMetadata {
 		
 	}
 	
+	/**
+	 * This method allows to stop immediately the entire MFE program.
+	 */
 	public final static void shutDownMFE() {
 		
 		if(MasterMetadata.artistES != null)
-			MasterMetadata.artistES.shutdown();
+			MasterMetadata.artistES.shutdownNow();
 		
 		if(MasterMetadata.albumES != null)
-			MasterMetadata.albumES.shutdown();
+			MasterMetadata.albumES.shutdownNow();
 		
 		if(MasterMetadata.songES != null)
-			MasterMetadata.songES.shutdown();
+			MasterMetadata.songES.shutdownNow();
 		
 	}
 	
+	/**
+	 * Produce the xml metadata of each artist.
+	 * @param path the starting directory where find the mp3 files.
+	 * @throws MasterException in case of error.
+	 */
 	public final static void artistMetadata(String path) 
 			throws MasterException {
-		
-		MasterMetadata.path= path;
+				
 		MasterMetadata.artistES= Executors.newFixedThreadPool(nThread);
-		MasterMetadata.artistTasks= new ArrayBlockingQueue<ArtistFeature>(MasterMetadata.maxTask);
-		MasterMetadata.startArtistAnalisys(MasterMetadata.getFiles());
+		MasterMetadata.artistTasks= new ArrayList<ArtistFeature>(MasterMetadata.maxTask);
+		MasterMetadata.init(path); //create file list, filter and dir
+		MasterMetadata.startArtistAnalysis(MasterMetadata.getFiles(dir, fileList));
 	}
 	
+	/**
+	 * Produce the xml metadata of each album.
+	 * @param path the starting directory where find the mp3 files.
+	 * @throws MasterException in case of error.
+	 */
 	public final static void albumMetadata(String path) 
 			throws MasterException {
 		
-		MasterMetadata.path= path;
 		MasterMetadata.albumES= Executors.newFixedThreadPool(MasterMetadata.nThread);
-		MasterMetadata.albumTasks= new ArrayBlockingQueue<AlbumFeature>(MasterMetadata.maxTask);
-		MasterMetadata.startAlbumAnalisys(MasterMetadata.getFiles());
+		MasterMetadata.albumTasks= new ArrayList<AlbumFeature>(MasterMetadata.maxTask);
+		MasterMetadata.init(path); //create file list, filter and dir
+		MasterMetadata.startAlbumAnalysis(MasterMetadata.getFiles(dir, fileList));
 	}
 	
+	/**
+	 * Produce the xml metadata of each song.
+	 * @param path the starting directory where find the mp3 files.
+	 * @throws MasterException in case of error.
+	 */
 	public final static void songMetadata(String path) 
 			throws MasterException {
 		
-		MasterMetadata.path= path;
 		MasterMetadata.songES= Executors.newFixedThreadPool(MasterMetadata.nThread);
-		MasterMetadata.songTasks= new ArrayBlockingQueue<HighLevelSongFeature>(MasterMetadata.maxTask);
-		MasterMetadata.startSongAnalisys(MasterMetadata.getFiles());
+		MasterMetadata.songTasks= new ArrayList<HighLevelSongFeature>(MasterMetadata.maxTask);
+		MasterMetadata.init(path); //create file list, filter and dir
+		MasterMetadata.startSongAnalysis(MasterMetadata.getFiles(dir, fileList));
 	}
 	
-	private final static File[] getFiles() 
+	/**
+	 * Create file list, filter and dir. Only if it is not done yet.
+	 * @param path 
+	 * @throws MasterException in case the path is not correct
+	 */
+	private final static void init(String path) 
 			throws MasterException {
 		
-		if(MasterMetadata.path == null || MasterMetadata.path.equals(""))
-			throw new MasterException("The given path is null");
+		if(path == null || path.equals(""))
+			throw new MasterException("The path is not null or empty string");
 		
-		File dir= new File(MasterMetadata.path);
-		if(dir.isDirectory() == false)
-			throw new MasterException("The input is not a directory");
+		MasterMetadata.blockOffset= 0; //just to set end reset it.
 		
-		File[] foundFiles = dir.listFiles(new FilenameFilter() {
-			@Override
-			public boolean accept(File dir, String name) {
-				return name.endsWith(".mp3");
-			}
-		});
+		if(MasterMetadata.initFlag) //If it is already initialized.
+			return;
 		
-		return foundFiles;
+		MasterMetadata.dir= new File(path);
+		MasterMetadata.fileList= new LinkedList<File>();
+		MasterMetadata.initFlag= true;
+	}
+
+    
+	/**
+	 * This method gets all mp3 files.
+	 * @return a list of files
+	 * @throws MasterException in case of error.
+	 */
+	private final static List<File> getFiles(File dir, List<File> files) 
+			throws MasterException {
+		
+		if(dir == null)
+			throw new MasterException("The directory is null");
+		
+	    if (files == null)
+	        files = new LinkedList<File>();
+	    
+	    if(dir.isDirectory() == false) {
+	    	if(dir.getName().endsWith(".mp3")) 
+	    		files.add(dir);
+	    	return files;
+	    }
+		
+	    for (File file : dir.listFiles()) //filter useful to get only files that ends with .mp3
+	    	MasterMetadata.getFiles(file, files); //recursive approach.
+	    
+		return files;
 	}
 	
 	
 	//######################## ARTIST PART
 	
+	/**
+	 * This method submit some tasks to a thread pool.
+	 * @throws MasterException in case of error.
+	 */
 	private final static void submitArtistTasks() 
 			 throws MasterException {
 		
@@ -106,19 +165,34 @@ public final class MasterMetadata {
 		try {
 			
 			//submit tasks to do.
+			//Waiting until all tasks are done
 			List<Future<Boolean>> res= MasterMetadata.artistES.invokeAll(MasterMetadata.artistTasks); 
 			
-			//Waiting until all tasks are done
-			for(int j= 0; j < length; ++j) 
-				try {
-					res.get(j).get();
+			String filePath= "";
+			Logger log= ArtistLogger.getInstance().getLog();
+			for(int j= 0; j < length; ++j) {
+				try {				
+					
+					if(res.get(j).get() == false) {
+						//retrieve the file that failed using the blockOffset and jth task.
+						filePath= MasterMetadata.fileList.get(MasterMetadata.blockOffset+j).getAbsolutePath();
+						log.info(filePath+" FAILED");
+					}
+					
 				} catch (ExecutionException e) {
-					//do nothing, just skip this task.
+					//retrieve the file that failed using the blockOffset and jth task.
+					filePath= MasterMetadata.fileList.get(MasterMetadata.blockOffset+j).getAbsolutePath();
+					log.warning(filePath+" FAILED");
 				} catch (InterruptedException e) {
-					//do nothing, just skip this task.
+					//retrieve the file that failed using the blockOffset and jth task.
+					filePath= MasterMetadata.fileList.get(MasterMetadata.blockOffset+j).getAbsolutePath();
+					log.warning(filePath+" FAILED");
 				} catch (CancellationException e) {
-					//do nothing, just skip this task.
+					//retrieve the file that failed using the blockOffset and jth task.
+					filePath= MasterMetadata.fileList.get(MasterMetadata.blockOffset+j).getAbsolutePath();
+					log.warning(filePath+" FAILED");
 				}
+			}
 			
 			//Clean the queue
 			MasterMetadata.artistTasks.clear(); 
@@ -128,17 +202,25 @@ public final class MasterMetadata {
 		}
 	}
 	
-	private final static void startArtistAnalisys(File[] foundFiles) 
+	/**
+	 * This method fill the queue with tasks to do, and start the artist analysis.
+	 * @param foundFiles
+	 * @throws MasterException
+	 */
+	private final static void startArtistAnalysis(List<File> foundFiles) 
 			throws MasterException {
 			
 		int cnt= 0;
 		try {
 			
-			for(File f : foundFiles) {
-				MasterMetadata.artistTasks.add(new ArtistFeature(f)); //create the list of tasks to do.
+			Iterator<File> iter= foundFiles.iterator();
+			while(iter.hasNext()) {
+				//create the list of tasks to do.
+				MasterMetadata.artistTasks.add(new ArtistFeature(iter.next()));
 				if(++cnt == maxTask) {
 					MasterMetadata.submitArtistTasks();
 					cnt= 0; //reset the counter
+					MasterMetadata.blockOffset += maxTask;
 				}
 			}
 			
@@ -163,6 +245,10 @@ public final class MasterMetadata {
 	
 	//######################## ALBUM PART
 	
+	/**
+	 * This method submit some tasks to a thread pool.
+	 * @throws MasterException in case of error.
+	 */
 	private final static void submitAlbumTasks() 
 			 throws MasterException {
 		
@@ -171,19 +257,34 @@ public final class MasterMetadata {
 		try {
 			
 			//submit tasks to do.
+			//Waiting until all tasks are done
 			List<Future<Boolean>> res= MasterMetadata.albumES.invokeAll(MasterMetadata.albumTasks); 
 			
-			//Waiting until all tasks are done
-			for(int j= 0; j < length; ++j) 
+			String filePath= "";
+			Logger log= AlbumLogger.getInstance().getLog();
+			for(int j= 0; j < length; ++j) {
 				try {
-					res.get(j).get();
+					
+					if(res.get(j).get() == false) {
+						//retrieve the file that failed using the blockOffset and jth task.
+						filePath= MasterMetadata.fileList.get(MasterMetadata.blockOffset+j).getAbsolutePath();
+						log.info(filePath+" FAILED");
+					}
+					
 				} catch (ExecutionException e) {
-					//do nothing, just skip this task.
+					//retrieve the file that failed using the blockOffset and jth task.
+					filePath= MasterMetadata.fileList.get(MasterMetadata.blockOffset+j).getAbsolutePath();
+					log.warning(filePath+" FAILED");
 				} catch (InterruptedException e) {
-					//do nothing, just skip this task.
+					//retrieve the file that failed using the blockOffset and jth task.
+					filePath= MasterMetadata.fileList.get(MasterMetadata.blockOffset+j).getAbsolutePath();
+					log.warning(filePath+" FAILED");
 				} catch (CancellationException e) {
-					//do nothing, just skip this task.
+					//retrieve the file that failed using the blockOffset and jth task.
+					filePath= MasterMetadata.fileList.get(MasterMetadata.blockOffset+j).getAbsolutePath();
+					log.warning(filePath+" FAILED");
 				}
+			}
 			
 			//Clean the queue
 			MasterMetadata.albumTasks.clear(); 
@@ -193,17 +294,25 @@ public final class MasterMetadata {
 		}
 	}
 	
-	private final static void startAlbumAnalisys(File[] foundFiles) 
+	/**
+	 * This method fill the queue with tasks to do, and start the album analysis.
+	 * @param foundFiles
+	 * @throws MasterException
+	 */
+	private final static void startAlbumAnalysis(List<File> foundFiles) 
 			throws MasterException {
 			
 		int cnt= 0;
 		try {
 			
-			for(File f : foundFiles) {
-				MasterMetadata.albumTasks.add(new AlbumFeature(f)); //create the list of tasks to do.
+			Iterator<File> iter= foundFiles.iterator();
+			while(iter.hasNext()) {
+				//create the list of tasks to do.
+				MasterMetadata.albumTasks.add(new AlbumFeature(iter.next())); 
 				if(++cnt == maxTask) {
 					MasterMetadata.submitAlbumTasks();
 					cnt= 0; //reset the counter
+					MasterMetadata.blockOffset += maxTask;
 				}
 			}
 			
@@ -225,8 +334,13 @@ public final class MasterMetadata {
 		}
 	}
 	
+	
 	//######################## SONG PART
 	
+	/**
+	 * This method submit some tasks to a thread pool.
+	 * @throws MasterException in case of error.
+	 */
 	private final static void submitSongTasks() 
 			 throws MasterException {
 		
@@ -235,18 +349,32 @@ public final class MasterMetadata {
 		try {
 			
 			//submit tasks to do.
+			//Waiting until all tasks are done
 			List<Future<Boolean>> res= MasterMetadata.songES.invokeAll(MasterMetadata.songTasks); 
 			
-			//Waiting until all tasks are done
+			String filePath= "";
+			Logger log= SongLogger.getInstance().getLog();
 			for(int j= 0; j < length; ++j) {
 				try {
-					res.get(j).get();
+					
+					if(res.get(j).get() == false) {
+						//retrieve the file that failed using the blockOffset and jth task.
+						filePath= MasterMetadata.fileList.get(MasterMetadata.blockOffset+j).getAbsolutePath();
+						log.info(filePath+" FAILED");
+					}
+						
 				} catch (ExecutionException e) {
-					//do nothing, just skip this task.
+					//retrieve the file that failed using the blockOffset and jth task.
+					filePath= MasterMetadata.fileList.get(MasterMetadata.blockOffset+j).getAbsolutePath();
+					log.warning(filePath+" FAILED");
 				} catch (InterruptedException e) {
-					//do nothing, just skip this task.
+					//retrieve the file that failed using the blockOffset and jth task.
+					filePath= MasterMetadata.fileList.get(MasterMetadata.blockOffset+j).getAbsolutePath();
+					log.warning(filePath+" FAILED");
 				} catch (CancellationException e) {
-					//do nothing, just skip this task.
+					//retrieve the file that failed using the blockOffset and jth task.
+					filePath= MasterMetadata.fileList.get(MasterMetadata.blockOffset+j).getAbsolutePath();
+					log.warning(filePath+" FAILED");
 				}
 			}
 			
@@ -258,17 +386,25 @@ public final class MasterMetadata {
 		}
 	}
 	
-	private final static void startSongAnalisys(File[] foundFiles) 
+	/**
+	 * This method fill the queue with tasks to do, and start the song analysis.
+	 * @param foundFiles
+	 * @throws MasterException
+	 */
+	private final static void startSongAnalysis(List<File> foundFiles) 
 			throws MasterException {
 			
 		int cnt= 0;
 		try {
 			
-			for(File f : foundFiles) {
-				MasterMetadata.songTasks.add(new HighLevelSongFeature(f)); //create the list of tasks to do.
+			Iterator<File> iter= foundFiles.iterator();
+			while(iter.hasNext()) {
+				//create the list of tasks to do.
+				MasterMetadata.songTasks.add(new HighLevelSongFeature(iter.next())); 
 				if(++cnt == maxTask) {
 					MasterMetadata.submitSongTasks();
 					cnt= 0; //reset the counter
+					MasterMetadata.blockOffset += maxTask;
 				}
 			}
 			
