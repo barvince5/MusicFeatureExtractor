@@ -47,7 +47,7 @@ public final class ArtistBiography {
 	 * This method allows to set a different timeOut.<br>
 	 * Note1: it must be greater that 1000 [ms] and less that 20000 [ms].<br>
 	 * NOte2: The default value is 7 seconds (7000 ms).
-	 * @param tiemOut in milli seconds
+	 * @param timeOut in milliseconds
 	 * @throws ArtistBiographyException if the timeout is not correct.
 	 */
 	public final void changeTimeout(int timeOut) 
@@ -62,7 +62,7 @@ public final class ArtistBiography {
 	 * This method allows to set a different wait value.<br>
 	 * Note1: it must be greater that 100 [ms] and less that 20000 [ms].<br>
 	 * NOte2: The default value is 1 second (1000 ms).
-	 * @param wait in milli seconds
+	 * @param wait in milliseconds
 	 * @throws ArtistBiographyException if the timeout is not correct.
 	 */
 	public final void changeWait(int wait) 
@@ -76,7 +76,7 @@ public final class ArtistBiography {
 	/**
 	 * This method gets the entire biography of an artist or a band from the wikipedia english website.<br>
 	 * Note: It is allowed on the wikipedia in english language.
-	 * @param url of the artist/band on wekipedia website.
+	 * @param url of the artist/band on wikipedia website.
 	 * @return the biography
 	 * @throws ArtistBiographyException in case of errors
 	 */
