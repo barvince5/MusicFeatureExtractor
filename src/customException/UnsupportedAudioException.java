@@ -5,19 +5,19 @@ package customException;
  * @author Antonio Collarino
  *
  */
-public final class UnsupportedAudioFileException extends Exception {
+public final class UnsupportedAudioException extends Exception {
 
 	private static final long serialVersionUID = 4993091377720383739L;
 
-	public UnsupportedAudioFileException(String msg) {
+	public UnsupportedAudioException(String msg) {
 		super(msg);
 	}
 	
-	public UnsupportedAudioFileException(String msg, Throwable e) {
+	public UnsupportedAudioException(String msg, Throwable e) {
 		super(msg, e);
 	}
 	
-	public UnsupportedAudioFileException() {
+	public UnsupportedAudioException() {
 		super();
 	}
 }
