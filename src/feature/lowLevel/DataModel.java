@@ -59,7 +59,8 @@ public class DataModel {
 	 *
 	 * @throws DataModelException 
 	 */
-	public DataModel() throws DataModelException {
+	public DataModel() 
+			throws DataModelException {
 
 		this.extractedFeatures= new HashMap<String, String[]>();
 		this.setDefaults();
