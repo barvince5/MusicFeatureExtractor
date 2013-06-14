@@ -1,10 +1,10 @@
 package main;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -29,9 +29,9 @@ public final class MasterMetadata {
 	private static ExecutorService artistES= null;
 	private static ExecutorService albumES= null;
 	private static ExecutorService songES= null;
-	private static ArrayBlockingQueue<ArtistFeature> artistTasks= null;
-	private static ArrayBlockingQueue<AlbumFeature> albumTasks= null;
-	private static ArrayBlockingQueue<HighLevelSongFeature> songTasks= null;
+	private static ArrayList<ArtistFeature> artistTasks= null;
+	private static ArrayList<AlbumFeature> albumTasks= null;
+	private static ArrayList<HighLevelSongFeature> songTasks= null;
 	private static File dir= null;
 	private static List<File> fileList= null;
 	private static boolean initFlag= false;
@@ -69,7 +69,7 @@ public final class MasterMetadata {
 			throws MasterException {
 				
 		MasterMetadata.artistES= Executors.newFixedThreadPool(nThread);
-		MasterMetadata.artistTasks= new ArrayBlockingQueue<ArtistFeature>(MasterMetadata.maxTask);
+		MasterMetadata.artistTasks= new ArrayList<ArtistFeature>(MasterMetadata.maxTask);
 		MasterMetadata.init(path); //create file list, filter and dir
 		MasterMetadata.startArtistAnalysis(MasterMetadata.getFiles(dir, fileList));
 	}
@@ -83,7 +83,7 @@ public final class MasterMetadata {
 			throws MasterException {
 		
 		MasterMetadata.albumES= Executors.newFixedThreadPool(MasterMetadata.nThread);
-		MasterMetadata.albumTasks= new ArrayBlockingQueue<AlbumFeature>(MasterMetadata.maxTask);
+		MasterMetadata.albumTasks= new ArrayList<AlbumFeature>(MasterMetadata.maxTask);
 		MasterMetadata.init(path); //create file list, filter and dir
 		MasterMetadata.startAlbumAnalysis(MasterMetadata.getFiles(dir, fileList));
 	}
@@ -97,7 +97,7 @@ public final class MasterMetadata {
 			throws MasterException {
 		
 		MasterMetadata.songES= Executors.newFixedThreadPool(MasterMetadata.nThread);
-		MasterMetadata.songTasks= new ArrayBlockingQueue<HighLevelSongFeature>(MasterMetadata.maxTask);
+		MasterMetadata.songTasks= new ArrayList<HighLevelSongFeature>(MasterMetadata.maxTask);
 		MasterMetadata.init(path); //create file list, filter and dir
 		MasterMetadata.startSongAnalysis(MasterMetadata.getFiles(dir, fileList));
 	}
@@ -139,7 +139,7 @@ public final class MasterMetadata {
 	        files = new LinkedList<File>();
 	    
 	    if(dir.isDirectory() == false) {
-	    	if(dir.getName().endsWith(".mp3"))
+	    	if(dir.getName().endsWith(".mp3")) 
 	    		files.add(dir);
 	    	return files;
 	    }
@@ -165,11 +165,11 @@ public final class MasterMetadata {
 		try {
 			
 			//submit tasks to do.
+			//Waiting until all tasks are done
 			List<Future<Boolean>> res= MasterMetadata.artistES.invokeAll(MasterMetadata.artistTasks); 
 			
 			String filePath= "";
 			Logger log= ArtistLogger.getInstance().getLog();
-			//Waiting until all tasks are done
 			for(int j= 0; j < length; ++j) {
 				try {				
 					
@@ -257,11 +257,11 @@ public final class MasterMetadata {
 		try {
 			
 			//submit tasks to do.
+			//Waiting until all tasks are done
 			List<Future<Boolean>> res= MasterMetadata.albumES.invokeAll(MasterMetadata.albumTasks); 
 			
 			String filePath= "";
 			Logger log= AlbumLogger.getInstance().getLog();
-			//Waiting until all tasks are done
 			for(int j= 0; j < length; ++j) {
 				try {
 					
@@ -349,11 +349,11 @@ public final class MasterMetadata {
 		try {
 			
 			//submit tasks to do.
+			//Waiting until all tasks are done
 			List<Future<Boolean>> res= MasterMetadata.songES.invokeAll(MasterMetadata.songTasks); 
 			
 			String filePath= "";
 			Logger log= SongLogger.getInstance().getLog();
-			//Waiting until all tasks are done
 			for(int j= 0; j < length; ++j) {
 				try {
 					

@@ -14,15 +14,17 @@ public final class ArtistBiography {
 
 	private static Object lock;
 	private static int timeOut, wait;
+	private static long minTime;
 	private static ArtistBiography instance= null;
 	
 	/**
 	 * This is the private constructor of this class.
 	 */
 	private ArtistBiography() {
-		ArtistBiography.wait= 1000;		// 1000 milli second is the default value.
-		ArtistBiography.timeOut= 7000; 	// 7000 milli second is the default value.
+		ArtistBiography.wait= 1000;			//1000 milli second is the default value.
+		ArtistBiography.timeOut= 7000; 		// 7000 milli second is the default value.
 		ArtistBiography.lock= new Object();
+		ArtistBiography.minTime= 1000000000; //in nano second. (it is one second)
 	}
 	
 	/**
@@ -96,9 +98,12 @@ public final class ArtistBiography {
 			synchronized(ArtistBiography.lock) {
 				Connection conn= Jsoup.connect(url);
 				conn.timeout(ArtistBiography.timeOut);
+				long startTime = System.nanoTime();   
 				doc = conn.get();
+				long estimatedTime = System.nanoTime() - startTime;
 				try {
-					Thread.sleep(ArtistBiography.wait);
+					if(estimatedTime < minTime)
+						Thread.sleep(ArtistBiography.wait);
 				} catch(InterruptedException e) {
 					return bio;	// Do nothing, just return
 				}
