@@ -3,7 +3,7 @@ package feature;
 import java.io.File;
 
 import customException.MP3Exception;
-import customException.UnsupportedAudioFileException;
+import customException.UnsupportedAudioException;
 import entagged.audioformats.AudioFile;
 import entagged.audioformats.AudioFileIO;
 import entagged.audioformats.Tag;
@@ -25,13 +25,13 @@ public class MP3Info {
 		
 		try {
 			this.getMP3Tag(song);
-		} catch (UnsupportedAudioFileException e) {
+		} catch (UnsupportedAudioException e) {
 			throw new MP3Exception("UnsupportedAudioFileException "+e.getMessage(), e);
 		}
 	}
 	
 	private final void getMP3Tag(File song) 
-			throws MP3Exception, UnsupportedAudioFileException {
+			throws MP3Exception, UnsupportedAudioException {
 		
 		try {
 			this.audioFile = AudioFileIO.read(song);
@@ -41,7 +41,7 @@ public class MP3Info {
 			this.albumName= this.tag.getFirstAlbum();
 			this.artistName= this.tag.getFirstArtist();
 		} catch (CannotReadException e) {
-			throw new UnsupportedAudioFileException("CannotReadException "+e.getMessage(), e);
+			throw new UnsupportedAudioException("CannotReadException "+e.getMessage(), e);
 		} catch (Exception e) {
 			throw new MP3Exception("Exception during setMp3Tag");
 		}
