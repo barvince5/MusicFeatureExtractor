@@ -1,25 +1,53 @@
 package main;
 
+import utils.Plotter;
 
-import customException.MasterException;
 
 public class Main {
 
-
 	public static void main(String[] args) {
+		
+		boolean hlFlag= false, llFlag= false;
+		String path= null;
+		
+		if(args.length == 0)
+			System.err.println("No input");
 		
 		try {
 			
-			System.err.println("ARTISTS PHASE: Please wait...");
-			MasterMetadata.artistMetadata("/home/sniper/Desktop/music/");
-		
-			System.err.println("ALBUMS PHASE: Please wait...");
-			MasterMetadata.albumMetadata("/home/sniper/Desktop/music/");
+			if(args[0].equalsIgnoreCase("-plot")) {
+				Plotter.plot(args);
+			} else if(args[0].equalsIgnoreCase("-all") && args.length == 2) {
+				hlFlag= true;
+				llFlag= true;
+				path= args[1];
+			} else if(args[0].equalsIgnoreCase("-hl") && args.length == 2) {
+				hlFlag= true;
+				path= args[1];
+			} else if(args[0].equalsIgnoreCase("-ll") && args.length == 2) {
+				llFlag= true;
+				path= args[1];
+			} else {
+				System.err.println("USAGE:"+
+									'\n'+"-all <dir or file>"+
+									'\n'+"-hl <dir or file>"+
+									'\n'+"-ll <dir or file>"+
+									'\n'+"-plot <file list>");
+				System.exit(1);
+			}
 			
-			System.err.println("SONGS PHASE: Please wait...");
-			MasterMetadata.songMetadata("/home/sniper/Desktop/music/");
-			
-		} catch (MasterException e) {
+			if(hlFlag) {
+				System.out.println("ARTISTS PHASE: Please wait...");
+				MasterMetadata.artistMetadata(path, hlFlag);
+				System.out.println("ALBUMS PHASE: Please wait...");
+				MasterMetadata.albumMetadata(path, hlFlag);
+			}
+			if(hlFlag || llFlag) {
+				System.out.println("SONGS PHASE: Please wait...");
+				MasterMetadata.songMetadata(path, hlFlag, llFlag);
+			}
+					
+		} catch(Exception e) {
 			System.err.println(e.getMessage());
 			MasterMetadata.shutDownMFE();
 			System.err.println("MFE is shutting down");

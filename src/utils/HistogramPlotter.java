@@ -4,7 +4,7 @@ package utils;
  * This class contains the function for drawing the frame given an array of values.
  */
 
-public class HistogramPlotter {
+public final class HistogramPlotter {
 	
 	private int width;
 	private int height;
@@ -33,7 +33,7 @@ public class HistogramPlotter {
 	 * @param width
 	 * @param height
 	 */
-	public void setDimensions(int width, int height) {
+	public final void setDimensions(int width, int height) {
 		this.width= width;
 		this.height= height;
 	}
@@ -42,14 +42,14 @@ public class HistogramPlotter {
 	 * Sets the label to be shown on the X axis of the Histogram.
 	 * @param label
 	 */
-	public void setLabel(String label) {
+	public final void setLabel(String label) {
 		this.label= label;
 	}
 	
 	/**
 	 * Shows the HistogramFrame on screen.
 	 */	
-	public void drawFrame() {
+	public final void drawFrame() {
 		this.buildFrame();
 		this.frame.pack();
 		this.frame.setVisible(true);

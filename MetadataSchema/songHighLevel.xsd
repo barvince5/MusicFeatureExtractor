@@ -5,7 +5,7 @@
 
     <complexType name="SongType">
     	<sequence>
-            <element name="XMLFileCreation" type="date" maxOccurs="1" minOccurs="1"></element>
+            <element name="XMLFileCreation" type="dateTime" maxOccurs="1" minOccurs="1"></element>
             <element name="artist" type="xsd1:artistType" maxOccurs="1"
     			minOccurs="0">
     		</element>

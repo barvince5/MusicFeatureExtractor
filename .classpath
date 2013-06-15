@@ -6,5 +6,7 @@
 	<classpathentry kind="lib" path="ExtLib/Entagged-0.35.jar"/>
 	<classpathentry kind="lib" path="ExtLib/jcommon-1.0.17.jar"/>
 	<classpathentry kind="lib" path="ExtLib/jfreechart-1.0.14.jar"/>
+	<classpathentry kind="lib" path="ExtLib/mp3plugin.jar"/>
+	<classpathentry kind="lib" path="ExtLib/AudioFeatureExtraction.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
