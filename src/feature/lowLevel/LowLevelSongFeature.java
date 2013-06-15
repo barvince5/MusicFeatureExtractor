@@ -63,6 +63,7 @@ public final class LowLevelSongFeature extends MP3Info implements Callable<Boole
 			throws SongFeatureException {
 		
 		RealMatrixExt[] rm= null;
+		File output= null;
 		try {
 			
 			//extracts low level features from the mp3 file
@@ -111,13 +112,13 @@ public final class LowLevelSongFeature extends MP3Info implements Callable<Boole
 			//there are 23 rows with 7 measures
 			mean.setSize(BigInteger.valueOf(rows));
 			for(int i= 0; i< rows; ++i) {
-				mean.getValue().add(ssdMatrix[i][0]);
-				median.getValue().add(ssdMatrix[i][1]);
-				variance.getValue().add(ssdMatrix[i][2]);
-				skewness.getValue().add(ssdMatrix[i][3]);
-				kurtosis.getValue().add(ssdMatrix[i][4]);
-				minValue.getValue().add(ssdMatrix[i][5]);
-				minValue.getValue().add(ssdMatrix[i][6]);
+				mean.getValue().add(new Double(ssdMatrix[i][0]));
+				median.getValue().add(new Double(ssdMatrix[i][1]));
+				variance.getValue().add(new Double(ssdMatrix[i][2]));
+				skewness.getValue().add(new Double(ssdMatrix[i][3]));
+				kurtosis.getValue().add(new Double(ssdMatrix[i][4]));
+				minValue.getValue().add(new Double(ssdMatrix[i][5]));
+				maxValue.getValue().add(new Double(ssdMatrix[i][6]));
 			}
 			
 			median.setSize(BigInteger.valueOf(rows));
@@ -125,7 +126,7 @@ public final class LowLevelSongFeature extends MP3Info implements Callable<Boole
 			skewness.setSize(BigInteger.valueOf(rows));
 			kurtosis.setSize(BigInteger.valueOf(rows));
 			minValue.setSize(BigInteger.valueOf(rows));
-			minValue.setSize(BigInteger.valueOf(rows));
+			maxValue.setSize(BigInteger.valueOf(rows));
 			
 			ssd.setMean(mean);
 			ssd.setMedian(median);
@@ -150,7 +151,7 @@ public final class LowLevelSongFeature extends MP3Info implements Callable<Boole
 			for(int i= 0; i< rows; ++i) {
 				RowType rt= obf.createRowType();
 				for(int j= 0; j< columns; ++j)
-					rt.getColumn().add(rpMatrix[i][j]);
+					rt.getColumn().add(new Double(rpMatrix[i][j]));
 				rp.getRow().add(rt);
 			}
 			
@@ -165,7 +166,7 @@ public final class LowLevelSongFeature extends MP3Info implements Callable<Boole
 			
 			double[] rhArray= rm[2].getData()[0]; //there is only one row
 			for(int i= 0; i< columns; ++i)
-				rh.getValue().add(rhArray[i]);
+				rh.getValue().add(new Double(rhArray[i]));
 			
 			song.setRhythmHistogram(rh);
 			
@@ -188,9 +189,13 @@ public final class LowLevelSongFeature extends MP3Info implements Callable<Boole
 			
 			//TODO correct path it's not present yet.
 			
-			File output= new File("LL_"+this.title+".xml");
+			output= new File("LL_"+this.title+".xml");
 			m.marshal(je, output);
 			
+		} catch (JAXBException e) {
+			if(output != null)
+				output.delete();
+			throw new SongFeatureException(e.getMessage(), e);
 		} catch(UnsupportedAudioFileException e) {
 			throw new SongFeatureException(e.getMessage(), e);
 		} catch(IOException e) {
@@ -198,8 +203,6 @@ public final class LowLevelSongFeature extends MP3Info implements Callable<Boole
 		} catch(FeatureExtractorException e) {
 			throw new SongFeatureException(e.getMessage(), e);
 		} catch (DateConverterException e) {
-			throw new SongFeatureException(e.getMessage(), e);
-		} catch (JAXBException e) {
 			throw new SongFeatureException(e.getMessage(), e);
 		} catch(Exception e) {
 			throw new SongFeatureException(e.getMessage(), e);

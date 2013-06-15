@@ -1,7 +1,7 @@
 package main;
 
-
 import customException.MasterException;
+
 
 public class Main {
 
@@ -17,8 +17,7 @@ public class Main {
 			
 			System.err.println("SONGS PHASE: Please wait...");
 			MasterMetadata.songMetadata("/home/sniper/Desktop/music/");
-			
-		
+					
 		} catch (MasterException e) {
 			System.err.println(e.getMessage());
 			MasterMetadata.shutDownMFE();
