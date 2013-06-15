@@ -206,7 +206,7 @@ public final class HighLevelSongFeature extends MP3Info implements Callable<Bool
 			
 			//TODO correct path it's not present yet.
 			
-			output= new File("mfe_"+this.song.getTitle()+".xml");
+			output= new File("HL_"+this.song.getTitle()+".xml");
 			m.marshal(je, output);
 			
 		} catch (JAXBException e) {
