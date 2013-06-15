@@ -28,7 +28,11 @@ public class Main {
 				llFlag= true;
 				path= args[1];
 			} else {
-				System.err.println("USAGE: ");
+				System.err.println("USAGE:"+
+									'\n'+"-all <dir or file>"+
+									'\n'+"-hl <dir or file>"+
+									'\n'+"-ll <dir or file>"+
+									'\n'+"-plot <file list>");
 				System.exit(1);
 			}
 			
