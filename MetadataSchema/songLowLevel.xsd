@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="https://github.com/AntonioCollarino/MusicFeatureExtractor.git" elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xsd4="https://github.com/AntonioCollarino/MusicFeatureExtractor.git">
+
+    <element name="SongMetadata" type="xsd4:SongType"></element>
+    
+    <complexType name="SongType">
+    	<sequence>
+    		<element name="XMLFileCreation" type="dateTime" maxOccurs="1"
+    			minOccurs="1">
+    		</element>
+    		<element name="fileName" type="string" maxOccurs="1"
+    			minOccurs="1">
+    		</element>
+    		<element name="length" type="positiveInteger" maxOccurs="1"
+    			minOccurs="0">
+    		</element>
+    		<element name="bitrate" type="positiveInteger" maxOccurs="1"
+    			minOccurs="1">
+    		</element>
+    		<element name="encoding" type="string" maxOccurs="1"
+    			minOccurs="0">
+    		</element>
+    		<element name="channelsNum" type="positiveInteger"
+    			maxOccurs="1" minOccurs="1">
+    		</element>
+    		<element name="frequency" type="positiveInteger"
+    			maxOccurs="1" minOccurs="1">
+    		</element>
+    		<element name="RhythmHistogram"
+    			type="xsd4:RhythmHistogramType" maxOccurs="1" minOccurs="1">
+    		</element>
+    		<element name="RhythmPattern" type="xsd4:RhythmPatternType"
+    			maxOccurs="1" minOccurs="1">
+    		</element>
+    		<element name="StatisticalSpectrumDescriptor" type="xsd4:StatisticalSpectrumDescriptorType" maxOccurs="1" minOccurs="1"></element>
+    	</sequence>
+    </complexType>
+
+    <complexType name="RhythmHistogramType">
+    	<sequence>
+            <element name="description" type="string" maxOccurs="1" minOccurs="1"></element>
+            <element name="value" type="double" minOccurs="60"
+    			maxOccurs="60">
+    		</element>
+    	</sequence>
+    	<attribute name="size" type="positiveInteger"></attribute>
+    </complexType>
+
+    <complexType name="RhythmPatternType">
+    	<sequence>
+            <element name="description" type="string" maxOccurs="1" minOccurs="1"></element>
+            <element name="row" type="xsd4:rowType" minOccurs="23"
+    			maxOccurs="23">
+    		</element>
+    	</sequence>
+    	<attribute name="rows" type="positiveInteger"></attribute>
+    	<attribute name="columns" type="positiveInteger"></attribute>
+    </complexType>
+
+    <complexType name="rowType">
+    	<sequence>
+    		<element name="column" type="double" minOccurs="60" maxOccurs="60"></element>
+    	</sequence>
+    </complexType>
+
+    <complexType name="StatisticalSpectrumDescriptorType">
+    	<sequence>
+    		<element name="mean" type="xsd4:ssdType" maxOccurs="1"
+    			minOccurs="1">
+    		</element>
+    		<element name="median" type="xsd4:ssdType" maxOccurs="1"
+    			minOccurs="1">
+    		</element>
+    		<element name="variance" type="xsd4:ssdType" maxOccurs="1"
+    			minOccurs="1">
+    		</element>
+    		<element name="skewness" type="xsd4:ssdType" maxOccurs="1"
+    			minOccurs="1">
+    		</element>
+    		<element name="kurtosis" type="xsd4:ssdType" maxOccurs="1"
+    			minOccurs="1">
+    		</element>
+    		<element name="minValue" type="xsd4:ssdType" maxOccurs="1" minOccurs="1"></element>
+    		<element name="maxValue" type="xsd4:ssdType" maxOccurs="1" minOccurs="1"></element>
+    	</sequence>
+    </complexType>
+
+
+    <complexType name="ssdType">
+    	<sequence>
+    		<element name="value" type="double" minOccurs="23"
+    			maxOccurs="23">
+    		</element>
+    	</sequence>
+    	<attribute name="size" type="positiveInteger"></attribute>
+    </complexType>
+</schema>

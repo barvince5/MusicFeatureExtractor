@@ -1,75 +1,56 @@
 package main;
 
+import utils.Plotter;
 
-import java.io.File;
-import java.util.LinkedList;
-import java.util.List;
-
-import customException.DataModelException;
-import customException.MasterException;
-import feature.lowLevel.DataModel;
 
 public class Main {
 
-	
-	
-	private final static List<File> getFiles(File dir, List<File> files) 
-			throws MasterException {
+	public static void main(String[] args) {
 		
-		if(dir == null)
-			throw new MasterException("The directory is null");
+		boolean hlFlag= false, llFlag= false;
+		String path= null;
 		
-	    if (files == null)
-	        files = new LinkedList<File>();
-	    
-	    if(dir.isDirectory() == false) {
-	    	if(dir.getName().endsWith(".mp3")) 
-	    		files.add(dir);
-	    	return files;
-	    }
+		if(args.length == 0)
+			System.err.println("No input");
 		
-	    for (File file : dir.listFiles()) //filter useful to get only files that ends with .mp3
-	    	Main.getFiles(file, files); //recursive approach.
-	    
-		return files;
-	}
-
-	public static void main(String[] args) 
-			throws MasterException {
-		
-//		try {
-			List<File> l= getFiles(new File("/home/sniper/Desktop/music/"), null);	
-//			System.err.println("ARTISTS PHASE: Please wait...");
-//			MasterMetadata.artistMetadata("/home/sniper/Desktop/music/");
-//		
-//			System.err.println("ALBUMS PHASE: Please wait...");
-//			MasterMetadata.albumMetadata("/home/sniper/Desktop/music/");
-//			
-//			System.err.println("SONGS PHASE: Please wait...");
-//			MasterMetadata.songMetadata("/home/sniper/Desktop/music/");
+		try {
 			
-			int cnt= 0;
-			for(File f : l) {
-				try {
-					DataModel dm= new DataModel();
-					dm.setFile(f);
-					dm.extract();
-					++cnt;
-					System.out.println(f.getName() + " " + cnt);
-				} catch( Exception e) {
-					System.err.println(e.getMessage());
-				}
+			if(args[0].equalsIgnoreCase("-plot")) {
+				Plotter.plot(args);
+			} else if(args[0].equalsIgnoreCase("-all") && args.length == 2) {
+				hlFlag= true;
+				llFlag= true;
+				path= args[1];
+			} else if(args[0].equalsIgnoreCase("-hl") && args.length == 2) {
+				hlFlag= true;
+				path= args[1];
+			} else if(args[0].equalsIgnoreCase("-ll") && args.length == 2) {
+				llFlag= true;
+				path= args[1];
+			} else {
+				System.err.println("USAGE:"+
+									'\n'+"-all <dir or file>"+
+									'\n'+"-hl <dir or file>"+
+									'\n'+"-ll <dir or file>"+
+									'\n'+"-plot <file list>");
+				System.exit(1);
 			}
 			
-			
-//		} catch (MasterException e) {
-//			System.err.println(e.getMessage());
-//			MasterMetadata.shutDownMFE();
-//			System.err.println("MFE is shutting down");
-//		} catch (DataModelException e) {
-//			System.err.println(e.getMessage());
-//			MasterMetadata.shutDownMFE();
-//			System.err.println("MFE is shutting down");
-//		}
+			if(hlFlag) {
+				System.out.println("ARTISTS PHASE: Please wait...");
+				MasterMetadata.artistMetadata(path, hlFlag);
+				System.out.println("ALBUMS PHASE: Please wait...");
+				MasterMetadata.albumMetadata(path, hlFlag);
+			}
+			if(hlFlag || llFlag) {
+				System.out.println("SONGS PHASE: Please wait...");
+				MasterMetadata.songMetadata(path, hlFlag, llFlag);
+			}
+					
+		} catch(Exception e) {
+			System.err.println(e.getMessage());
+			MasterMetadata.shutDownMFE();
+			System.err.println("MFE is shutting down");
+		}
 	}
 }
