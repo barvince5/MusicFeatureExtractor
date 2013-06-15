@@ -17,14 +17,7 @@ public final class Plotter {
 	
 	public final static void plot(String[] files) 
 			throws PlotterException {
-		
-		Logger log= null; 
-		try {
-			log= SongLogger.getInstance().getLog();
-		} catch(LogException e) {
-			throw new PlotterException(e.getMessage(), e);
-		}
-		
+				
 		for(int i= 1; i< files.length; ++i) {
 			try {
 				File file= new File(files[i]);
@@ -32,7 +25,15 @@ public final class Plotter {
 				HistogramPlotter hp= new HistogramPlotter(values, file.getName());
 				hp.drawFrame();
 			} catch(Exception e) {
+				
+				Logger log= null; 
+				try {
+					log= SongLogger.getInstance().getLog();
+				} catch (LogException e1) {
+					throw new PlotterException("LogException "+e.getMessage(), e);
+				}
 				log.warning(files[i]+" PLOT FAILED");
+				
 			}
 		}
 	}

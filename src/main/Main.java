@@ -9,6 +9,11 @@ public class Main {
 		
 		boolean hlFlag= false, llFlag= false;
 		String path= null;
+		String helpMSG= "USAGE:"+
+						'\n'+"-all <dir or file>"+
+						'\n'+"-hl <dir or file>"+
+						'\n'+"-ll <dir or file>"+
+						'\n'+"-plot <file list>";
 		
 		if(args.length == 0)
 			System.err.println("No input");
@@ -36,12 +41,10 @@ public class Main {
 					path= System.getProperty("user.dir");
 				else
 					path= args[1];
+			} else if(args[0].equalsIgnoreCase("--help")) {
+				System.err.println(helpMSG);
 			} else {
-				System.err.println("USAGE:"+
-									'\n'+"-all <dir or file>"+
-									'\n'+"-hl <dir or file>"+
-									'\n'+"-ll <dir or file>"+
-									'\n'+"-plot <file list>");
+				System.err.println(helpMSG);
 				System.exit(1);
 			}
 			
