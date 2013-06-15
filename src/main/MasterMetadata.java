@@ -19,9 +19,10 @@ import share.log.SongLogger;
 import customException.MP3Exception;
 import customException.MasterException;
 
+import feature.SongFeature;
 import feature.highLevel.AlbumFeature;
 import feature.highLevel.ArtistFeature;
-import feature.highLevel.HighLevelSongFeature;
+
 
 public final class MasterMetadata {
 	
@@ -31,7 +32,7 @@ public final class MasterMetadata {
 	private static ExecutorService songES= null;
 	private static ArrayList<ArtistFeature> artistTasks= null;
 	private static ArrayList<AlbumFeature> albumTasks= null;
-	private static ArrayList<HighLevelSongFeature> songTasks= null;
+	private static ArrayList<SongFeature> songTasks= null;
 	private static File dir= null;
 	private static List<File> fileList= null;
 	private static boolean initFlag= false;
@@ -65,9 +66,12 @@ public final class MasterMetadata {
 	 * @param path the starting directory where find the mp3 files.
 	 * @throws MasterException in case of error.
 	 */
-	public final static void artistMetadata(String path) 
+	public final static void artistMetadata(String path, boolean evaluate) 
 			throws MasterException {
 				
+		if(evaluate == false)
+			return;
+		
 		MasterMetadata.artistES= Executors.newFixedThreadPool(nThread);
 		MasterMetadata.artistTasks= new ArrayList<ArtistFeature>(MasterMetadata.maxTask);
 		MasterMetadata.init(path); //create file list, filter and dir
@@ -79,8 +83,11 @@ public final class MasterMetadata {
 	 * @param path the starting directory where find the mp3 files.
 	 * @throws MasterException in case of error.
 	 */
-	public final static void albumMetadata(String path) 
+	public final static void albumMetadata(String path, boolean evaluate) 
 			throws MasterException {
+		
+		if(evaluate == false)
+			return;
 		
 		MasterMetadata.albumES= Executors.newFixedThreadPool(MasterMetadata.nThread);
 		MasterMetadata.albumTasks= new ArrayList<AlbumFeature>(MasterMetadata.maxTask);
@@ -93,13 +100,16 @@ public final class MasterMetadata {
 	 * @param path the starting directory where find the mp3 files.
 	 * @throws MasterException in case of error.
 	 */
-	public final static void songMetadata(String path) 
+	public final static void songMetadata(String path, boolean hlEvaluation, boolean llEvaluation) 
 			throws MasterException {
 		
+		if(hlEvaluation == false && llEvaluation == false)
+			return;
+		
 		MasterMetadata.songES= Executors.newFixedThreadPool(MasterMetadata.nThread);
-		MasterMetadata.songTasks= new ArrayList<HighLevelSongFeature>(MasterMetadata.maxTask);
+		MasterMetadata.songTasks= new ArrayList<SongFeature>(MasterMetadata.maxTask);
 		MasterMetadata.init(path); //create file list, filter and dir
-		MasterMetadata.startSongAnalysis(MasterMetadata.getFiles(dir, fileList));
+		MasterMetadata.startSongAnalysis(MasterMetadata.getFiles(dir, fileList), hlEvaluation, llEvaluation);
 	}
 	
 	/**
@@ -391,7 +401,7 @@ public final class MasterMetadata {
 	 * @param foundFiles
 	 * @throws MasterException
 	 */
-	private final static void startSongAnalysis(List<File> foundFiles) 
+	private final static void startSongAnalysis(List<File> foundFiles, boolean hlEvaluation, boolean llEvaluation) 
 			throws MasterException {
 			
 		int cnt= 0;
@@ -400,7 +410,7 @@ public final class MasterMetadata {
 			Iterator<File> iter= foundFiles.iterator();
 			while(iter.hasNext()) {
 				//create the list of tasks to do.
-				MasterMetadata.songTasks.add(new HighLevelSongFeature(iter.next())); 
+				MasterMetadata.songTasks.add(new SongFeature(iter.next(), hlEvaluation, llEvaluation)); 
 				if(++cnt == maxTask) {
 					MasterMetadata.submitSongTasks();
 					cnt= 0; //reset the counter

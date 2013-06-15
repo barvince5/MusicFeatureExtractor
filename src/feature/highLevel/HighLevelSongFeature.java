@@ -14,7 +14,6 @@ import httpGET.GetHttpPage;
 
 import java.io.File;
 import java.math.BigInteger;
-import java.util.concurrent.Callable;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -35,54 +34,45 @@ import customException.CreateDocException;
 import customException.DateConverterException;
 import customException.FindAlbumArtistException;
 import customException.GetHttpException;
-import customException.MP3Exception;
 import customException.MusicbrainzUrlException;
 import customException.SongFeatureException;
 import entagged.audioformats.AudioFile;
 import feature.MP3Info;
 
-public final class HighLevelSongFeature extends MP3Info implements Callable<Boolean> {
-
-	private SongType song;
-	private ObjectFactory obf;
-	private Document songDoc= null;
+public final class HighLevelSongFeature {
 	
-	public HighLevelSongFeature(File song) 
-			throws MP3Exception {
-		
-		super(song);
-		this.obf= new ObjectFactory();
-		this.song= this.obf.createSongType();
-		
-	}
-	
-	@Override
-	public final Boolean call()
+	public final static Boolean start(MP3Info mp3)
 			throws SongFeatureException {
 		
 		GetHttpPage getHttp= GetHttpPage.getInstance();
 		String content= "";
 		File output= null;
 		NodeList nodeList= null;
+		SongType song= null;
+		ObjectFactory obf= null;
+		Document songDoc= null;
 		
 		try {
 			
-			String title= super.getTitle();
+			obf= new ObjectFactory();
+			song= obf.createSongType();
+			
+			String title= mp3.getTitle();
 			if(title == null || title.equals(""))
 				return false;
 			
-			String artistName= super.getArtist();
-			String albumName = super.getAlbum();
+			String artistName= mp3.getArtist();
+			String albumName = mp3.getAlbum();
 			
 			// try all parameters, the function will use the most it can
 			content= getHttp.getWebPageAsString(MusicbrainzUrl.getMbRecordingUrl(artistName, title, albumName));
 			if(content.equals(""))
 				return false;
 			
-			this.songDoc= CreateDoc.create(content);
+			songDoc= CreateDoc.create(content);
 			
 			//if the count is zero, no song was found.
-			Element recordingListNode= (Element) this.songDoc.getElementsByTagName("recording-list").item(0);
+			Element recordingListNode= (Element) songDoc.getElementsByTagName("recording-list").item(0);
 			Integer count= Integer.valueOf(recordingListNode.getAttributes().getNamedItem("count").getNodeValue());
 			if(count.intValue() == 0) {
 			
@@ -97,9 +87,9 @@ public final class HighLevelSongFeature extends MP3Info implements Callable<Bool
 			if(content.equals(""))
 					return false;
 					
-			this.songDoc= CreateDoc.create(content);
+			songDoc= CreateDoc.create(content);
 				
-			recordingListNode= (Element) this.songDoc.getElementsByTagName("recording-list").item(0);
+			recordingListNode= (Element) songDoc.getElementsByTagName("recording-list").item(0);
 			count= Integer.valueOf(recordingListNode.getAttributes().getNamedItem("count").getNodeValue());
 				
 			if(count.intValue() == 0) 
@@ -109,27 +99,27 @@ public final class HighLevelSongFeature extends MP3Info implements Callable<Bool
 			Element recordingNode= (Element) recordingListNode.getElementsByTagName("recording").item(0);
 	
 			//set song id
-			this.song.setMbSongID(recordingNode.getAttribute("id"));
+			song.setMbSongID(recordingNode.getAttribute("id"));
 			//set song title
 
-			this.song.setTitle(recordingNode.getElementsByTagName("title").item(0).getTextContent());
+			song.setTitle(recordingNode.getElementsByTagName("title").item(0).getTextContent());
 			
 			//set artist
-			ArtistType artist= this.obf.createArtistType();
+			ArtistType artist= obf.createArtistType();
 			Element artistNode= (Element) recordingNode.getElementsByTagName("artist").item(0);
 			artist.setMbArtistID(artistNode.getAttribute("id"));
 			artist.setName(artistNode.getElementsByTagName("name").item(0).getTextContent());
 			nodeList= artistNode.getElementsByTagName("disambiguation");			
 			if(nodeList.getLength() != 0) 
 				artist.setDisambiguation(nodeList.item(0).getTextContent());
-			this.song.setArtist(artist);
+			song.setArtist(artist);
 			
 			//set albums for this song
 			nodeList= recordingNode.getElementsByTagName("release");
-			AlbumListType albumList = this.obf.createAlbumListType();
+			AlbumListType albumList = obf.createAlbumListType();
 			for (int i=0; i<nodeList.getLength(); ++i) {
 				Element releaseNode = (Element) nodeList.item(i);
-				AlbumType album = this.obf.createAlbumType();
+				AlbumType album = obf.createAlbumType();
 				
 				//set album ID
 				album.setMbAlbumID(releaseNode.getAttribute("id"));
@@ -161,36 +151,36 @@ public final class HighLevelSongFeature extends MP3Info implements Callable<Bool
 			}
 			
 			if (albumList.getAlbum().isEmpty() == false)
-				this.song.setAlbumList(albumList);
+				song.setAlbumList(albumList);
 			
-			AudioFile afile = super.getAudioFile();
+			AudioFile afile = mp3.getAudioFile();
 			
 			//set file length (seconds)
-			this.song.setLength(BigInteger.valueOf(afile.getLength()));
+			song.setLength(BigInteger.valueOf(afile.getLength()));
 			
 			//set file name
-			this.song.setFileName(afile.getName());
+			song.setFileName(afile.getName());
 			
 			//set bitrate
-			this.song.setBitrate(BigInteger.valueOf(afile.getBitrate()));
+			song.setBitrate(BigInteger.valueOf(afile.getBitrate()));
 			
 			//set channels
-			this.song.setChannelsNum(BigInteger.valueOf(afile.getChannelNumber()));
+			song.setChannelsNum(BigInteger.valueOf(afile.getChannelNumber()));
 			
 			//set frequency
-			this.song.setFrequency(BigInteger.valueOf(afile.getSamplingRate()));
+			song.setFrequency(BigInteger.valueOf(afile.getSamplingRate()));
 			
 			//set encoding
 			String encoding = afile.getEncodingType();
 			if (encoding != null && !encoding.equals(""))
-				this.song.setEncoding(encoding);
+				song.setEncoding(encoding);
 			
 			//set the creation date
-			this.song.setXMLFileCreation(DateConverter.CurrentDateToXMLGregorianCalendar());
+			song.setXMLFileCreation(DateConverter.CurrentDateToXMLGregorianCalendar());
 			
 			//marshall this JaxbElement
 			JAXBContext jc= JAXBContext.newInstance("songArtifacts.highLevel");
-			JAXBElement<SongType> je= this.obf.createSongMetadata(this.song);
+			JAXBElement<SongType> je= obf.createSongMetadata(song);
 			Marshaller m= jc.createMarshaller();
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 			SchemaFactory sf= SchemaFactory.newInstance(W3C_XML_SCHEMA_NS_URI);
@@ -206,7 +196,7 @@ public final class HighLevelSongFeature extends MP3Info implements Callable<Bool
 			
 			//TODO correct path it's not present yet.
 			
-			output= new File("HL_"+this.song.getTitle()+".xml");
+			output= new File("HL_"+song.getTitle()+".xml");
 			m.marshal(je, output);
 			
 		} catch (JAXBException e) {

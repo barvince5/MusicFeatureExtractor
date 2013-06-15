@@ -5,7 +5,6 @@ import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.util.concurrent.Callable;
 
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.xml.bind.JAXBContext;
@@ -32,48 +31,36 @@ import at.tuwien.ifs.feature.extraction.audio.data.FeatureExtractionOptions;
 import at.tuwien.ifs.feature.extraction.audio.data.RealMatrixExt;
 
 import customException.DateConverterException;
-import customException.MP3Exception;
 import customException.SongFeatureException;
 import entagged.audioformats.AudioFile;
 import feature.MP3Info;
 
-public final class LowLevelSongFeature extends MP3Info implements Callable<Boolean>{
+public final class LowLevelSongFeature {
 
-	private FeatureExtractionOptions opt= null;
-	private AudioFileExtractor afe= null;
-	private File file= null;
-	private String title;
-	
-	public LowLevelSongFeature(File file, String title) 
-			throws MP3Exception {
-		
-		super(file);
-		this.file= file;
-		this.title= title;
-		this.opt= new FeatureExtractionOptions();
-        this.opt.extractRH = true;
-        this.opt.extractRP = true;
-        this.opt.extractSSD = true;
-        this.afe= new AudioFileExtractor();
-        
-	}
-	
-	@Override
-	public Boolean call() 
+	public final  static Boolean start(MP3Info mp3, File file) 
 			throws SongFeatureException {
 		
+		FeatureExtractionOptions opt= null;
+		AudioFileExtractor afe= null;
 		RealMatrixExt[] rm= null;
 		File output= null;
+		
 		try {
 			
+			opt= new FeatureExtractionOptions();
+	        opt.extractRH = true;
+	        opt.extractRP = true;
+	        opt.extractSSD = true;
+	        afe= new AudioFileExtractor();
+	       
 			//extracts low level features from the mp3 file
-			rm = this.afe.extractAudioFile(this.file, this.opt);
+			rm = afe.extractAudioFile(file, opt);
 			
 			//puts values inside artifacts
 			ObjectFactory obf= new ObjectFactory();
 			SongType song= obf.createSongType();
 			
-			AudioFile af= super.getAudioFile();
+			AudioFile af= mp3.getAudioFile();
 			
 			//set filename
 			song.setFileName(af.getName());
@@ -170,7 +157,6 @@ public final class LowLevelSongFeature extends MP3Info implements Callable<Boole
 			
 			song.setRhythmHistogram(rh);
 			
-			
 			//marshall this JaxbElement
 			JAXBContext jc= JAXBContext.newInstance("songArtifacts.lowLevel");
 			JAXBElement<SongType> je= obf.createSongMetadata(song);
@@ -189,7 +175,7 @@ public final class LowLevelSongFeature extends MP3Info implements Callable<Boole
 			
 			//TODO correct path it's not present yet.
 			
-			output= new File("LL_"+this.title+".xml");
+			output= new File("LL_"+mp3.getAudioFile().getName()+".xml");
 			m.marshal(je, output);
 			
 		} catch (JAXBException e) {
