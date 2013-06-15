@@ -1,9 +1,11 @@
 package feature.highLevel;
 
 import feature.MP3Info;
+import feature.lowLevel.LowLevelSongFeature;
 import httpGET.GetHttpPage;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.concurrent.Callable;
 
 import javax.xml.bind.JAXBContext;
@@ -12,6 +14,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.ValidationEvent;
 import javax.xml.bind.ValidationEventHandler;
+import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
@@ -214,7 +217,8 @@ public final class ArtistFeature extends MP3Info implements Callable<Boolean> {
 			Marshaller m= jc.createMarshaller();
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 			SchemaFactory sf= SchemaFactory.newInstance(W3C_XML_SCHEMA_NS_URI);
-			Schema schema= sf.newSchema(new File("MetadataSchema/artist.xsd"));
+			InputStream is= LowLevelSongFeature.class.getClassLoader().getResourceAsStream("MetadataSchema/artist.xsd");
+			Schema schema= sf.newSchema(new StreamSource(is));
 			m.setSchema(schema);
 			m.setEventHandler(new ValidationEventHandler() {
 				
@@ -224,9 +228,8 @@ public final class ArtistFeature extends MP3Info implements Callable<Boolean> {
 				}
 			});
 			
-			//TODO correct path it's not present yet.
 			
-			output= new File("mfe_"+this.artist.getName()+".xml");
+			output= new File("ARTIST_"+this.artist.getName()+".xml");
 			m.marshal(je, output);
 			
 		} catch (JAXBException e) {

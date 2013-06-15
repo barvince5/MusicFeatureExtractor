@@ -13,6 +13,7 @@ import utils.FindAlbumArtist;
 import httpGET.GetHttpPage;
 
 import java.io.File;
+import java.io.InputStream;
 import java.math.BigInteger;
 
 import javax.xml.bind.JAXBContext;
@@ -21,6 +22,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.ValidationEvent;
 import javax.xml.bind.ValidationEventHandler;
+import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
@@ -38,6 +40,7 @@ import customException.MusicbrainzUrlException;
 import customException.SongFeatureException;
 import entagged.audioformats.AudioFile;
 import feature.MP3Info;
+import feature.lowLevel.LowLevelSongFeature;
 
 public final class HighLevelSongFeature {
 	
@@ -184,7 +187,8 @@ public final class HighLevelSongFeature {
 			Marshaller m= jc.createMarshaller();
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 			SchemaFactory sf= SchemaFactory.newInstance(W3C_XML_SCHEMA_NS_URI);
-			Schema schema= sf.newSchema(new File("MetadataSchema/songHighLevel.xsd"));
+			InputStream is= LowLevelSongFeature.class.getClassLoader().getResourceAsStream("MetadataSchema/songHighLevel.xsd");
+			Schema schema= sf.newSchema(new StreamSource(is));
 			m.setSchema(schema);
 			m.setEventHandler(new ValidationEventHandler() {
 				
@@ -194,9 +198,8 @@ public final class HighLevelSongFeature {
 				}
 			});
 			
-			//TODO correct path it's not present yet.
 			
-			output= new File("HL_"+song.getTitle()+".xml");
+			output= new File("SONG_HL_"+song.getTitle()+".xml");
 			m.marshal(je, output);
 			
 		} catch (JAXBException e) {

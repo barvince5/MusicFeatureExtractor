@@ -15,18 +15,27 @@ public class Main {
 		
 		try {
 			
-			if(args[0].equalsIgnoreCase("-plot")) {
+			if(args[0].equalsIgnoreCase("-plot") && args.length >= 2) {
 				Plotter.plot(args);
 			} else if(args[0].equalsIgnoreCase("-all") && args.length == 2) {
 				hlFlag= true;
 				llFlag= true;
-				path= args[1];
+				if(args[1].equals("."))
+					path= System.getProperty("user.dir");
+				else
+					path= args[1];
 			} else if(args[0].equalsIgnoreCase("-hl") && args.length == 2) {
 				hlFlag= true;
-				path= args[1];
+				if(args[1].equals("."))
+					path= System.getProperty("user.dir");
+				else
+					path= args[1];
 			} else if(args[0].equalsIgnoreCase("-ll") && args.length == 2) {
 				llFlag= true;
-				path= args[1];
+				if(args[1].equals("."))
+					path= System.getProperty("user.dir");
+				else
+					path= args[1];
 			} else {
 				System.err.println("USAGE:"+
 									'\n'+"-all <dir or file>"+

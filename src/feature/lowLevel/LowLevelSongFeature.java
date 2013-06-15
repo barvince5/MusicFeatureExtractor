@@ -4,6 +4,7 @@ import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigInteger;
 
 import javax.sound.sampled.UnsupportedAudioFileException;
@@ -13,6 +14,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.ValidationEvent;
 import javax.xml.bind.ValidationEventHandler;
+import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
@@ -163,7 +165,8 @@ public final class LowLevelSongFeature {
 			Marshaller m= jc.createMarshaller();
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 			SchemaFactory sf= SchemaFactory.newInstance(W3C_XML_SCHEMA_NS_URI);
-			Schema schema= sf.newSchema(new File("MetadataSchema/songLowLevel.xsd"));
+			InputStream is= LowLevelSongFeature.class.getClassLoader().getResourceAsStream("MetadataSchema/songLowLevel.xsd");
+			Schema schema= sf.newSchema(new StreamSource(is));
 			m.setSchema(schema);
 			m.setEventHandler(new ValidationEventHandler() {
 				
@@ -173,9 +176,8 @@ public final class LowLevelSongFeature {
 				}
 			});
 			
-			//TODO correct path it's not present yet.
 			
-			output= new File("LL_"+mp3.getAudioFile().getName()+".xml");
+			output= new File("SONG_LL_"+mp3.getAudioFile().getName()+".xml");
 			m.marshal(je, output);
 			
 		} catch (JAXBException e) {
