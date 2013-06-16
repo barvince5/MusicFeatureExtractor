@@ -4,6 +4,8 @@ import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
 
 
 import java.io.InputStream;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
@@ -17,6 +19,7 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
 import mfeArtifacts.setup.AuthorType.Author;
+import mfeArtifacts.setup.CommandType;
 import mfeArtifacts.setup.FlagValueType;
 import mfeArtifacts.setup.MFESetupType;
 
@@ -71,12 +74,28 @@ public final class MFESetup {
 		}
 	}
 	
-	public final List<String> getHelpMessage() {
-		return this.setup.getPossibleCommands().getCommand();
+	public final String getHelpMessage() {
+		
+		String msg= "";
+		List<CommandType> cmdList= this.setup.getPossibleCommands().getCommand();
+		Iterator<CommandType> iter= cmdList.iterator();
+		while(iter.hasNext()) {
+			CommandType temp= iter.next();
+			msg= msg + temp.getCmd() + " " + temp.getDescription() + '\n';
+		}
+			
+		return msg;
 	}
 	
 	public final List<String> getCommands() {
-		return this.setup.getPossibleCommands().getCommand();
+		
+		List<String> cmd= new LinkedList<String>();
+		List<CommandType> cmdList= this.setup.getPossibleCommands().getCommand();
+		Iterator<CommandType> iter= cmdList.iterator();
+		while(iter.hasNext())
+			iter.next().getCmd();
+		
+		return cmd;
 	}
 	
 	public final List<Author> getAuthors() {

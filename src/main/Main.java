@@ -21,7 +21,6 @@ public class Main {
 		String path= "";
 		String helpMSG= "";
 		List<Author> authors= null;
-		List<String> commands= null;
 		
 		try {
 			
@@ -44,24 +43,14 @@ public class Main {
 			}
 			
 			//set the flags values
-			Iterator<String> iter2= setup.getHelpMessage().iterator();
-			while(iter2.hasNext()) {
-				helpMSG = helpMSG + iter2.next() + '\n';
-			}
+			helpMSG= setup.getHelpMessage();
 			
 			//set the authors
 			authors= setup.getAuthors();
 			
-			//set commands
-			commands= setup.getCommands();
-			
 			//START PROGRAM PHASE
 			String userCommand= args[0];
 			int inputNumberValues= args.length - 1; //-1 for command word
-			if(commands.contains(userCommand) == false) {
-				System.err.println("Command error"+'\n'+helpMSG);
-				System.exit(1);
-			}
 			
 			//check the command and set the variables or flags
 			switch(userCommand) {
