@@ -13,7 +13,8 @@ public class Main {
 						'\n'+"-all <dir or file>"+" for high and low level feature"+
 						'\n'+"-hl <dir or file>"+" for high level feature"+
 						'\n'+"-ll <dir or file>"+" for low level feature"+
-						'\n'+"-plot <file list SONG_LL_>"+" for plotting the Rhythm Histogram";
+						'\n'+"-plot <file list SONG_LL_>"+" for plotting the Rhythm Histogram"+
+						'\n'+"-author";
 		
 		try {
 			
@@ -46,6 +47,8 @@ public class Main {
 					path= args[1];
 			} else if(args[0].equalsIgnoreCase("-help")) {
 				System.out.println(helpMSG);
+			} else if(args[0].equalsIgnoreCase("-author")){
+				//TODO
 			} else {
 				System.err.println(helpMSG);
 				System.exit(1);
