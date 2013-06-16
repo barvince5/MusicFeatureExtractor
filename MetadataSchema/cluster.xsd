@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="https://github.com/AntonioCollarino/MusicFeatureExtractor.git" elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xsd5="https://github.com/AntonioCollarino/MusicFeatureExtractor.git">
+
+    <element name="ClusterData" type="xsd5:ClusterDataType">
+	</element>
+
+	<complexType name="ClusterDataType">
+		<sequence>
+			<element name="XMLFileCreation" type="dateTime" maxOccurs="1" minOccurs="1"></element>
+			<element name="clusterList" type="xsd5:clusterListType" maxOccurs="1" minOccurs="1"></element>
+		</sequence>
+		
+	</complexType>
+	
+	<complexType name="clusterListType">
+		<sequence>
+			<element name="cluster" type="xsd5:clusterType"
+				maxOccurs="unbounded">
+			</element>
+		</sequence>
+	</complexType>
+
+	<complexType name="clusterType">
+		<sequence>
+			<element name="songPath" type="string" maxOccurs="unbounded"></element>
+		</sequence>
+		<attribute name="id" type="nonNegativeInteger" use="required"></attribute>
+	</complexType>
+</schema>
