@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<MFESetup xmlns="https://github.com/AntonioCollarino/MusicFeatureExtractor.git" MFENumberVersion="1.0.1" MFENameVersion="Music Feature Extractor (MFE)">
-    <XMLCreationDate>2013-06-16T15:31:59.526+02:00</XMLCreationDate>
+<MFESetup xmlns="https://github.com/AntonioCollarino/MusicFeatureExtractor.git" MFENumberVersion="1.0.0" MFENameVersion="Music Feature Extractor (MFE)">
+    <XMLCreationDate>2013-06-17+02:00</XMLCreationDate>
     <authors>
         <author>
             <name>Antonio</name>
@@ -8,7 +8,7 @@
             <email>anto.collarino@gmail.com</email>
             <alias>sniper</alias>
             <role>Original author</role>
-            <joined>2013-06-16+02:00</joined>
+            <joined>2013-06-17+02:00</joined>
         </author>
         <author>
             <name>Vincenzo</name>
@@ -16,15 +16,42 @@
             <email>barvince5@gmail.com</email>
             <alias>barvince5</alias>
             <role>Original author</role>
-            <joined>2013-06-16+02:00</joined>
+            <joined>2013-06-17+02:00</joined>
         </author>
     </authors>
     <possibleCommands>
-        <command>-all &lt;dir or file&gt; for high and low level feature</command>
-        <command>-hl &lt;dir or file&gt; for high level feature</command>
-        <command>-ll &lt;dir or file&gt; for low level feature</command>
-        <command>-plot &lt;file list SONG_LL_&gt; for plotting the Rhythm Histogram</command>
-        <command>-author</command>
+        <command>
+            <cmd>-all</cmd>
+            <description>[dir or file] for high and low level feature</description>
+        </command>
+        <command>
+            <cmd>-hl</cmd>
+            <description>[dir or file] for high level feature</description>
+        </command>
+        <command>
+            <cmd>-ll</cmd>
+            <description>[dir or file] for low level feature</description>
+        </command>
+        <command>
+            <cmd>-plot</cmd>
+            <description>[file list SONG_LL_] for plotting the rhythm histogram</description>
+        </command>
+        <command>
+            <cmd>-cluster</cmd>
+            <description>[k clusters] [max iteration] [dir with SONG_LL_ files]</description>
+        </command>
+        <command>
+            <cmd>-help</cmd>
+            <description>to know the possible commands</description>
+        </command>
+        <command>
+            <cmd>-author</cmd>
+            <description>to know who are the authors</description>
+        </command>
+        <command>
+            <cmd>-version</cmd>
+            <description>the current MFE version</description>
+        </command>
     </possibleCommands>
     <flags>
         <flag name="HighLevelFlag">false</flag>

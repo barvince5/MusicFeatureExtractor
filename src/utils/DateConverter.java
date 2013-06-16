@@ -51,4 +51,19 @@ public final class DateConverter {
 		
 		return xmlGrogerianCalendar;
 	}
+	
+	/**
+	 * This method transform an xml Gregorian calendar in date.
+	 * @param gc
+	 * @return te corresponding date value
+	 * @throws DateConverterException 
+	 */
+	public final static Date XMLGregorianCalendarToDate(XMLGregorianCalendar gc) 
+			throws DateConverterException {
+		
+		if(gc == null)
+			throw new DateConverterException("The input is null ");
+		
+		return gc.toGregorianCalendar().getTime();
+	}
 }
