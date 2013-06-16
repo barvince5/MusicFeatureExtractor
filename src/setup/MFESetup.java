@@ -2,9 +2,8 @@ package setup;
 
 import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
 
-import java.io.File;
+
 import java.io.InputStream;
-import java.util.Date;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
@@ -16,8 +15,6 @@ import javax.xml.bind.ValidationEventHandler;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-
-import utils.DateConverter;
 
 import mfeArtifacts.setup.AuthorType.Author;
 import mfeArtifacts.setup.FlagValueType;
@@ -31,17 +28,19 @@ public final class MFESetup {
 	
 	private MFESetupType setup= null; 
 	
-	public MFESetup(File setting) 
+	public MFESetup(String path) 
 			throws MFESetupException {
 		
-		this.setup= this.getSettings(setting);
+		this.setup= this.getSettings(path);
 	}
 	
-	private final MFESetupType getSettings(File file) 
+	private final MFESetupType getSettings(String path) 
 			throws MFESetupException { 
+		
 		
 		try {
 			
+			InputStream file= MFESetup.class.getClassLoader().getResourceAsStream("MFESetting/setup.xml");
 			JAXBContext jc= JAXBContext.newInstance("mfeArtifacts.setup");
 			Unmarshaller u= jc.createUnmarshaller();
 			SchemaFactory sf= SchemaFactory.newInstance(W3C_XML_SCHEMA_NS_URI);
@@ -52,7 +51,6 @@ public final class MFESetup {
 				
 				@Override
 				public boolean handleEvent(ValidationEvent event) {
-					System.err.println(event.getMessage());
 					return false;
 				}
 			});
@@ -60,15 +58,16 @@ public final class MFESetup {
 			@SuppressWarnings("unchecked")
 			JAXBElement<MFESetupType> je= (JAXBElement<MFESetupType>) u.unmarshal(file);
 			MFESetupType setup= je.getValue();
-			
 			return setup;
 		
 		}catch(JAXBException e) {
 			throw new MFESetupException("JAXBException "+e.getMessage(), e);
+		} catch(IllegalArgumentException e) {
+			throw new MFESetupException("IllegalArgumentException "+e.getMessage(), e);
 		} catch(NullPointerException e) {
 			throw new MFESetupException("NullPointerException "+e.getMessage(), e);
 		} catch(Exception e) {
-			throw new MFESetupException(e.getMessage(), e);
+			throw new MFESetupException("Exception "+e.getMessage(), e);
 		}
 	}
 	
@@ -93,10 +92,10 @@ public final class MFESetup {
 		return this.setup.getMFENameVersion();
 	}
 	
-	public final Date getCreationSetupFileDate() 
+	public final String getCreationSetupFileDate() 
 			throws DateConverterException {
 		
-		return DateConverter.XMLGregorianCalendarToDate(this.setup.getXMLCreationDate());
+		return this.setup.getXMLCreationDate().toString();
 	}
 	
 	public final List<FlagValueType> getFlags() {

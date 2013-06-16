@@ -5,7 +5,7 @@
     
     <complexType name="MFESetupType">
     	<sequence>
-    		<element name="XMLCreationDate" type="dateTime"
+    		<element name="XMLCreationDate" type="date"
     			maxOccurs="1" minOccurs="1">
     		</element>
     		<element name="authors" type="xsd6:authorType" maxOccurs="1"

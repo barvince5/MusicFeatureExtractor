@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <MFESetup xmlns="https://github.com/AntonioCollarino/MusicFeatureExtractor.git" MFENumberVersion="1.0.0" MFENameVersion="Music Feature Extractor (MFE)">
-    <XMLCreationDate>2013-06-16T21:15:35.151+02:00</XMLCreationDate>
+    <XMLCreationDate>2013-06-16+02:00</XMLCreationDate>
     <authors>
         <author>
             <name>Antonio</name>

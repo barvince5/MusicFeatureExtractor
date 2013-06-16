@@ -1,6 +1,6 @@
 package main;
 
-import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -31,8 +31,7 @@ public class Main {
 			}
 			
 			//SETUP PHASE
-			File file= new File("MFESetting/setup.xml");
-			MFESetup setup= new MFESetup(file);
+			MFESetup setup= new MFESetup("MFESetting/setup.xml");
 			
 			//set the flags
 			Iterator<FlagValueType> iter1= setup.getFlags().iterator();
@@ -141,26 +140,25 @@ public class Main {
 					break;
 					
 				case "-author":
-					if(inputNumberValues == 1) {
+					
 						
-						String name, surname, alias, email, role;
-						Date joined;
-						Iterator<Author> iter= authors.iterator();
-						while(iter.hasNext()) {
-							Author aut= iter.next();
-							name= aut.getName();
-							surname= aut.getSurname();
-							alias= aut.getAlias();
-							email= aut.getEmail();
-							role= aut.getRole();
-							joined= DateConverter.XMLGregorianCalendarToDate(aut.getJoined());
-							System.out.println("Name: "+name+'\n'+"Surname: "+surname+'\n'+"Alias: "+alias);
-							System.out.println("E-mail: "+email+'\n'+"Role: "+role+'\n'+"Joined: "+joined.toString());
-						}
-						
-					} else {
-						System.out.println("Command error"+'\n'+helpMSG);
+					String name, surname, alias, email, role;
+					Date joined;
+					Iterator<Author> iter= authors.iterator();
+					while(iter.hasNext()) {
+						Author aut= iter.next();
+						name= aut.getName();
+						surname= aut.getSurname();
+						alias= aut.getAlias();
+						email= aut.getEmail();
+						role= aut.getRole();
+						joined= DateConverter.XMLGregorianCalendarToDate(aut.getJoined());
+						SimpleDateFormat dt= new SimpleDateFormat("YYYY-MM-dd");
+						System.out.println("Name: "+name+'\n'+"Surname: "+surname+'\n'+"Alias: "+alias);
+						System.out.println("E-mail: "+email+'\n'+"Role: "+role+'\n'+"Joined: "+dt.format(joined));
+						System.out.println("========");
 					}
+
 					break;
 					
 				case "-version":
