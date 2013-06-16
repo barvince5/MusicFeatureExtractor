@@ -103,7 +103,7 @@ public class KMeans {
 		
 		for(; i<this.songList.size(); ++i) {
 			Song s= this.songList.get(i);
-			int clust= this.findNearestCluster(s.getPosition());
+			int clust= this.findNearestCluster(s.getPosition()).getCluster();
 			Cluster c= this.clusterList.get(clust);
 			c.assignSong(s);
 		}	
@@ -122,40 +122,58 @@ public class KMeans {
 			boolean moved= false;
 			for(int currCluster=0; currCluster< this.clusterNumber; ++currCluster) {
 						
-				Cluster thisCluster= this.clusterList.get(currCluster);
-				
 				// for each cluster, check if a song is closer to the centroid of another cluster than to its own
-				ArrayList<Song> songs= (ArrayList<Song>) thisCluster.getSongListCopy();
+				Cluster thisCluster= this.clusterList.get(currCluster);
+				boolean last= false;
 				
-				// to return exactly k clusters, don't risk leaving any cluster empty; 
-				if(thisCluster.getSongCount() >= 2) {
-					Iterator<Song> iter= songs.iterator();
-					boolean last= false;
-					while(iter.hasNext() && last == false) {
+				// to return exactly k clusters, don't risk leaving any cluster empty by skipping clusters with one song in them; 
+				if(thisCluster.getSongCount() == 1) 
+					last= true;
+					
+				while(last == false) {
 						
+					// until it's possible, loop through all songs to find the worst fit for this cluster 
+					ArrayList<Song> songs= (ArrayList<Song>) thisCluster.getSongListCopy();
+					DistanceResult bestMove= new DistanceResult();
+					Iterator<Song> iter= songs.iterator();
+					while(iter.hasNext() && last == false) {
+							
 						Song currSong= iter.next();
-						int bestCluster= this.findNearestCluster(currSong.getPosition());
-						if (bestCluster != currCluster) {
-							
-							// the best cluster for this song isn't the current one, so it's moved to the found one
-							String path= currSong.getPath();
-							thisCluster.removeSong(path);
-							this.clusterList.get(bestCluster).assignSong(currSong);
-							moved= true;
-							
-							// if after deletion there is only one file, go to the next cluster / iteration 
-							if (thisCluster.getSongCount() == 1)
-								last= true;
+						DistanceResult thisMove= this.findNearestCluster(currSong.getPosition());
+						if(thisMove.getCluster() != currCluster) {
+								
+							// if it's the first cycle or the distance to another cluster is better than 
+							// the temporary best, this is the new best
+							if (bestMove.getDistance() == -1 || thisMove.getDistance() < bestMove.getDistance())
+								bestMove= thisMove;
+								bestMove.setName(currSong.getPath());
+							}
 						}
+					
+					// if no move can be made at the end of the while, exit the loop
+					if(bestMove.getDistance() == -1)
+						last= true;
+					else {
+						// if there was a good move in the song list, do it
+						// the best cluster for this song isn't the current one, so it's moved to the found one
+						Song s= thisCluster.removeSong(bestMove.getName());
+						this.clusterList.get(bestMove.getCluster()).assignSong(s);
+						moved= true;	
+						
+						// if after deletion there is only one file, go to the next cluster / iteration 
+						if(thisCluster.getSongCount() == 1)
+							last= true;	
 					}
-				} 
-			}
+				}
+			} 
 			
-			//if i didn't move any song in this iteration, stop looping
+			
+			//if i didn't move any song in any cluster in this iteration, stop looping
 			if(moved == false)
 				bestResult= true;
-		}	
+			}
 		
+		// once the algorithm has ended, save the results.
 		this.saveResults();
 	}	
 	
@@ -303,33 +321,31 @@ public class KMeans {
 	}
 	
 	/**
-	 * Finds the identifier or the cluster whose centroid is closest to the current position.
+	 * Finds the identifier or the cluster whose centroid is closest to the current position, and
+	 * the distance to it from the current position.
 	 * @param position the current position
-	 * @return closest cluster identifier
+	 * @return closest cluster identifier and distance from it
 	 * @throws ClusterException
 	 */
-	private int findNearestCluster(double[] position) 
+	private DistanceResult findNearestCluster(double[] position) 
 			throws ClusterException {
 		
-		int bestCluster= -1;
-		double bestDistance= -1;
+		DistanceResult res= new DistanceResult();
+		
 		for(int i= 0; i< this.clusterNumber; ++i) {
 			
 			double[] centroid= this.clusterList.get(i).getCentroid();
 			double distance= this.cosineSimilarity(position, centroid);
-			if(bestDistance == -1) {
-				bestDistance= distance;
-				bestCluster= i;
-			} else if(distance < bestDistance) {
-				bestDistance= distance;
-				bestCluster= i;
+			if(res.getDistance() == -1 || distance < res.getDistance()) {
+				res.setDistance(distance);
+				res.setCluster(i);
 			}
 		}
 		
-		if (bestCluster == -1)
+		if (res.getCluster() == -1)
 			throw new ClusterException("Can't assign to any cluster");
 		
-		return bestCluster;
+		return res;
 	}
 
 	/**
