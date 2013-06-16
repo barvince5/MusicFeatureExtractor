@@ -10,15 +10,18 @@ public class Main {
 		boolean hlFlag= false, llFlag= false;
 		String path= null;
 		String helpMSG= "USAGE:"+
-						'\n'+"-all <dir or file>"+
-						'\n'+"-hl <dir or file>"+
-						'\n'+"-ll <dir or file>"+
-						'\n'+"-plot <file list>";
-		
-		if(args.length == 0)
-			System.err.println("No input");
+						'\n'+"-all <dir or file>"+" for high and low level feature"+
+						'\n'+"-hl <dir or file>"+" for high level feature"+
+						'\n'+"-ll <dir or file>"+" for low level feature"+
+						'\n'+"-plot <file list SONG_LL_>"+" for plotting the Rhythm Histogram";
 		
 		try {
+			
+			if(args.length == 0) {
+				System.err.println("No input");
+				System.out.println(helpMSG);
+				System.exit(1);
+			}
 			
 			if(args[0].equalsIgnoreCase("-plot") && args.length >= 2) {
 				Plotter.plot(args);
@@ -41,8 +44,8 @@ public class Main {
 					path= System.getProperty("user.dir");
 				else
 					path= args[1];
-			} else if(args[0].equalsIgnoreCase("--help")) {
-				System.err.println(helpMSG);
+			} else if(args[0].equalsIgnoreCase("-help")) {
+				System.out.println(helpMSG);
 			} else {
 				System.err.println(helpMSG);
 				System.exit(1);
