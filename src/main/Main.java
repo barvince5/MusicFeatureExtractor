@@ -37,9 +37,9 @@ public class Main {
 			Iterator<FlagValueType> iter1= setup.getFlags().iterator();
 			while(iter1.hasNext()) {
 				FlagValueType flag= iter1.next();
-				if(flag.getName().equalsIgnoreCase("HighLevelFlag"))
+				if(flag.getName().equals("HighLevelFlag"))
 					hlFlag= flag.isValue();
-				if(flag.getName().equalsIgnoreCase("LowLevelFlag"))
+				if(flag.getName().equals("LowLevelFlag"))
 					llFlag= flag.isValue();
 			}
 			
@@ -72,7 +72,6 @@ public class Main {
 					} else {
 						System.err.println("Command error"+'\n'+helpMSG);
 					}
-					
 					break;
 
 				case "-all":
@@ -85,10 +84,16 @@ public class Main {
 						else
 							path= args[1];
 						
+						System.out.println("ARTISTS PHASE: Please wait...");
+						MasterMetadata.artistMetadata(path, hlFlag);
+						System.out.println("ALBUMS PHASE: Please wait...");
+						MasterMetadata.albumMetadata(path, hlFlag);
+						System.out.println("SONGS PHASE: Please wait...");
+						MasterMetadata.songMetadata(path, hlFlag, llFlag);
+						
 					} else {
 						System.err.println("Command error"+'\n'+helpMSG);
 					}
-					
 					break;
 					
 				case "-hl":
@@ -140,8 +145,6 @@ public class Main {
 					break;
 					
 				case "-author":
-					
-						
 					String name, surname, alias, email, role;
 					Date joined;
 					Iterator<Author> iter= authors.iterator();
@@ -158,7 +161,6 @@ public class Main {
 						System.out.println("E-mail: "+email+'\n'+"Role: "+role+'\n'+"Joined: "+dt.format(joined));
 						System.out.println("========");
 					}
-
 					break;
 					
 				case "-version":
@@ -166,15 +168,20 @@ public class Main {
 					break;
 					
 				case "-cluster":
+					if(inputNumberValues == 3) {
+						//TODO
+					} else {
+						System.err.println("Command error"+'\n'+helpMSG);
+					}
 					break;
 					
 				default:
 					System.err.println("Command error"+'\n'+helpMSG);
 					break;
+
 			}
 					
 		} catch(Exception e) {
-			System.err.println(e.getMessage());
 			MasterMetadata.shutDownMFE();
 			System.err.println("MFE is shutting down");
 		}

@@ -20,11 +20,13 @@
         </author>
     </authors>
     <possibleCommands>
-        <command>-all [dir or file] for high and low level feature</command>
-        <command>-hl [dir or file] for high level feature</command>
-        <command>-ll [dir or file] for low level feature</command>
-        <command>-plot [file list SONG_LL_] for plotting the Rhythm Histogram</command>
+        <command>-all</command>
+        <command>-hl</command>
+        <command>-ll</command>
+        <command>-plot</command>
         <command>-author</command>
+        <command>-version</command>
+        <command>-cluster</command>
         <command>-help</command>
     </possibleCommands>
     <flags>
