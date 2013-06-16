@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<MFESetup xmlns="https://github.com/AntonioCollarino/MusicFeatureExtractor.git" MFENumberVersion="1.0.1" MFENameVersion="Music Feature Extractor (MFE)">
-    <XMLCreationDate>2013-06-16T15:31:59.526+02:00</XMLCreationDate>
+<MFESetup xmlns="https://github.com/AntonioCollarino/MusicFeatureExtractor.git" MFENumberVersion="1.0.0" MFENameVersion="Music Feature Extractor (MFE)">
+    <XMLCreationDate>2013-06-16T21:15:35.151+02:00</XMLCreationDate>
     <authors>
         <author>
             <name>Antonio</name>
@@ -20,11 +20,12 @@
         </author>
     </authors>
     <possibleCommands>
-        <command>-all &lt;dir or file&gt; for high and low level feature</command>
-        <command>-hl &lt;dir or file&gt; for high level feature</command>
-        <command>-ll &lt;dir or file&gt; for low level feature</command>
-        <command>-plot &lt;file list SONG_LL_&gt; for plotting the Rhythm Histogram</command>
+        <command>-all [dir or file] for high and low level feature</command>
+        <command>-hl [dir or file] for high level feature</command>
+        <command>-ll [dir or file] for low level feature</command>
+        <command>-plot [file list SONG_LL_] for plotting the Rhythm Histogram</command>
         <command>-author</command>
+        <command>-help</command>
     </possibleCommands>
     <flags>
         <flag name="HighLevelFlag">false</flag>

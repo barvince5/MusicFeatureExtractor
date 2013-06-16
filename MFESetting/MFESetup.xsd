@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="https://github.com/AntonioCollarino/MusicFeatureExtractor.git" elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xsd="https://github.com/AntonioCollarino/MusicFeatureExtractor.git">
+<schema targetNamespace="https://github.com/AntonioCollarino/MusicFeatureExtractor.git" elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xsd6="https://github.com/AntonioCollarino/MusicFeatureExtractor.git">
 
-    <element name="MFESetup" type="xsd:MFESetupType"></element>
+    <element name="MFESetup" type="xsd6:MFESetupType"></element>
     
     <complexType name="MFESetupType">
     	<sequence>
     		<element name="XMLCreationDate" type="dateTime"
     			maxOccurs="1" minOccurs="1">
     		</element>
-    		<element name="authors" type="xsd:authorType" maxOccurs="1"
+    		<element name="authors" type="xsd6:authorType" maxOccurs="1"
     			minOccurs="1">
     		</element>
-    		<element name="possibleCommands" type="xsd:possibleCommandType"
+    		<element name="possibleCommands" type="xsd6:possibleCommandType"
     			maxOccurs="1" minOccurs="1">
     		</element>
-    		<element name="flags" type="xsd:flagType" maxOccurs="1" minOccurs="1"></element>
+    		<element name="flags" type="xsd6:flagType" maxOccurs="1" minOccurs="1"></element>
     	</sequence>
     	<attribute name="MFENumberVersion" type="string" use="required" fixed="1.0.0"></attribute>
     	<attribute name="MFENameVersion" type="string" use="required" fixed="Music Feature Extractor (MFE)"></attribute>
@@ -56,7 +56,7 @@
 
     <complexType name="flagType">
     	<sequence>
-    		<element name="flag" type="xsd:flagValueType" maxOccurs="unbounded" minOccurs="1"></element>
+    		<element name="flag" type="xsd6:flagValueType" maxOccurs="unbounded" minOccurs="1"></element>
     	</sequence>
     </complexType>
 

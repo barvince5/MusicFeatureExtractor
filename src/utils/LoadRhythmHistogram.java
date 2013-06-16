@@ -36,31 +36,31 @@ public final class LoadRhythmHistogram {
 		double[] rhValues= null;
 
 			
-			JAXBContext jc= JAXBContext.newInstance("songArtifacts.lowLevel");
-			Unmarshaller u= jc.createUnmarshaller();
-			SchemaFactory sf= SchemaFactory.newInstance(W3C_XML_SCHEMA_NS_URI);
-			InputStream is= LowLevelSongFeature.class.getClassLoader().getResourceAsStream("MetadataSchema/songLowLevel.xsd");
-			Schema schema= sf.newSchema(new StreamSource(is));
-			u.setSchema(schema);
-			u.setEventHandler(new ValidationEventHandler() {
+		JAXBContext jc= JAXBContext.newInstance("songArtifacts.lowLevel");
+		Unmarshaller u= jc.createUnmarshaller();
+		SchemaFactory sf= SchemaFactory.newInstance(W3C_XML_SCHEMA_NS_URI);
+		InputStream is= LowLevelSongFeature.class.getClassLoader().getResourceAsStream("MetadataSchema/songLowLevel.xsd");
+		Schema schema= sf.newSchema(new StreamSource(is));
+		u.setSchema(schema);
+		u.setEventHandler(new ValidationEventHandler() {
 				
-				@Override
-				public boolean handleEvent(ValidationEvent event) {
-					return false;
-				}
-			});
+			@Override
+			public boolean handleEvent(ValidationEvent event) {
+				return false;
+			}
+		});
 
-			@SuppressWarnings("unchecked")
-			JAXBElement<SongType> je= (JAXBElement<SongType>) u.unmarshal(file);
-			SongType song= je.getValue();
+		@SuppressWarnings("unchecked")
+		JAXBElement<SongType> je= (JAXBElement<SongType>) u.unmarshal(file);
+		SongType song= je.getValue();
 			
-			RhythmHistogramType rh= song.getRhythmHistogram();
-			List<Double> values= rh.getValue();
-			rhValues= new double[values.size()];
+		RhythmHistogramType rh= song.getRhythmHistogram();
+		List<Double> values= rh.getValue();
+		rhValues= new double[values.size()];
 			
-			Iterator<Double> iter= values.iterator();
-			for(int i= 0; iter.hasNext(); ++i)
-				rhValues[i]= iter.next().doubleValue();
+		Iterator<Double> iter= values.iterator();
+		for(int i= 0; iter.hasNext(); ++i)
+			rhValues[i]= iter.next().doubleValue();
 
 		return rhValues;
 	}
