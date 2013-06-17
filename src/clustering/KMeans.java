@@ -82,7 +82,9 @@ public class KMeans {
 			this.clusterList.add(c);
 		}
 		
+		
 		this.init();
+	
 	}
 	
 	/**
@@ -99,6 +101,7 @@ public class KMeans {
 			Song s= this.songList.get(i);
 			Cluster c= this.clusterList.get(i);
 			c.assignSong(s);
+			c.resetCentroid();
 		}
 		
 		for(; i<this.songList.size(); ++i) {
@@ -107,6 +110,7 @@ public class KMeans {
 			Cluster c= this.clusterList.get(clust);
 			c.assignSong(s);
 		}	
+		
 	}
 
 	/**
@@ -118,6 +122,11 @@ public class KMeans {
 		
 		boolean bestResult= false;
 		for(int i= 0; i< maxIter && bestResult == false ; ++i) {
+			
+			// at the start of each iteration, recalculate each centroid
+			Iterator<Cluster> iterC= this.clusterList.iterator();
+			while(iterC.hasNext())
+				iterC.next().resetCentroid();
 			
 			boolean moved= false;
 			for(int currCluster=0; currCluster< this.clusterNumber; ++currCluster) {
@@ -135,23 +144,24 @@ public class KMeans {
 					// until it's possible, loop through all songs to find the worst fit for this cluster 
 					ArrayList<Song> songs= (ArrayList<Song>) thisCluster.getSongListCopy();
 					DistanceResult bestMove= new DistanceResult();
-					Iterator<Song> iter= songs.iterator();
-					while(iter.hasNext() && last == false) {
+					Iterator<Song> iterS= songs.iterator();
+					while(iterS.hasNext() && last == false) {
 							
-						Song currSong= iter.next();
+						Song currSong= iterS.next();
 						DistanceResult thisMove= this.findNearestCluster(currSong.getPosition());
 						if(thisMove.getCluster() != currCluster) {
 								
-							// if it's the first cycle or the distance to another cluster is better than 
+							// if it's the first cycle or the similarity w.r.t. another cluster is better than 
 							// the temporary best, this is the new best
-							if (bestMove.getDistance() == -1 || thisMove.getDistance() < bestMove.getDistance())
+							if (bestMove.getSimilarity() == -2.0 || thisMove.getSimilarity() > bestMove.getSimilarity())
+			
 								bestMove= thisMove;
 								bestMove.setName(currSong.getPath());
 							}
 						}
 					
 					// if no move can be made at the end of the while, exit the loop
-					if(bestMove.getDistance() == -1)
+					if(bestMove.getSimilarity() == -2.0)
 						last= true;
 					else {
 						// if there was a good move in the song list, do it
@@ -321,30 +331,30 @@ public class KMeans {
 	}
 	
 	/**
-	 * Finds the identifier or the cluster whose centroid is closest to the current position, and
-	 * the distance to it from the current position.
+	 * Finds the identifier or the cluster whose centroid is closest to the current position,
+	 * and how similar it is to the currently chosen element.
 	 * @param position the current position
 	 * @return closest cluster identifier and distance from it
 	 * @throws ClusterException
 	 */
 	private DistanceResult findNearestCluster(double[] position) 
 			throws ClusterException {
-		
+
 		DistanceResult res= new DistanceResult();
-		
 		for(int i= 0; i< this.clusterNumber; ++i) {
 			
 			double[] centroid= this.clusterList.get(i).getCentroid();
-			double distance= this.cosineSimilarity(position, centroid);
-			if(res.getDistance() == -1 || distance < res.getDistance()) {
-				res.setDistance(distance);
+			double similarity= this.cosineSimilarity(position, centroid);
+
+			if(res.getSimilarity() == -2.0 || similarity > res.getSimilarity()) {
+				res.setSimilarity(similarity);
 				res.setCluster(i);
 			}
 		}
 		
 		if (res.getCluster() == -1)
 			throw new ClusterException("Can't assign to any cluster");
-		
+	
 		return res;
 	}
 
@@ -382,7 +392,7 @@ public class KMeans {
 		for (int i=0; i<size; ++i)
 			result += (a[i]*a[i]);
 		
-		return result;
+		return Math.sqrt(result);
 	
 	}
 	

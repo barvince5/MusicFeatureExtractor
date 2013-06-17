@@ -81,7 +81,6 @@ public class Cluster {
 			return false;
 		
 		this.songMap.put(path, s);
-		this.resetCentroid();
 		return true;
 	}
 	
@@ -95,7 +94,6 @@ public class Cluster {
 			return null;
 		
 		Song result= this.songMap.remove(path);
-		this.resetCentroid();
 		
 		return result;
 	}
@@ -137,11 +135,11 @@ public class Cluster {
 	 * song in the Cluster.
 	 * 
 	 */
-	private void resetCentroid() {
+	public void resetCentroid() {
 		
 		int size= this.songMap.size();
 		
-		// if there's no songs, there can be no centroid
+		// if there are no songs, there can be no centroid
 		if(size == 0)
 			return;
 		
@@ -151,24 +149,25 @@ public class Cluster {
 			this.centroid= songs[0].getPosition();
 		}
 		
-		double[] newCentroid= new double [this.dimensions];
+		double[] newCentroid= new double[this.dimensions];
 		
 		for(int i= 0; i< this.dimensions; ++i) 
 			newCentroid[i]= 0.0;
 		
-		Iterator<String> iter= this.songMap.keySet().iterator();
+		Iterator<Song> iter= this.songMap.values().iterator();
 		while(iter.hasNext()) {
-			double[] currSong= this.songMap.get(iter.next()).getPosition();
+			double[] currSong= iter.next().getPosition();
 
 			for (int i=0; i< this.dimensions; ++i) {
 				newCentroid[i] += currSong[i]; 
-			}
-		
-			for(int i= 0; i< this.dimensions; ++i)
-				newCentroid[i] = newCentroid[i] / (double) this.songMap.size();
-			
+			}	
 		}
+
+		for(int i= 0; i< this.dimensions; ++i)
+			newCentroid[i] = newCentroid[i] / (double) this.songMap.size();
 		
 		this.centroid= newCentroid;
+
+		return;
 	}
 }

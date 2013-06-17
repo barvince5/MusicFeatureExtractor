@@ -1,33 +1,42 @@
 package clustering;
 
+import customException.ClusterException;
+
 public class DistanceResult {
 
 	/**
 	 * This class contains the result of the method that finds the closest
 	 * Cluster with respect to the current position. It contains the closest
-	 * cluster identifier, the distance from it, and the name of the element
-	 * in the current position (the song path). 
+	 * cluster identifier, the cosine similarity with respect to it, and 
+	 * the name of the element in the current position (the song path). 
 	 */
 	
 	private int cluster;
-	private double distance;
+	private double similarity;
 	private String name;
 	
 	/**
-	 * The constructor initializes the name to an empty string, and
-	 * both the cluster name and distance to -1.
+	 * The constructor initializes the name to an empty string. 
+	 * The cluster id will be initialized to -1.
+	 * Since (-1,1) is the acceptable range for the similarity, 
+	 * it will be initialized to an impossible value, -2.
 	 */
 	public DistanceResult(){
 		this.cluster= -1;
-		this.distance= -1.0;
+		this.similarity= -2.0;
 		this.name= "";
 	}
 	
 	/**
 	 * Sets the cluster identifier.
 	 * @param cluster cluster id
+	 * @throws ClusterException 
 	 */
-	public void setCluster(int cluster) {
+	public void setCluster(int cluster) 
+			throws ClusterException {
+		if(cluster < 0)
+			throw new ClusterException("The cluster identifier cannot be negative!");
+		
 		this.cluster= cluster;
 	}
 	
@@ -40,19 +49,24 @@ public class DistanceResult {
 	}
 	
 	/**
-	 * Sets the distance from the best cluster centroid.
-	 * @param distance distance from cluster
+	 * Sets the cosine similarity with respect to the best cluster centroid.
+	 * @param similarity similarity w.r.t. the cluster
+	 * @throws ClusterException 
 	 */
-	public void setDistance(double distance) {
-		this.distance= distance;
+	public void setSimilarity(double similarity) 
+			throws ClusterException {
+		if(similarity < -1.0 || similarity > 1.0)
+			throw new ClusterException("The similarity must be between -1 and 1!");
+		
+		this.similarity= similarity;
 	}
 	
 	/**
-	 * Gets the distance from the best cluster centroid.
-	 * @return distance from cluster
+	 * Gets the cosine similarity with respect to the best cluster centroid.
+	 * @return similarity w.r.t. the cluster
 	 */
-	public double getDistance() {
-		return this.distance;
+	public double getSimilarity() {
+		return this.similarity;
 	}
 	
 	/**
