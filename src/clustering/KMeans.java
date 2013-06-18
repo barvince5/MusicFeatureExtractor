@@ -3,6 +3,7 @@ package clustering;
 import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
 
 import java.io.File;
+import java.io.InputStream;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,6 +16,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.ValidationEvent;
 import javax.xml.bind.ValidationEventHandler;
+import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
@@ -42,6 +44,7 @@ public class KMeans {
 	
 	private List<Song> songList= null;
 	private int clusterNumber= -1;
+	private int songNumber= -1;
 	private int maxIter= -1;
 	private List<Cluster> clusterList= null;
 	
@@ -68,11 +71,12 @@ public class KMeans {
 		this.clusterNumber= clusterNumber;
 		this.maxIter= maxIter;
 		this.songList= new ArrayList<Song>();
+		this.songNumber= this.songList.size();
 		
 		// loads the songs list and returns the number of dimensions
 		int dimensions= this.loadSongs(path);
 		
-		if (this.songList.size() < this.clusterNumber)
+		if (this.songNumber < this.clusterNumber)
 			throw new ClusterException("The number of files can't be less than the number of clusters!");
 		
 		this.clusterList= new ArrayList<Cluster>();
@@ -104,7 +108,7 @@ public class KMeans {
 			c.resetCentroid();
 		}
 		
-		for(; i<this.songList.size(); ++i) {
+		for(; i<this.songNumber; ++i) {
 			Song s= this.songList.get(i);
 			int clust= this.findNearestCluster(s.getPosition()).getCluster();
 			Cluster c= this.clusterList.get(clust);
@@ -205,6 +209,8 @@ public class KMeans {
 		}
 		
 		ClusterListType clusters= obf.createClusterListType();
+		clusters.setClusterCount(BigInteger.valueOf(this.clusterNumber));
+		clusters.setSongCount(BigInteger.valueOf(this.songNumber));
 		Iterator<Cluster> iterC= this.clusterList.iterator();
 		
 		while(iterC.hasNext()) {
@@ -232,7 +238,8 @@ public class KMeans {
 			Marshaller m= jc.createMarshaller();
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 			SchemaFactory sf= SchemaFactory.newInstance(W3C_XML_SCHEMA_NS_URI);
-			Schema schema= sf.newSchema(new File("MetadataSchema/cluster.xsd"));
+			InputStream is= KMeans.class.getClassLoader().getResourceAsStream("MetadataSchema/cluster.xsd");
+			Schema schema= sf.newSchema(new StreamSource(is));
 			m.setSchema(schema);
 			m.setEventHandler(new ValidationEventHandler() {
 				

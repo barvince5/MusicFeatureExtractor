@@ -18,6 +18,10 @@
 				maxOccurs="unbounded">
 			</element>
 		</sequence>
+		<attribute name="clusterCount" type="positiveInteger"
+			use="required">
+		</attribute>
+		<attribute name="songCount" type="positiveInteger" use="required"></attribute>
 	</complexType>
 
 	<complexType name="clusterType">
