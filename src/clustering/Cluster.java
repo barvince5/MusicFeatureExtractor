@@ -5,16 +5,15 @@ import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class contains the information about an cluster in the 
+ * K-Means clustering algorithm. It has a numerical identifier, 
+ * the number of item dimensions (60 for Rhythm Histogram), a
+ * map with the songs assigned to this cluster, and the current
+ * position of the cluster centroid, computed again each time an
+ * item is assigned or removed from the cluster.
+ */
 public class Cluster {
-
-	/**
-	 * This class contains the information about an cluster in the 
-	 * K-Means clustering algorithm. It has a numerical identifier, 
-	 * the number of item dimensions (60 for Rhythm Histogram), a
-	 * map with the songs assigned to this cluster, and the current
-	 * position of the cluster centroid, computed again each time an
-	 * item is assigned or removed from the cluster.
-	 */
 	
 	private int id;
 	private int dimensions;
