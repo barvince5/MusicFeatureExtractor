@@ -23,7 +23,7 @@ public class Main {
 		try {
 
 			//SETUP PHASE
-			MFESetup setup= new MFESetup();
+			MFESetup setup= new MFESetup(); 
 			cmd= setup.getCommands();
 			if(cmd.isEmpty()) {
 				System.err.println("No command present in setup.xml file");
@@ -42,13 +42,13 @@ public class Main {
 				
 				//creation of the corresponding class is done on the fly
 				Constructor<?> con= Class.forName(clazz).getConstructor(CommandParameter.class);
+				//for now only one command at time can be run.
 				Command c= (Command) con.newInstance(new CommandParameter(args, setup));
 				c.start();
 			}
 
 		} catch(Exception e) {
 			System.err.println(e.getMessage());
-			MasterMetadata.shutDownMFE();
 			System.err.println("MFE is shutting down");
 		}
 	}

@@ -48,7 +48,7 @@ public final class MasterMetadata {
 	/**
 	 * This method allows to stop immediately the entire MFE program.
 	 */
-	public final static void shutDownMFE() {
+	public final static void shutDownMM() {
 		
 		if(MasterMetadata.artistES != null)
 			MasterMetadata.artistES.shutdownNow();
