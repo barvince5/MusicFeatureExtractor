@@ -1,24 +1,29 @@
 package command.info;
 
 import java.text.SimpleDateFormat;
-import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import utils.DateConverter;
 
 import mfeArtifacts.setup.AuthorType.Author;
 import command.Command;
+import command.CommandParameter;
 
 /**
  * This class prints on screen informations about the authors.
  */
 public final class AuthorCommand implements Command {
 
-	private Collection<Author> authors= null;
+	private CommandParameter par;
 	
-	public AuthorCommand(Collection<Author> authors) {
-		this.authors= authors;
+	public AuthorCommand(CommandParameter par) {
+		
+		if(par == null)
+			throw new NullPointerException("AuthorCommand has a null CommandParameter");
+		
+		this.par= par;
 	}
 	
 	@Override
@@ -28,6 +33,7 @@ public final class AuthorCommand implements Command {
 		String name, surname, alias, email, role;
 		Date joined;
 		
+		List<Author> authors= par.getMFESetup().getAuthors();
 		Iterator<Author> iter= authors.iterator();
 		while(iter.hasNext()) {
 			

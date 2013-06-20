@@ -1,16 +1,17 @@
 package main;
 
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
 
 import command.Command;
+import command.CommandParameter;
 
 import setup.MFESetup;
 
 
-
 public class Main {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		
 		if(args.length == 0) {
 			System.err.println("No command input");
@@ -39,7 +40,9 @@ public class Main {
 				
 			} else {
 				
-				Command c= (Command) Class.forName(clazz).newInstance();
+				//creation of the corresponding class is done on the fly
+				Constructor<?> con= Class.forName(clazz).getConstructor(CommandParameter.class);
+				Command c= (Command) con.newInstance(new CommandParameter(args, setup));
 				c.start();
 			}
 
