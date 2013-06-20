@@ -8,7 +8,7 @@ import customException.ClusterException;
  * cluster identifier, the cosine similarity with respect to it, and 
  * the name of the element in the current position (the song path). 
  */
-public class DistanceResult {
+public final class DistanceResult {
 	
 	private int cluster;
 	private double similarity;
@@ -31,7 +31,7 @@ public class DistanceResult {
 	 * @param cluster cluster id
 	 * @throws ClusterException 
 	 */
-	public void setCluster(int cluster) 
+	public final void setCluster(int cluster) 
 			throws ClusterException {
 		if(cluster < 0)
 			throw new ClusterException("The cluster identifier cannot be negative!");
@@ -43,7 +43,7 @@ public class DistanceResult {
 	 * Gets the cluster identifier.
 	 * @return cluster id
 	 */
-	public int getCluster() {
+	public final int getCluster() {
 		return this.cluster;
 	}
 	
@@ -52,7 +52,7 @@ public class DistanceResult {
 	 * @param similarity similarity w.r.t. the cluster
 	 * @throws ClusterException 
 	 */
-	public void setSimilarity(double similarity) 
+	public final void setSimilarity(double similarity) 
 			throws ClusterException {
 		if(similarity < -1.0 || similarity > 1.0)
 			throw new ClusterException("The similarity must be between -1 and 1!");
@@ -64,7 +64,7 @@ public class DistanceResult {
 	 * Gets the cosine similarity with respect to the best cluster centroid.
 	 * @return similarity w.r.t. the cluster
 	 */
-	public double getSimilarity() {
+	public final double getSimilarity() {
 		return this.similarity;
 	}
 	
@@ -72,7 +72,7 @@ public class DistanceResult {
 	 * Sets the name of the element in the current position.
 	 * @param name element name
 	 */
-	public void setName(String name) {
+	public final void setName(String name) {
 		this.name= name;
 	}
 	
@@ -80,7 +80,7 @@ public class DistanceResult {
 	 * Gets the name of the element in the current position.
 	 * @return element name
 	 */
-	public String getName() {
+	public final String getName() {
 		return this.name;
 	}
 }
