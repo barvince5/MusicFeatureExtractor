@@ -32,14 +32,13 @@ import clusterArtifacts.ObjectFactory;
 import customException.ClusterException;
 import customException.DateConverterException;
 
+/**
+ * This class executes the K-Means algorithm to perform clustering on a set of
+ * Low Level Song Feature files starting from a directory. The measure used for 
+ * position is the Rhythm Histogram (60-dimensional array) and the measure of 
+ * distance used is the Cosine Similarity. 
+ */
 public class KMeans {
-
-	/**
-	 * This class executes the K-Means algorithm to perform clustering on a set of
-	 * Low Level Song Feature files starting from a directory. The measure used for 
-	 * position is the Rhythm Histogram (60-dimensional array) and the measure of 
-	 * distance used is the Cosine Similarity. 
-	 */
 	
 	
 	private List<Song> songList= null;
@@ -60,7 +59,7 @@ public class KMeans {
 		throws ClusterException {
 		
 		if(clusterNumber <= 0)
-			throw new ClusterException("The number of clusters can't be negative!");
+			throw new ClusterException("The number of clusters must be positive!");
 		
 		if(maxIter < 1)
 			throw new ClusterException("Must iterate at least once!");
@@ -71,10 +70,10 @@ public class KMeans {
 		this.clusterNumber= clusterNumber;
 		this.maxIter= maxIter;
 		this.songList= new ArrayList<Song>();
-		this.songNumber= this.songList.size();
 		
 		// loads the songs list and returns the number of dimensions
 		int dimensions= this.loadSongs(path);
+		this.songNumber= this.songList.size();
 		
 		if (this.songNumber < this.clusterNumber)
 			throw new ClusterException("The number of files can't be less than the number of clusters!");

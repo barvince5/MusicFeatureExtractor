@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import clustering.KMeans;
+
 import mfeArtifacts.setup.AuthorType.Author;
 import mfeArtifacts.setup.FlagValueType;
 
@@ -156,9 +158,13 @@ public class Main {
 					System.out.println("Version: "+setup.getVersion()+" "+setup.getVersionName());
 					break;
 					
-				case "-cluster":
+				case "-kmeans":
 					if(inputNumberValues == 3) {
-						//TODO
+						int clusterNumber= Integer.valueOf(args[1]);
+						int maxIter= Integer.valueOf(args[2]);
+						String dir= args[3];
+						KMeans kmeans= new KMeans(clusterNumber, maxIter, dir);
+						kmeans.start();
 					} else {
 						System.err.println("Command error"+'\n'+helpMSG);
 					}
@@ -171,6 +177,7 @@ public class Main {
 			}
 					
 		} catch(Exception e) {
+			System.err.println(e.getMessage());
 			MasterMetadata.shutDownMFE();
 			System.err.println("MFE is shutting down");
 		}

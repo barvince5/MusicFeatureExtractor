@@ -8,13 +8,13 @@ import customException.ClusterException;
 
 import utils.LoadRhythmHistogram;
 
+/**
+ * This class contains the information about an item in the considered set (song)
+ * for the K-Means clustering algorithm. It contains the position, the cluster it 
+ * has been assigned to, and the filename path as identifier. 
+ */
 public class Song {
 	
-	/**
-	 * This class contains the information about an item in the considered set (song)
-	 * for the K-Means clustering algorithm. It contains the position, the cluster it 
-	 * has been assigned to, and the filename path as identifier. 
-	 */
 	
 	String path;
 	int cluster;

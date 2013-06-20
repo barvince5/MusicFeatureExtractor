@@ -2,14 +2,13 @@ package clustering;
 
 import customException.ClusterException;
 
+/**
+ * This class contains the result of the method that finds the closest
+ * Cluster with respect to the current position. It contains the closest
+ * cluster identifier, the cosine similarity with respect to it, and 
+ * the name of the element in the current position (the song path). 
+ */
 public class DistanceResult {
-
-	/**
-	 * This class contains the result of the method that finds the closest
-	 * Cluster with respect to the current position. It contains the closest
-	 * cluster identifier, the cosine similarity with respect to it, and 
-	 * the name of the element in the current position (the song path). 
-	 */
 	
 	private int cluster;
 	private double similarity;

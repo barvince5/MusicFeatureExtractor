@@ -37,7 +37,7 @@
             <description>[file list SONG_LL_] for plotting the rhythm histogram</description>
         </command>
         <command>
-            <cmd>-cluster</cmd>
+            <cmd>-kmeans</cmd>
             <description>[k clusters] [max iteration] [dir with SONG_LL_ files]</description>
         </command>
         <command>
