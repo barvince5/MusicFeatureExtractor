@@ -35,7 +35,7 @@ public class Main {
 			String clazz= cmd.get(userCommand);
 			if(clazz == null || clazz.equals("")) {
 				
-				System.err.println("No class present for this command");
+				System.err.println("This command is not correct, please try -help");
 				System.exit(1);
 				
 			} else {
