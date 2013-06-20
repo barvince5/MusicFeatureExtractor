@@ -14,7 +14,6 @@
     		<element name="possibleCommands" type="xsd6:possibleCommandType"
     			maxOccurs="1" minOccurs="1">
     		</element>
-    		<element name="flags" type="xsd6:flagType" maxOccurs="1" minOccurs="1"></element>
     	</sequence>
     	<attribute name="MFENumberVersion" type="string" use="required" fixed="1.0.0"></attribute>
     	<attribute name="MFENameVersion" type="string" use="required" fixed="Music Feature Extractor (MFE)"></attribute>
@@ -53,25 +52,15 @@
     	</sequence>
     </complexType>
 
-
-    <complexType name="flagType">
-    	<sequence>
-    		<element name="flag" type="xsd6:flagValueType" maxOccurs="unbounded" minOccurs="1"></element>
-    	</sequence>
-    </complexType>
-
-    <complexType name="flagValueType">
-    	<simpleContent>
-    		<extension base="boolean">
-    			<attribute name="name" type="string"></attribute>
-    		</extension>
-    	</simpleContent>
-    </complexType>
-
     <complexType name="commandType">
     	<sequence>
-    		<element name="cmd" type="string" maxOccurs="1" minOccurs="1"></element>
-    		<element name="description" type="string" maxOccurs="1" minOccurs="1"></element>
+    		<element name="cmd" type="string" maxOccurs="1"
+    			minOccurs="1">
+    		</element>
+    		<element name="description" type="string" maxOccurs="1"
+    			minOccurs="1">
+    		</element>
+    		<element name="class" type="string" maxOccurs="1" minOccurs="1"></element>
     	</sequence>
     </complexType>
 </schema>

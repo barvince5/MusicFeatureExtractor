@@ -38,7 +38,7 @@ import customException.DateConverterException;
  * position is the Rhythm Histogram (60-dimensional array) and the measure of 
  * distance used is the Cosine Similarity. 
  */
-public class KMeans {
+public final class KMeans {
 	
 	
 	private List<Song> songList= null;
@@ -96,7 +96,7 @@ public class KMeans {
 	 * they are the closest to.  
 	 * @throws ClusterException
 	 */
-	private void init() 
+	private final void init() 
 			throws ClusterException {
 		
 		int i= 0;
@@ -120,7 +120,7 @@ public class KMeans {
 	 * Executes the algorithm for the parameters specified in the constructor.
 	 * @throws ClusterException
 	 */
-	public void start() 
+	public final void execute() 
 			throws ClusterException {
 		
 		boolean bestResult= false;
@@ -194,7 +194,7 @@ public class KMeans {
 	 * Writes the results of the clustering algorithm procedure to XML.
 	 * @throws ClusterException
 	 */
-	private void saveResults() 
+	private final void saveResults() 
 			throws ClusterException {
 		
 		ObjectFactory obf= new ObjectFactory();
@@ -298,7 +298,7 @@ public class KMeans {
 	 * @return number of dimensions for the files loaded (RhythmHistogram defaults to 60)
 	 * @throws ClusterException
 	 */
-	private int loadSongs(String dir) 
+	private final int loadSongs(String dir) 
 		throws ClusterException {
 		
 		try {
@@ -315,7 +315,7 @@ public class KMeans {
 	 * @return number of dimensions for the files loaded (RhythmHistogram defaults to 60)
 	 * @throws ClusterException
 	 */
-	private int loadSongs(File dir) 
+	private final int loadSongs(File dir) 
 			throws ClusterException {
 		
 		int dimensions= -1;
@@ -343,7 +343,7 @@ public class KMeans {
 	 * @return closest cluster identifier and distance from it
 	 * @throws ClusterException
 	 */
-	private DistanceResult findNearestCluster(double[] position) 
+	private final DistanceResult findNearestCluster(double[] position) 
 			throws ClusterException {
 
 		DistanceResult res= new DistanceResult();
@@ -371,7 +371,7 @@ public class KMeans {
 	 * @return dot product
 	 * @throws ClusterException
 	 */
-	private double dotProduct(double[] a, double[] b) 
+	private final double dotProduct(double[] a, double[] b) 
 		throws ClusterException {
 		
 		int size = a.length;
@@ -390,7 +390,7 @@ public class KMeans {
 	 * @param a array
 	 * @return norm
 	 */
-	private double getNorm(double[] a) {
+	private final double getNorm(double[] a) {
 		
 		int size = a.length;
 		
@@ -409,7 +409,7 @@ public class KMeans {
 	 * @return cosine similarity
 	 * @throws ClusterException
 	 */
-	private double cosineSimilarity(double[] a, double[] b) 
+	private final double cosineSimilarity(double[] a, double[] b) 
 			throws ClusterException {
 		
 		double dot= this.dotProduct(a, b);

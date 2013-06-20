@@ -13,7 +13,7 @@ import utils.LoadRhythmHistogram;
  * for the K-Means clustering algorithm. It contains the position, the cluster it 
  * has been assigned to, and the filename path as identifier. 
  */
-public class Song {
+public final class Song {
 	
 	
 	String path;
@@ -44,7 +44,7 @@ public class Song {
 	 * Gets the current song position (Rhythm Histogram).
 	 * @return song position
 	 */
-	public double[] getPosition() {
+	public final double[] getPosition() {
 		return this.position;
 	}
 	
@@ -52,7 +52,7 @@ public class Song {
 	 * Gets the current song path (used as identifier).
 	 * @return song path
 	 */
-	public String getPath() {
+	public final String getPath() {
 		return this.path;
 	}
 	
@@ -60,7 +60,7 @@ public class Song {
 	 * Sets the cluster this song has been assigned to.
 	 * @param clusterID
 	 */
-	public void setCluster(int clusterID) {
+	public final void setCluster(int clusterID) {
 		this.cluster= clusterID;
 	}
 	
@@ -68,7 +68,7 @@ public class Song {
 	 * Gets the ID of the Cluster this song has assigned to.
 	 * @return cluster ID
 	 */
-	public int getCluster() {
+	public final int getCluster() {
 		return this.cluster;
 	}
 	
@@ -77,7 +77,7 @@ public class Song {
 	 * defaults to 60) 
 	 * @return number of dimensions
 	 */
-	public int getDimensions() {
+	public final int getDimensions() {
 		return this.position.length;
 	}
 

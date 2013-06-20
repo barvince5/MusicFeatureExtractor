@@ -13,7 +13,7 @@ import java.util.List;
  * position of the cluster centroid, computed again each time an
  * item is assigned or removed from the cluster.
  */
-public class Cluster {
+public final class Cluster {
 	
 	private int id;
 	private int dimensions;
@@ -49,7 +49,7 @@ public class Cluster {
 	 * (The Rhythm Histogram defaults to 60).
 	 * @param dim the number of dimensions
 	 */
-	public void setDimensions(int dim) {
+	public final void setDimensions(int dim) {
 		this.dimensions= dim;
 	}
 	
@@ -57,7 +57,7 @@ public class Cluster {
 	 * Gets the number of dimensions.
 	 * @return number of dimensions
 	 */
-	public int getDimensions() {
+	public final int getDimensions() {
 		return this.dimensions;
 	}
 	
@@ -65,7 +65,7 @@ public class Cluster {
 	 * Gets the identifier of the current Cluster.
 	 * @return cluster identifier
 	 */
-	public int getId() {
+	public final int getId() {
 		return this.id;
 	}
 	
@@ -73,7 +73,7 @@ public class Cluster {
 	 * Adds a Song to the Cluster and recalculates the centroid.
 	 * @return true if added correctly, false if already present.
 	 */
-	public boolean assignSong(Song s) {
+	public final boolean assignSong(Song s) {
 		
 		String path= s.getPath();
 		if(this.songMap.containsKey(path))
@@ -87,7 +87,7 @@ public class Cluster {
 	 * Removes a Song from the Cluster and recalculates the centroid.
 	 * @return the song if it was present, null otherwise
 	 */
-	public Song removeSong(String path) {
+	public final Song removeSong(String path) {
 		
 		if(path == null || path.equals(""))
 			return null;
@@ -101,7 +101,7 @@ public class Cluster {
 	 * Gets the current position of the Cluster centroid
 	 * @return position of the centroid
 	 */
-	public double[] getCentroid() {
+	public final double[] getCentroid() {
 		return this.centroid;
 	}
 	
@@ -109,7 +109,7 @@ public class Cluster {
 	 * Gets the number of songs in the cluster
 	 * @return song count
 	 */
-	public int getSongCount() {
+	public final int getSongCount() {
 		return this.songMap.size();
 	}
 	
@@ -117,7 +117,7 @@ public class Cluster {
 	 * Returns a copy of the list of songs in the Cluster.
 	 * @return copy of song List
 	 */
-	public List<Song> getSongListCopy() {
+	public final List<Song> getSongListCopy() {
 		
 		List<Song> result= new ArrayList<Song>();
 		Iterator<String> iter= this.songMap.keySet().iterator();
@@ -134,7 +134,7 @@ public class Cluster {
 	 * song in the Cluster.
 	 * 
 	 */
-	public void resetCentroid() {
+	public final void resetCentroid() {
 		
 		int size= this.songMap.size();
 		
@@ -155,11 +155,11 @@ public class Cluster {
 		
 		Iterator<Song> iter= this.songMap.values().iterator();
 		while(iter.hasNext()) {
+			
 			double[] currSong= iter.next().getPosition();
 
-			for (int i=0; i< this.dimensions; ++i) {
-				newCentroid[i] += currSong[i]; 
-			}	
+			for (int i= 0; i< this.dimensions; ++i)
+				newCentroid[i] += currSong[i];
 		}
 
 		for(int i= 0; i< this.dimensions; ++i)

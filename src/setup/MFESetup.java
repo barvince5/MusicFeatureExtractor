@@ -4,8 +4,8 @@ import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
 
 
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
@@ -18,9 +18,9 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
+
 import mfeArtifacts.setup.AuthorType.Author;
 import mfeArtifacts.setup.CommandType;
-import mfeArtifacts.setup.FlagValueType;
 import mfeArtifacts.setup.MFESetupType;
 
 import customException.DateConverterException;
@@ -30,16 +30,15 @@ import customException.MFESetupException;
 public final class MFESetup {
 	
 	private MFESetupType setup= null; 
-	
-	public MFESetup(String path) 
+
+	public MFESetup() 
 			throws MFESetupException {
 		
-		this.setup= this.getSettings(path);
+		this.setup= this.getSettings();
 	}
 	
-	private final MFESetupType getSettings(String path) 
+	private final MFESetupType getSettings() 
 			throws MFESetupException { 
-		
 		
 		try {
 			
@@ -87,13 +86,15 @@ public final class MFESetup {
 		return msg;
 	}
 	
-	public final List<String> getCommands() {
+	public final HashMap<String, String> getCommands() {
 		
-		List<String> cmd= new LinkedList<String>();
+		HashMap<String, String> cmd= new HashMap<String, String>();
 		List<CommandType> cmdList= this.setup.getPossibleCommands().getCommand();
 		Iterator<CommandType> iter= cmdList.iterator();
-		while(iter.hasNext())
-			iter.next().getCmd();
+		while(iter.hasNext()) {
+			CommandType c= iter.next();
+			cmd.put(c.getCmd(), c.getClazz());
+		}
 		
 		return cmd;
 	}
@@ -111,13 +112,13 @@ public final class MFESetup {
 		return this.setup.getMFENameVersion();
 	}
 	
+	public final String getCompleteVersionInfo() {
+		return (this.setup.getMFENumberVersion() + " " + this.setup.getMFENameVersion());
+	}
+	
 	public final String getCreationSetupFileDate() 
 			throws DateConverterException {
 		
 		return this.setup.getXMLCreationDate().toString();
-	}
-	
-	public final List<FlagValueType> getFlags() {
-		return this.setup.getFlags().getFlag();
 	}
 }

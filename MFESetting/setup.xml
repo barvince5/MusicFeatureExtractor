@@ -23,38 +23,42 @@
         <command>
             <cmd>-all</cmd>
             <description>[dir or file] for high and low level feature</description>
+            <class>command.featureExtraction.AllFeatureCommand</class>
         </command>
         <command>
             <cmd>-hl</cmd>
             <description>[dir or file] for high level feature</description>
+            <class>command.featureExtraction.HighLevelFeatureCommand</class>
         </command>
         <command>
             <cmd>-ll</cmd>
             <description>[dir or file] for low level feature</description>
+            <class>command.featureExtraction.LowLevelFeatureCommand</class>
         </command>
         <command>
             <cmd>-plot</cmd>
             <description>[file list SONG_LL_] for plotting the rhythm histogram</description>
+            <class>command.plot.PlotCommand</class>
         </command>
         <command>
             <cmd>-kmeans</cmd>
             <description>[k clusters] [max iteration] [dir with SONG_LL_ files]</description>
+            <class>command.featureExtraction.KmeansCommand</class>
         </command>
         <command>
             <cmd>-help</cmd>
             <description>to know the possible commands</description>
+            <class>command.info.HelpCommand</class>
         </command>
         <command>
             <cmd>-author</cmd>
             <description>to know who are the authors</description>
+            <class>command.info.AuthorCommand</class>
         </command>
         <command>
             <cmd>-version</cmd>
             <description>the current MFE version</description>
+            <class>command.info.MFEVersionCommand</class>
         </command>
     </possibleCommands>
-    <flags>
-        <flag name="HighLevelFlag">false</flag>
-        <flag name="LowLevelFlag">false</flag>
-    </flags>
 </MFESetup>
