@@ -3,11 +3,9 @@ package feature.lowLevel;
 import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
 
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -27,36 +25,35 @@ import songArtifacts.lowLevel.SsdType;
 import songArtifacts.lowLevel.StatisticalSpectrumDescriptorType;
 import utils.DateConverter;
 
-import at.tuwien.ifs.feature.extraction.audio.AudioFileExtractor;
-import at.tuwien.ifs.feature.extraction.audio.FeatureExtractorException;
-import at.tuwien.ifs.feature.extraction.audio.data.FeatureExtractionOptions;
-import at.tuwien.ifs.feature.extraction.audio.data.RealMatrixExt;
-
 import customException.DateConverterException;
 import customException.SongFeatureException;
 import entagged.audioformats.AudioFile;
 import feature.MP3Info;
+import feature.lowLevel.audio.LowLevelExtractor;
+import feature.lowLevel.audio.data.FeatureExtractionOptions;
+
 
 public final class LowLevelSongFeature {
 
+	/**
+	 * Extract Low Level Features on a given file.
+	 * @param mp3 MP3Info to use for obtaining file information from the system
+	 * @param file file to extract the features from
+	 * @return true if successful, false otherwise
+	 * @throws SongFeatureException
+	 */
 	public final  static Boolean start(MP3Info mp3, File file) 
 			throws SongFeatureException {
 		
 		FeatureExtractionOptions opt= null;
-		AudioFileExtractor afe= null;
-		RealMatrixExt[] rm= null;
 		File output= null;
+		LowLevelExtractor lle= null;
 		
 		try {
 			
 			opt= new FeatureExtractionOptions();
-	        opt.extractRH = true;
-	        opt.extractRP = true;
-	        opt.extractSSD = true;
-	        afe= new AudioFileExtractor();
-	       
-			//extracts low level features from the mp3 file
-			rm = afe.extractAudioFile(file, opt);
+	        opt.enableAll();
+	        lle= new LowLevelExtractor(opt, file);
 			
 			//puts values inside artifacts
 			ObjectFactory obf= new ObjectFactory();
@@ -85,77 +82,74 @@ public final class LowLevelSongFeature {
 			//set file creation date
 			song.setXMLFileCreation(DateConverter.CurrentDateToXMLGregorianCalendar());
 			
-			//set ssd
+			// SSD
 			StatisticalSpectrumDescriptorType ssd= obf.createStatisticalSpectrumDescriptorType();
+
+			BigInteger rows= BigInteger.valueOf(lle.getDimensionSSD());
+			
 			SsdType mean= obf.createSsdType();
-			SsdType median= obf.createSsdType();
-			SsdType variance= obf.createSsdType();
-			SsdType skewness= obf.createSsdType();
-			SsdType kurtosis= obf.createSsdType();
-			SsdType minValue= obf.createSsdType();
-			SsdType maxValue= obf.createSsdType();
-			
-			double[][] ssdMatrix= rm[0].getData();
-			int rows= rm[0].getRowDimension();
-			
-			//there are 23 rows with 7 measures
-			mean.setSize(BigInteger.valueOf(rows));
-			for(int i= 0; i< rows; ++i) {
-				mean.getValue().add(new Double(ssdMatrix[i][0]));
-				median.getValue().add(new Double(ssdMatrix[i][1]));
-				variance.getValue().add(new Double(ssdMatrix[i][2]));
-				skewness.getValue().add(new Double(ssdMatrix[i][3]));
-				kurtosis.getValue().add(new Double(ssdMatrix[i][4]));
-				minValue.getValue().add(new Double(ssdMatrix[i][5]));
-				maxValue.getValue().add(new Double(ssdMatrix[i][6]));
-			}
-			
-			median.setSize(BigInteger.valueOf(rows));
-			variance.setSize(BigInteger.valueOf(rows));
-			skewness.setSize(BigInteger.valueOf(rows));
-			kurtosis.setSize(BigInteger.valueOf(rows));
-			minValue.setSize(BigInteger.valueOf(rows));
-			maxValue.setSize(BigInteger.valueOf(rows));
-			
+			mean.setSize(rows);
+			mean.getValue().addAll(lle.getMeanList());
 			ssd.setMean(mean);
+			
+			SsdType median= obf.createSsdType();
+			median.setSize(rows);
+			median.getValue().addAll(lle.getMedianList());
 			ssd.setMedian(median);
+			
+			SsdType variance= obf.createSsdType();
+			variance.setSize(rows);
+			variance.getValue().addAll(lle.getVarianceList());
 			ssd.setVariance(variance);
+			
+			SsdType skewness= obf.createSsdType();
+			skewness.setSize(rows);
+			skewness.getValue().addAll(lle.getSkewnessList());
 			ssd.setSkewness(skewness);
+			
+			SsdType kurtosis= obf.createSsdType();
+			kurtosis.setSize(rows);
+			kurtosis.getValue().addAll(lle.getKurtosisList());
 			ssd.setKurtosis(kurtosis);
+			
+			SsdType minValue= obf.createSsdType();
+			minValue.setSize(rows);
+			minValue.getValue().addAll(lle.getMinValueList());
 			ssd.setMinValue(minValue);
+			
+			SsdType maxValue= obf.createSsdType();
+			maxValue.setSize(rows);
+			maxValue.getValue().addAll(lle.getMaxValueList());
 			ssd.setMaxValue(maxValue);
+			
 			song.setStatisticalSpectrumDescriptor(ssd);
 			
-			//Rhythm pattern
+			// Rhythm Pattern
 			RhythmPatternType rp= obf.createRhythmPatternType();
-			rows= rm[1].getRowDimension();
-			int columns= rm[1].getColumnDimension();
+			int rpRows= lle.getRowsRP();
+			BigInteger columns= BigInteger.valueOf(lle.getColumnsRP());
 			
-			rp.setRows(BigInteger.valueOf(rows));
-			rp.setColumns(BigInteger.valueOf(columns));
+			rp.setRows(BigInteger.valueOf(rpRows));
+			rp.setColumns(columns);
 			String des= "The rhythm pattern describes modulation amplitude for a series of critical bands (rows) on various frequencies (columns)";
 			rp.setDescription(des);
 			
-			double[][] rpMatrix= rm[1].getData();
-			for(int i= 0; i< rows; ++i) {
+			for(int i= 0; i< rpRows; ++i) {
 				RowType rt= obf.createRowType();
-				for(int j= 0; j< columns; ++j)
-					rt.getColumn().add(new Double(rpMatrix[i][j]));
+				rt.getColumn().addAll(lle.getRPRowList(i));
 				rp.getRow().add(rt);
 			}
 			
 			song.setRhythmPattern(rp);
 			
-			//rhythm histogram
+			// Rhythm Histogram
 			RhythmHistogramType rh= obf.createRhythmHistogramType();
-			columns= rm[2].getColumnDimension();
-			rh.setSize(BigInteger.valueOf(columns));
+			columns= BigInteger.valueOf(lle.getDimensionRH());
+			rh.setSize(columns);
 			des= "Rhythm histogram contains general descriptors for rhythmics for a number of modulation frequencies";
 			rh.setDescription(des);
 			
-			double[] rhArray= rm[2].getData()[0]; //there is only one row
-			for(int i= 0; i< columns; ++i)
-				rh.getValue().add(new Double(rhArray[i]));
+			rh.getValue().addAll(lle.getRHList());
 			
 			song.setRhythmHistogram(rh);
 			
@@ -176,19 +170,12 @@ public final class LowLevelSongFeature {
 				}
 			});
 			
-			
 			output= new File("SONG_LL_"+mp3.getAudioFile().getName()+".xml");
 			m.marshal(je, output);
 			
 		} catch (JAXBException e) {
 			if(output != null)
 				output.delete();
-			throw new SongFeatureException(e.getMessage(), e);
-		} catch(UnsupportedAudioFileException e) {
-			throw new SongFeatureException(e.getMessage(), e);
-		} catch(IOException e) {
-			throw new SongFeatureException(e.getMessage(), e);
-		} catch(FeatureExtractorException e) {
 			throw new SongFeatureException(e.getMessage(), e);
 		} catch (DateConverterException e) {
 			throw new SongFeatureException(e.getMessage(), e);

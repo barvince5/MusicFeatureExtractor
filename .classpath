@@ -7,6 +7,10 @@
 	<classpathentry kind="lib" path="ExtLib/jcommon-1.0.17.jar"/>
 	<classpathentry kind="lib" path="ExtLib/jfreechart-1.0.14.jar"/>
 	<classpathentry kind="lib" path="ExtLib/mp3plugin.jar"/>
-	<classpathentry kind="lib" path="ExtLib/AudioFeatureExtraction.jar"/>
+	<classpathentry kind="lib" path="ExtLib/commons-lang3-3.1.jar"/>
+	<classpathentry kind="lib" path="ExtLib/commons-math3-3.2.jar"/>
+	<classpathentry kind="lib" path="ExtLib/jl1.0.jar"/>
+	<classpathentry kind="lib" path="ExtLib/mp3spi1.9.4.jar"/>
+	<classpathentry kind="lib" path="ExtLib/tritonus_share.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
