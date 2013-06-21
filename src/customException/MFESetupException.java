@@ -1,5 +1,8 @@
 package customException;
 
+/**
+ * This exception can happens when an error occurs getting during the setup of MFE.
+ */
 public class MFESetupException extends Exception {
 
 

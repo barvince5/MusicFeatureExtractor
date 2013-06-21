@@ -8,13 +8,23 @@ import customException.PlotterException;
 
 import share.log.SongLogger;
 
-
+/**
+ * This class plots the rhythm histogram.
+ */
 public final class Plotter {
 
+	/**
+	 * To avoid instantiation of this class.
+	 */
 	private Plotter() {
 		
 	}
 	
+	/**
+	 * 
+	 * @param files list of files (SONG_LL_[song name]) containing low level features.
+	 * @throws PlotterException
+	 */
 	public final static void plot(String[] files) 
 			throws PlotterException {
 				

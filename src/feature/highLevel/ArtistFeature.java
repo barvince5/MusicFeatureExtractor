@@ -45,6 +45,9 @@ import customException.MP3Exception;
 import customException.CreateDocException;
 import customException.MusicbrainzUrlException;
 
+/**
+ * This class is able to get some information about the artist and it stores them in an xml file.
+ */
 public final class ArtistFeature extends MP3Info implements Callable<Boolean> {
 
 	private ObjectFactory obf= null;
@@ -55,6 +58,11 @@ public final class ArtistFeature extends MP3Info implements Callable<Boolean> {
 	private String artistID= null;
 	private GetHttpPage getHttp= null;
 	
+	/**
+	 * This is the constructor.
+	 * @param song is the .mp3 file
+	 * @throws MP3Exception because this class extends MP3Info and in case of error this exception is thrown.
+	 */
 	public ArtistFeature(File song) 
 			throws MP3Exception {
 		
@@ -64,6 +72,9 @@ public final class ArtistFeature extends MP3Info implements Callable<Boolean> {
 		this.getHttp= GetHttpPage.getInstance();
 	}
 			
+	/**
+	 * This method as the all procedure for extract the features.
+	 */
 	@Override
 	public final Boolean call() 
 		throws ArtistFeatureException {
@@ -255,6 +266,15 @@ public final class ArtistFeature extends MP3Info implements Callable<Boolean> {
 		return true;
 	}
 	
+	/**
+	 * This method gets the corresponding doc. Element given the name of the artist as input. A query to
+	 * musicbrainz website is done.
+	 * @param artistName
+	 * @return Element
+	 * @throws GetHttpException in case of http error.
+	 * @throws MusicbrainzUrlException if the url is not correct
+	 * @throws CreateDocException is it is not possible to create the DOM document.
+	 */
 	private final Element getArtistListNode(String artistName) 
 			throws GetHttpException, MusicbrainzUrlException, CreateDocException {
 		

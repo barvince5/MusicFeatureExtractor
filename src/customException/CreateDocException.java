@@ -2,8 +2,6 @@ package customException;
 
 /**
  * Exception that occurs when it is not possible to create a doc.
- * @author Antonio Collarino
- *
  */
 public class CreateDocException extends Exception {
 

@@ -2,8 +2,6 @@ package customException;
 
 /**
  * Exception that occurs when input values are not correct or when an error occurs.
- * @author Antonio Collarino
- *
  */
 public class MusicbrainzUrlException extends Exception {
 

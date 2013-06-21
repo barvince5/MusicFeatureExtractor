@@ -2,8 +2,6 @@ package customException;
 
 /**
  * This exception can happens when an error occurs getting information about biography of an artist.
- * @author Antonio Collarino
- *
  */
 public class ArtistBiographyException extends Exception {
 

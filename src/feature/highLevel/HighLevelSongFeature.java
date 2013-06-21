@@ -42,8 +42,14 @@ import entagged.audioformats.AudioFile;
 import feature.MP3Info;
 import feature.lowLevel.LowLevelSongFeature;
 
+/**
+ * This class is able to get some high level information about the song and it stores them in an xml file.
+ */
 public final class HighLevelSongFeature {
 	
+	/**
+	 * This method as the all procedure for extract the features.
+	 */
 	public final static Boolean start(MP3Info mp3)
 			throws SongFeatureException {
 		

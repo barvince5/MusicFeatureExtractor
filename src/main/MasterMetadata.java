@@ -23,7 +23,9 @@ import feature.SongFeature;
 import feature.highLevel.AlbumFeature;
 import feature.highLevel.ArtistFeature;
 
-
+/**
+ * This class is the master which commands the features extraction for high and low level.
+ */
 public final class MasterMetadata {
 	
 	private final static int maxTask= 10, nThread= 4;
@@ -66,11 +68,8 @@ public final class MasterMetadata {
 	 * @param path the starting directory where find the mp3 files.
 	 * @throws MasterException in case of error.
 	 */
-	public final static void artistMetadata(String path, boolean evaluate) 
+	public final static void artistMetadata(String path) 
 			throws MasterException {
-				
-		if(evaluate == false)
-			return;
 		
 		MasterMetadata.artistES= Executors.newFixedThreadPool(nThread);
 		MasterMetadata.artistTasks= new ArrayList<ArtistFeature>(MasterMetadata.maxTask);
@@ -83,12 +82,9 @@ public final class MasterMetadata {
 	 * @param path the starting directory where find the mp3 files.
 	 * @throws MasterException in case of error.
 	 */
-	public final static void albumMetadata(String path, boolean evaluate) 
+	public final static void albumMetadata(String path) 
 			throws MasterException {
-		
-		if(evaluate == false)
-			return;
-		
+
 		MasterMetadata.albumES= Executors.newFixedThreadPool(MasterMetadata.nThread);
 		MasterMetadata.albumTasks= new ArrayList<AlbumFeature>(MasterMetadata.maxTask);
 		MasterMetadata.init(path); //create file list, filter and dir

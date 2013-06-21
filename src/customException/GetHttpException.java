@@ -2,8 +2,6 @@ package customException;
 
 /**
  * Exception that occurs when there are errors to get http page content.
- * @author sniper
- *
  */
 public final class GetHttpException extends Exception {
 

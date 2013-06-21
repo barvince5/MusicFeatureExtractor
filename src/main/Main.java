@@ -8,7 +8,11 @@ import command.CommandParameter;
 
 import setup.MFESetup;
 
-
+/**
+ * This is the main class of the MFE program. At the beginning is done the setup and then a map of commands
+ * is loaded from the xml setup file. If the user give a correct command on the fly is allocated the corresponding
+ * object, and then the start command method is called to execute it.
+ */
 public class Main {
 
 	public static void main(String[] args) throws Exception {

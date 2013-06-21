@@ -26,17 +26,28 @@ import mfeArtifacts.setup.MFESetupType;
 import customException.DateConverterException;
 import customException.MFESetupException;
 
-
+/**
+ * This class is important to get setting data from the setup.xml file
+ */
 public final class MFESetup {
 	
 	private MFESetupType setup= null; 
 
+	/**
+	 * This is the constructor.
+	 * @throws MFESetupException in case of error.
+	 */
 	public MFESetup() 
 			throws MFESetupException {
 		
 		this.setup= this.getSettings();
 	}
 	
+	/**
+	 * This method load the setting from the xml setup file.
+	 * @return
+	 * @throws MFESetupException
+	 */
 	private final MFESetupType getSettings() 
 			throws MFESetupException { 
 		
@@ -73,6 +84,10 @@ public final class MFESetup {
 		}
 	}
 	
+	/**
+	 * Gets a useful message for the user.
+	 * @return
+	 */
 	public final String getHelpMessage() {
 		
 		String msg= "";
@@ -86,6 +101,11 @@ public final class MFESetup {
 		return msg;
 	}
 	
+	/**
+	 * Gets a map where the key is the command and the entry is its corresponding class which will
+	 * be instantiated on the fly in the main class.
+	 * @return
+	 */
 	public final HashMap<String, String> getCommands() {
 		
 		HashMap<String, String> cmd= new HashMap<String, String>();
@@ -99,23 +119,44 @@ public final class MFESetup {
 		return cmd;
 	}
 	
+	/**
+	 * Gets a list of author.
+	 * @return
+	 */
 	public final List<Author> getAuthors() {
 		List<Author> aut= this.setup.getAuthors().getAuthor();
 		return aut;
 	}
 	
+	/**
+	 * Gets the number version of MFE. (e.g. 1.0.0)
+	 * @return
+	 */
 	public final String getVersion() {
 		return this.setup.getMFENumberVersion();
 	}
 	
+	/**
+	 * Gets the name of this MFE version.
+	 * @return
+	 */
 	public final String getVersionName() {
 		return this.setup.getMFENameVersion();
 	}
 	
+	/**
+	 * Gets both version name and number.
+	 * @return
+	 */
 	public final String getCompleteVersionInfo() {
 		return (this.setup.getMFENumberVersion() + " " + this.setup.getMFENameVersion());
 	}
 	
+	/**
+	 * Gets the creation date of the setup xml file as string.
+	 * @return
+	 * @throws DateConverterException
+	 */
 	public final String getCreationSetupFileDate() 
 			throws DateConverterException {
 		

@@ -24,12 +24,25 @@ import feature.lowLevel.LowLevelSongFeature;
 import songArtifacts.lowLevel.RhythmHistogramType;
 import songArtifacts.lowLevel.SongType;
 
+/**
+ * This class gets data from the xml file containing the low level feature of a song.
+ */
 public final class LoadRhythmHistogram {
 	
+	/**
+	 * To avoid instantiation of this class.
+	 */
 	private LoadRhythmHistogram() {
 		
 	}
 	
+	/**
+	 * This method gets the rhythm histogram array of 60 values.
+	 * @param file
+	 * @return
+	 * @throws JAXBException
+	 * @throws SAXException
+	 */
 	public final static double[] getValues(File file) 
 			throws JAXBException, SAXException {
 		

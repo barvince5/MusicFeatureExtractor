@@ -2,8 +2,6 @@ package customException;
 
 /**
  * Exception that occurs when there are errors during MP3 analysis.
- * @author Antonio Collarino
- *
  */
 public final class MP3Exception extends Exception {
 

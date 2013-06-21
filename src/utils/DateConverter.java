@@ -10,6 +10,9 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import customException.DateConverterException;
 
+/**
+ * This class has some useful methods to convert date.
+ */
 public final class DateConverter {
 
 	/**

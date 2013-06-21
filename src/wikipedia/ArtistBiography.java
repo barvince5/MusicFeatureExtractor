@@ -10,6 +10,10 @@ import org.jsoup.select.Elements;
 
 import customException.ArtistBiographyException;
 
+/**
+ * This class creates just one instance (using singleton pattern) fro geting biography of an artist
+ * from wikipedia website.  
+ */
 public final class ArtistBiography {
 
 	private static Object lock;

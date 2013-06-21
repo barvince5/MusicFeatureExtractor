@@ -11,6 +11,10 @@ public final class HighLevelFeatureCommand implements Command {
 
 	private CommandParameter par;
 	
+	/**
+	 * Standard command constructor which gets as input the command parameter.
+	 * @param par contains all necessary data (user input and setup data).
+	 */
 	public HighLevelFeatureCommand(CommandParameter par) {
 		
 		if(par == null)
@@ -37,10 +41,10 @@ public final class HighLevelFeatureCommand implements Command {
 			path= System.getProperty("user.dir");
 		
 		System.out.println("ARTISTS PHASE: Please wait...");
-		MasterMetadata.artistMetadata(path, hlFlag);
+		MasterMetadata.artistMetadata(path);
 		
 		System.out.println("ALBUMS PHASE: Please wait...");
-		MasterMetadata.albumMetadata(path, hlFlag);
+		MasterMetadata.albumMetadata(path);
 		
 		System.out.println("SONGS PHASE: Please wait...");
 		MasterMetadata.songMetadata(path, hlFlag, llFlag);
