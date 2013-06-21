@@ -15,8 +15,6 @@ import customException.GetHttpException;
 
 /**
  * Class with methods able to get http page given a URL.
- * @author Antonio Collarino 
- *
  */
 public final class GetHttpPage {
 	

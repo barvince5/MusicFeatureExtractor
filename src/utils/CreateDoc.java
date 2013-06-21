@@ -15,6 +15,9 @@ import org.xml.sax.SAXException;
 
 import customException.CreateDocException;
 
+/**
+ * This class is able to create a generic doc DOM.
+ */
 public final class CreateDoc {
 
 	/**

@@ -8,6 +8,9 @@ import java.net.URL;
 
 import customException.MusicbrainzUrlException;
 
+/**
+ * This class creates the exact url for musicbrainz website.
+ */
 public final class MusicbrainzUrl {
 	
 	/**

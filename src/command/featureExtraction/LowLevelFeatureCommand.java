@@ -11,6 +11,10 @@ public final class LowLevelFeatureCommand implements Command {
 
 	private CommandParameter par;
 	
+	/**
+	 * Standard command constructor which gets as input the command parameter.
+	 * @param par contains all necessary data (user input and setup data).
+	 */
 	public LowLevelFeatureCommand(CommandParameter par) {
 		
 		if(par == null)

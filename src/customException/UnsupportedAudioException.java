@@ -2,8 +2,6 @@ package customException;
 
 /**
  * Exception that occurs when an audio file is not supported.
- * @author Antonio Collarino
- *
  */
 public final class UnsupportedAudioException extends Exception {
 

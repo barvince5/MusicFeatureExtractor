@@ -7,7 +7,10 @@ import java.util.logging.Logger;
 
 import customException.LogException;
 
-
+/**
+ * This class creates just one instance for the log file using the singleton pattern. The aim is to
+ * share the log file with other threads.
+ */
 public final class ArtistLogger {
 	
 	private static Logger log= null;

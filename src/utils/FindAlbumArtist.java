@@ -12,12 +12,22 @@ import customException.FindAlbumArtistException;
 import customException.GetHttpException;
 import customException.MusicbrainzUrlException;
 
+/**
+ * The aim of this class is to try to get data from musicbrainz website even is some tags are not good.
+ */
 public final class FindAlbumArtist {
 
 	private String artistName= "";
 	private String albumName= "";
 	private String title= "";
 	
+	/**
+	 * This is the constructor.
+	 * @param artist
+	 * @param album
+	 * @param title of the song is mandatory
+	 * @throws FindAlbumArtistException
+	 */
 	public FindAlbumArtist(String artist, String album, String title) 
 			throws FindAlbumArtistException {
 		
@@ -28,6 +38,11 @@ public final class FindAlbumArtist {
 			this.find();
 	}
 	
+	/**
+	 * This method is able to find information about artist name and album name. It try to create different
+	 * url query for musicbrainz website to try to get data, even if some tags of the .mp3 file are not correct.
+	 * @throws FindAlbumArtistException in case of error
+	 */
 	private final void find() 
 			throws FindAlbumArtistException {
 		
@@ -116,10 +131,9 @@ public final class FindAlbumArtist {
 							this.albumName= currAlbumName;
 							found= true;
 						}	
-					
-				}
-				
+				}	
 			}
+			
 		} catch (CreateDocException e) {
 			throw new FindAlbumArtistException("CreateDocException "+e.getMessage(), e);
 		} catch (GetHttpException e) {
@@ -131,14 +145,26 @@ public final class FindAlbumArtist {
 		}
 	}
 
+	/**
+	 * This methods returns the name of the artist.
+	 * @return a string
+	 */
 	public final String getArtistName() {
 		return this.artistName;
 	}
 
+	/**
+	 * This methods returns the name of the album.
+	 * @return a string
+	 */
 	public final String getAlbumName() {
 		return this.albumName;
 	}
 
+	/**
+	 * This methods returns the title of the song.
+	 * @return a string
+	 */
 	public String getTitle() {
 		return this.title;
 	}
