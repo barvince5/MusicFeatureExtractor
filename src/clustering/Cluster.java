@@ -21,18 +21,18 @@ public final class Cluster {
 	private double[] centroid;
 	
 	/**
-	 * Creates a new empty Cluster.
+	 * Creates a new empty Cluster with default dimensions (60).
 	 * @param id the unique identifier of the Cluster
 	 */
 	public Cluster(int id) {
 		this.id= id;
-		this.songMap= new HashMap<String, Song>();
-		this.centroid= null;
 		this.dimensions= 60;
+		this.songMap= new HashMap<String, Song>();
+		this.centroid= new double[this.dimensions];
 	}
 
 	/**
-	 * Creates a new empty Cluster.
+	 * Creates a new empty Cluster with user-defined dimensions.
 	 * @param id the unique identifier of the Cluster
 	 * @param dimensions the position dimension number for the data 
 	 * (RhythmHistogram defaults to 60)
@@ -41,7 +41,7 @@ public final class Cluster {
 		this.id= id;
 		this.dimensions= dimensions;
 		this.songMap= new HashMap<String, Song>();
-		this.centroid= null;
+		this.centroid= new double[this.dimensions];
 	}
 	
 	/**
@@ -146,12 +146,11 @@ public final class Cluster {
 		if(size == 1) {			
 			Song[] songs= this.songMap.values().toArray(new Song[size]);
 			this.centroid= songs[0].getPosition();
+			return;
 		}
 		
-		double[] newCentroid= new double[this.dimensions];
-		
 		for(int i= 0; i< this.dimensions; ++i) 
-			newCentroid[i]= 0.0;
+			this.centroid[i]= 0.0;
 		
 		Iterator<Song> iter= this.songMap.values().iterator();
 		while(iter.hasNext()) {
@@ -159,13 +158,12 @@ public final class Cluster {
 			double[] currSong= iter.next().getPosition();
 
 			for (int i= 0; i< this.dimensions; ++i)
-				newCentroid[i] += currSong[i];
+				this.centroid[i] += currSong[i];
 		}
 
 		for(int i= 0; i< this.dimensions; ++i)
-			newCentroid[i] = newCentroid[i] / (double) this.songMap.size();
+			this.centroid[i] = this.centroid[i] / (double) this.songMap.size();
 		
-		this.centroid= newCentroid;
 
 		return;
 	}
