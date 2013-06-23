@@ -1,4 +1,4 @@
-package share.log;
+package log;
 
 import java.io.IOException;
 import java.util.Date;
@@ -11,28 +11,26 @@ import customException.LogException;
  * This class creates just one instance for the log file using the singleton pattern. The aim is to
  * share the log file with other threads.
  */
-public final class ArtistLogger {
-	
+public final class AlbumLogger {
+
 	private static Logger log= null;
-	private static ArtistLogger instance= null;
+	private static AlbumLogger instance= null;
 	
 	/**
 	 * This is the private constructor
 	 * @throws LogException 
-	 * @throws IOException 
-	 * @throws SecurityException 
 	 */
-	private ArtistLogger() 
-		throws LogException {
+	private AlbumLogger() 
+			throws LogException {
 		
-		ArtistLogger.log= Logger.getLogger(ArtistLogger.class.getName());
+		AlbumLogger.log= Logger.getLogger(AlbumLogger.class.getName());
 		FileHandler fh= null;
 		
 		try {
 			
-			fh = new FileHandler("ArtistLog " + new Date().toString());
-			ArtistLogger.log.addHandler(fh);
-			ArtistLogger.log.setUseParentHandlers(false);
+			fh = new FileHandler("AlbumLog " + new Date().toString());
+			AlbumLogger.log.addHandler(fh);
+			AlbumLogger.log.setUseParentHandlers(false);
 			
 		} catch (SecurityException e) {
 			throw new LogException(e.getMessage(), e);
@@ -41,26 +39,26 @@ public final class ArtistLogger {
 		} catch (Exception e) {
 			throw new LogException(e.getMessage(), e);
 		}
-		
 	}
+	
 	
 	/**
 	 * There is only one instance of this class. (Singleton)
 	 * @return
 	 * @throws LogException 
 	 */
-	public static ArtistLogger getInstance() 
+	public static AlbumLogger getInstance() 
 			throws LogException {
 		
-		if(ArtistLogger.log == null) {
-			synchronized (ArtistLogger.class) {
-				if(ArtistLogger.log == null) {
-					ArtistLogger.instance= new ArtistLogger();
+		if(AlbumLogger.log == null) {
+			synchronized (AlbumLogger.class) {
+				if(AlbumLogger.log == null) {
+					AlbumLogger.instance= new AlbumLogger();
 				}
 			}
 		}
 		
-		return ArtistLogger.instance;
+		return AlbumLogger.instance;
 	}
 	
 	/**
@@ -68,6 +66,6 @@ public final class ArtistLogger {
 	 * @return
 	 */
 	public final Logger getLog() {
-		return ArtistLogger.log;
+		return AlbumLogger.log;
 	}
 }

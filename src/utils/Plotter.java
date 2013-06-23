@@ -3,10 +3,11 @@ package utils;
 import java.io.File;
 import java.util.logging.Logger;
 
+import log.SongLogger;
+
 import customException.LogException;
 import customException.PlotterException;
 
-import share.log.SongLogger;
 
 /**
  * This class plots the rhythm histogram.

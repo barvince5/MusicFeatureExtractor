@@ -5,6 +5,7 @@ import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
 import java.io.File;
 import java.io.InputStream;
 import java.math.BigInteger;
+import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -16,6 +17,8 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
+import log.SongLogger;
+
 import songArtifacts.lowLevel.RhythmHistogramType;
 import songArtifacts.lowLevel.RhythmPatternType;
 import songArtifacts.lowLevel.RowType;
@@ -26,6 +29,7 @@ import songArtifacts.lowLevel.StatisticalSpectrumDescriptorType;
 import utils.DateConverter;
 
 import customException.DateConverterException;
+import customException.LogException;
 import customException.SongFeatureException;
 import entagged.audioformats.AudioFile;
 import feature.MP3Info;
@@ -48,6 +52,13 @@ public final class LowLevelSongFeature {
 		FeatureExtractionOptions opt= null;
 		File output= null;
 		LowLevelExtractor lle= null;
+		
+		Logger log;
+		try {
+			log= SongLogger.getInstance().getLog();
+		} catch (LogException e) {
+			throw new SongFeatureException("LogException "+e.getMessage(), e);
+		}
 		
 		try {
 			
@@ -176,10 +187,13 @@ public final class LowLevelSongFeature {
 		} catch (JAXBException e) {
 			if(output != null)
 				output.delete();
+			log.warning("Marshalling validation error for file: "+mp3.getAudioFile().getName());
 			throw new SongFeatureException(e.getMessage(), e);
 		} catch (DateConverterException e) {
+			log.warning("Error converting date for file: "+mp3.getAudioFile().getName());
 			throw new SongFeatureException(e.getMessage(), e);
 		} catch(Exception e) {
+			log.warning("Error "+e.getMessage()+" for file: "+mp3.getAudioFile().getName());
 			throw new SongFeatureException(e.getMessage(), e);
 		}
 		

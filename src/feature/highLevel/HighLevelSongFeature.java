@@ -15,6 +15,7 @@ import httpGET.GetHttpPage;
 import java.io.File;
 import java.io.InputStream;
 import java.math.BigInteger;
+import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -26,6 +27,7 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
+import log.SongLogger;
 import musicbrainz.MusicbrainzUrl;
 
 import org.w3c.dom.Document;
@@ -36,6 +38,7 @@ import customException.CreateDocException;
 import customException.DateConverterException;
 import customException.FindAlbumArtistException;
 import customException.GetHttpException;
+import customException.LogException;
 import customException.MusicbrainzUrlException;
 import customException.SongFeatureException;
 import entagged.audioformats.AudioFile;
@@ -61,22 +64,33 @@ public final class HighLevelSongFeature {
 		ObjectFactory obf= null;
 		Document songDoc= null;
 		
+		Logger log;
+		try {
+			log = SongLogger.getInstance().getLog();
+		} catch (LogException e) {
+			throw new SongFeatureException("LogException "+e.getMessage(), e);
+		}
+		
 		try {
 			
 			obf= new ObjectFactory();
 			song= obf.createSongType();
 			
 			String title= mp3.getTitle();
-			if(title == null || title.equals(""))
+			if(title == null || title.equals("")) {
+				log.info("The title is null for file: "+mp3.getAudioFile().getName());
 				return false;
+			}
 			
 			String artistName= mp3.getArtist();
 			String albumName = mp3.getAlbum();
 			
 			// try all parameters, the function will use the most it can
 			content= getHttp.getWebPageAsString(MusicbrainzUrl.getMbRecordingUrl(artistName, title, albumName));
-			if(content.equals(""))
+			if(content.equals("")) {
+				log.info("Could not get Song from musicbrainz for file: "+mp3.getAudioFile().getName());
 				return false;
+			}
 			
 			songDoc= CreateDoc.create(content);
 			
@@ -93,16 +107,20 @@ public final class HighLevelSongFeature {
 					
 			// try the query with the new parameters
 			content= getHttp.getWebPageAsString(MusicbrainzUrl.getMbRecordingUrl(artistName, title, albumName));
-			if(content.equals(""))
-					return false;
+			if(content.equals("")) {
+				log.info("Could not get Song from musicbrainz for file: "+mp3.getAudioFile().getName());
+				return false;
+			}
 					
 			songDoc= CreateDoc.create(content);
 				
 			recordingListNode= (Element) songDoc.getElementsByTagName("recording-list").item(0);
 			count= Integer.valueOf(recordingListNode.getAttributes().getNamedItem("count").getNodeValue());
 				
-			if(count.intValue() == 0) 
+			if(count.intValue() == 0) {
+				log.info("Could not get Song from musicbrainz for file: "+mp3.getAudioFile().getName());
 				return false;		
+			}
 				
 			
 			Element recordingNode= (Element) recordingListNode.getElementsByTagName("recording").item(0);
@@ -211,20 +229,28 @@ public final class HighLevelSongFeature {
 		} catch (JAXBException e) {
 			if(output != null)
 				output.delete();
+			log.warning("Marshalling validation error for file: "+mp3.getAudioFile().getName());
 			throw new SongFeatureException("JAXBException "+e.getMessage(), e);	
 		} catch (FindAlbumArtistException e) {
+			log.warning("Error finding artist for file: "+mp3.getAudioFile().getName());
 			throw new SongFeatureException("FindAlbumArtistException "+e.getMessage(), e);
 		} catch (DateConverterException e) {
+			log.warning("Error converting date for file: "+mp3.getAudioFile().getName());
 			throw new SongFeatureException("DateConverterException "+e.getMessage(), e);
 		} catch (NullPointerException e) {
+			log.warning("NullPointerException for file: "+mp3.getAudioFile().getName());
 			throw new SongFeatureException("NullPointerException "+e.getMessage(), e);
 		} catch (MusicbrainzUrlException e) {
+			log.warning("Error musicbrainz url generation for file: "+mp3.getAudioFile().getName());
 			throw new SongFeatureException("MusicbrainzUrlException "+e.getMessage(), e);
 		} catch (GetHttpException e) {
+			log.warning("Error getting html page for file: "+mp3.getAudioFile().getName());
 			throw new SongFeatureException("GetHttpException "+e.getMessage(), e);
 		} catch (CreateDocException e) {
+			log.warning("Error creating document DOM for file: "+mp3.getAudioFile().getName());
 			throw new SongFeatureException("MusicbrainzDocException doc creation problem "+e.getMessage(), e);
 		} catch (Exception e) {
+			log.warning("Error "+e.getMessage()+" for file: "+mp3.getAudioFile().getName());
 			throw new SongFeatureException("Exception "+e.getMessage(), e);
 		}
 		

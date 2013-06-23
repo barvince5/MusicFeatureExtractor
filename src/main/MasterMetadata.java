@@ -12,9 +12,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.logging.Logger;
 
-import share.log.AlbumLogger;
-import share.log.ArtistLogger;
-import share.log.SongLogger;
+import log.AlbumLogger;
+import log.ArtistLogger;
+import log.SongLogger;
+
 
 import customException.MP3Exception;
 import customException.MasterException;

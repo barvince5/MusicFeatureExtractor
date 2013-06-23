@@ -1,4 +1,4 @@
-package share.log;
+package log;
 
 import java.io.IOException;
 import java.util.Date;
@@ -11,26 +11,28 @@ import customException.LogException;
  * This class creates just one instance for the log file using the singleton pattern. The aim is to
  * share the log file with other threads.
  */
-public final class SongLogger {
+public final class ArtistLogger {
 	
 	private static Logger log= null;
-	private static SongLogger instance= null;
+	private static ArtistLogger instance= null;
 	
 	/**
 	 * This is the private constructor
 	 * @throws LogException 
+	 * @throws IOException 
+	 * @throws SecurityException 
 	 */
-	private SongLogger() 
-			throws LogException {
+	private ArtistLogger() 
+		throws LogException {
 		
-		SongLogger.log= Logger.getLogger(ArtistLogger.class.getName());
+		ArtistLogger.log= Logger.getLogger(ArtistLogger.class.getName());
 		FileHandler fh= null;
 		
 		try {
 			
-			fh = new FileHandler("SongLog " + new Date().toString());
-			SongLogger.log.addHandler(fh);
-			SongLogger.log.setUseParentHandlers(false);
+			fh = new FileHandler("ArtistLog " + new Date().toString());
+			ArtistLogger.log.addHandler(fh);
+			ArtistLogger.log.setUseParentHandlers(false);
 			
 		} catch (SecurityException e) {
 			throw new LogException(e.getMessage(), e);
@@ -39,6 +41,7 @@ public final class SongLogger {
 		} catch (Exception e) {
 			throw new LogException(e.getMessage(), e);
 		}
+		
 	}
 	
 	/**
@@ -46,18 +49,18 @@ public final class SongLogger {
 	 * @return
 	 * @throws LogException 
 	 */
-	public static SongLogger getInstance() 
+	public static ArtistLogger getInstance() 
 			throws LogException {
 		
-		if(SongLogger.log == null) {
-			synchronized (SongLogger.class) {
-				if(SongLogger.log == null) {
-					SongLogger.instance= new SongLogger();
+		if(ArtistLogger.log == null) {
+			synchronized (ArtistLogger.class) {
+				if(ArtistLogger.log == null) {
+					ArtistLogger.instance= new ArtistLogger();
 				}
 			}
 		}
 		
-		return SongLogger.instance;
+		return ArtistLogger.instance;
 	}
 	
 	/**
@@ -65,6 +68,6 @@ public final class SongLogger {
 	 * @return
 	 */
 	public final Logger getLog() {
-		return SongLogger.log;
+		return ArtistLogger.log;
 	}
 }

@@ -1,4 +1,4 @@
-package share.log;
+package log;
 
 import java.io.IOException;
 import java.util.Date;
@@ -11,26 +11,26 @@ import customException.LogException;
  * This class creates just one instance for the log file using the singleton pattern. The aim is to
  * share the log file with other threads.
  */
-public final class AlbumLogger {
-
+public final class SongLogger {
+	
 	private static Logger log= null;
-	private static AlbumLogger instance= null;
+	private static SongLogger instance= null;
 	
 	/**
 	 * This is the private constructor
 	 * @throws LogException 
 	 */
-	private AlbumLogger() 
+	private SongLogger() 
 			throws LogException {
 		
-		AlbumLogger.log= Logger.getLogger(AlbumLogger.class.getName());
+		SongLogger.log= Logger.getLogger(ArtistLogger.class.getName());
 		FileHandler fh= null;
 		
 		try {
 			
-			fh = new FileHandler("AlbumLog " + new Date().toString());
-			AlbumLogger.log.addHandler(fh);
-			AlbumLogger.log.setUseParentHandlers(false);
+			fh = new FileHandler("SongLog " + new Date().toString());
+			SongLogger.log.addHandler(fh);
+			SongLogger.log.setUseParentHandlers(false);
 			
 		} catch (SecurityException e) {
 			throw new LogException(e.getMessage(), e);
@@ -41,24 +41,23 @@ public final class AlbumLogger {
 		}
 	}
 	
-	
 	/**
 	 * There is only one instance of this class. (Singleton)
 	 * @return
 	 * @throws LogException 
 	 */
-	public static AlbumLogger getInstance() 
+	public static SongLogger getInstance() 
 			throws LogException {
 		
-		if(AlbumLogger.log == null) {
-			synchronized (AlbumLogger.class) {
-				if(AlbumLogger.log == null) {
-					AlbumLogger.instance= new AlbumLogger();
+		if(SongLogger.log == null) {
+			synchronized (SongLogger.class) {
+				if(SongLogger.log == null) {
+					SongLogger.instance= new SongLogger();
 				}
 			}
 		}
 		
-		return AlbumLogger.instance;
+		return SongLogger.instance;
 	}
 	
 	/**
@@ -66,6 +65,6 @@ public final class AlbumLogger {
 	 * @return
 	 */
 	public final Logger getLog() {
-		return AlbumLogger.log;
+		return SongLogger.log;
 	}
 }
