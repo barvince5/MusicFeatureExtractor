@@ -18,10 +18,6 @@
 				maxOccurs="unbounded">
 			</element>
 		</sequence>
-		<attribute name="clusterCount" type="positiveInteger"
-			use="required">
-		</attribute>
-		<attribute name="songCount" type="positiveInteger" use="required"></attribute>
 	</complexType>
 
 	<complexType name="clusterType">
@@ -29,5 +25,6 @@
 			<element name="songPath" type="string" maxOccurs="unbounded"></element>
 		</sequence>
 		<attribute name="id" type="nonNegativeInteger" use="required"></attribute>
+		<attribute name="count" type="positiveInteger" use="required"></attribute>
 	</complexType>
 </schema>
