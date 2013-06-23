@@ -7,6 +7,7 @@ import httpGET.GetHttpPage;
 import java.io.File;
 import java.io.InputStream;
 import java.util.concurrent.Callable;
+import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -19,6 +20,7 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
 
+import log.ArtistLogger;
 import musicbrainz.MusicbrainzUrl;
 
 import org.w3c.dom.Document;
@@ -41,6 +43,7 @@ import customException.ArtistFeatureException;
 import customException.DateConverterException;
 import customException.FindAlbumArtistException;
 import customException.GetHttpException;
+import customException.LogException;
 import customException.MP3Exception;
 import customException.CreateDocException;
 import customException.MusicbrainzUrlException;
@@ -57,6 +60,7 @@ public final class ArtistFeature extends MP3Info implements Callable<Boolean> {
 	private Document linksDoc= null;
 	private String artistID= null;
 	private GetHttpPage getHttp= null;
+	private Logger log;
 	
 	/**
 	 * This is the constructor.
@@ -70,6 +74,11 @@ public final class ArtistFeature extends MP3Info implements Callable<Boolean> {
 		this.obf= new ObjectFactory();
 		this.artist= this.obf.createArtistType();
 		this.getHttp= GetHttpPage.getInstance();
+		try {
+			this.log= ArtistLogger.getInstance().getLog();
+		} catch (LogException e) {
+			throw new MP3Exception("LogException "+e.getMessage(), e);
+		}
 	}
 			
 	/**
@@ -86,16 +95,20 @@ public final class ArtistFeature extends MP3Info implements Callable<Boolean> {
 		try {
 				
 			String title= super.getTitle();
-			if(title.equals(""))
+			if(title == null || title.equals("")) {
+				this.log.info("The title is null for file: "+super.getAudioFile().getName());
 				return false;
+			}
 			
 			String artistName= super.getArtist();
 			if(artistName.equals("")) {
 				
 				FindAlbumArtist finder= new FindAlbumArtist(artistName, super.getAlbum(), title);
 				artistName= finder.getArtistName();
-				if(artistName.equals(""))
+				if(artistName.equals("")) {
+					this.log.info("Could not get Artist from musicbrainz for file: "+super.getAudioFile().getName());
 					return false;
+				}
 			}
 		
 			Element artistListNode= this.getArtistListNode(artistName);
@@ -103,12 +116,16 @@ public final class ArtistFeature extends MP3Info implements Callable<Boolean> {
 				
 				FindAlbumArtist finder= new FindAlbumArtist(artistName, super.getAlbum(), title);
 				artistName= finder.getArtistName();
-				if(artistName.equals(""))
+				if(artistName.equals("")) {
+					this.log.info("Could not get Artist from musicbrainz for file: "+super.getAudioFile().getName());
 					return false;
+				}
 				
 				artistListNode= this.getArtistListNode(artistName);
-				if(artistListNode == null)
+				if(artistListNode == null) {
+					this.log.info("Could not get Artist from musicbrainz for file: "+super.getAudioFile().getName());
 					return false;
+				}
 			}
 			
 			Element artistNode= (Element) artistListNode.getElementsByTagName("artist").item(0);
@@ -246,20 +263,28 @@ public final class ArtistFeature extends MP3Info implements Callable<Boolean> {
 		} catch (JAXBException e) {
 			if(output != null)
 				output.delete();
+			this.log.warning("Marshalling validation error for file: "+super.getAudioFile().getName());
 			throw new ArtistFeatureException("JAXBException "+e.getMessage(), e);
 		} catch (FindAlbumArtistException e) {
+			this.log.warning("Error finding artist for file: "+super.getAudioFile().getName());
 			throw new ArtistFeatureException("FindAlbumArtistException "+e.getMessage(), e);
 		} catch (NullPointerException e) {
+			this.log.warning("NullPointerException for file: "+super.getAudioFile().getName());
 			throw new ArtistFeatureException("NullPointerException "+e.getMessage(), e);
 		} catch (DateConverterException e) {
+			this.log.warning("Error converting date for file: "+super.getAudioFile().getName());
 			throw new ArtistFeatureException("DateConverterException "+e.getMessage(), e);
 		} catch (MusicbrainzUrlException e) {
+			this.log.warning("Error musicbrainz url generation for file: "+super.getAudioFile().getName());
 			throw new ArtistFeatureException("MusicbrainzUrlException "+e.getMessage(), e);
 		} catch (GetHttpException e) {
+			this.log.warning("Error getting html page for file: "+super.getAudioFile().getName());
 			throw new ArtistFeatureException("GetHttpException "+e.getMessage(), e);
 		} catch (CreateDocException e) {
+			this.log.warning("Error creating document DOM for file: "+super.getAudioFile().getName());
 			throw new ArtistFeatureException("MusicbrainzDocException doc creation problem "+e.getMessage(), e);
 		} catch (Exception e) {
+			this.log.warning("Error "+e.getMessage()+" for file: "+super.getAudioFile().getName());
 			throw new ArtistFeatureException("Exception "+e.getMessage(), e);
 		}
 		

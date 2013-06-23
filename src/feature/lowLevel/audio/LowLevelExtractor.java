@@ -27,7 +27,6 @@ public class LowLevelExtractor {
 	 * @param opt feature extraction options. To extract all features with default params, use opt's enableAll() method before calling this constructor.
 	 * @param file the audio file to extract features from 
 	 * @throws AudioFileExtractorException
-	 * @see {@link FeatureExtractionOptions}
 	 */
 	public LowLevelExtractor (FeatureExtractionOptions opt, File file) 
 			throws AudioFileExtractorException {

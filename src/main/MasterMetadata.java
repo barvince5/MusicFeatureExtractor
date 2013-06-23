@@ -5,16 +5,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.CancellationException;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.logging.Logger;
-
-import share.log.AlbumLogger;
-import share.log.ArtistLogger;
-import share.log.SongLogger;
 
 import customException.MP3Exception;
 import customException.MasterException;
@@ -38,7 +30,6 @@ public final class MasterMetadata {
 	private static File dir= null;
 	private static List<File> fileList= null;
 	private static boolean initFlag= false;
-	private static int blockOffset; //this indicate the head of the current scheduled file block
 	
 	/**
 	 * Private constructor to avoid instantiation.
@@ -119,8 +110,6 @@ public final class MasterMetadata {
 		if(path == null || path.equals(""))
 			throw new MasterException("The path is not null or empty string");
 		
-		MasterMetadata.blockOffset= 0; //just to set end reset it.
-		
 		if(MasterMetadata.initFlag) //If it is already initialized.
 			return;
 		
@@ -165,40 +154,12 @@ public final class MasterMetadata {
 	 */
 	private final static void submitArtistTasks() 
 			 throws MasterException {
-		
-		int length= MasterMetadata.artistTasks.size();
-		
+
 		try {
 			
 			//submit tasks to do.
 			//Waiting until all tasks are done
-			List<Future<Boolean>> res= MasterMetadata.artistES.invokeAll(MasterMetadata.artistTasks); 
-			
-			String filePath= "";
-			Logger log= ArtistLogger.getInstance().getLog();
-			for(int j= 0; j < length; ++j) {
-				try {				
-					
-					if(res.get(j).get() == false) {
-						//retrieve the file that failed using the blockOffset and jth task.
-						filePath= MasterMetadata.fileList.get(MasterMetadata.blockOffset+j).getAbsolutePath();
-						log.info(filePath+" FAILED");
-					}
-					
-				} catch (ExecutionException e) {
-					//retrieve the file that failed using the blockOffset and jth task.
-					filePath= MasterMetadata.fileList.get(MasterMetadata.blockOffset+j).getAbsolutePath();
-					log.warning(filePath+" FAILED");
-				} catch (InterruptedException e) {
-					//retrieve the file that failed using the blockOffset and jth task.
-					filePath= MasterMetadata.fileList.get(MasterMetadata.blockOffset+j).getAbsolutePath();
-					log.warning(filePath+" FAILED");
-				} catch (CancellationException e) {
-					//retrieve the file that failed using the blockOffset and jth task.
-					filePath= MasterMetadata.fileList.get(MasterMetadata.blockOffset+j).getAbsolutePath();
-					log.warning(filePath+" FAILED");
-				}
-			}
+			MasterMetadata.artistES.invokeAll(MasterMetadata.artistTasks); 
 			
 			//Clean the queue
 			MasterMetadata.artistTasks.clear(); 
@@ -226,7 +187,6 @@ public final class MasterMetadata {
 				if(++cnt == maxTask) {
 					MasterMetadata.submitArtistTasks();
 					cnt= 0; //reset the counter
-					MasterMetadata.blockOffset += maxTask;
 				}
 			}
 			
@@ -257,41 +217,13 @@ public final class MasterMetadata {
 	 */
 	private final static void submitAlbumTasks() 
 			 throws MasterException {
-		
-		int length= MasterMetadata.albumTasks.size();
-		
+			
 		try {
 			
 			//submit tasks to do.
 			//Waiting until all tasks are done
-			List<Future<Boolean>> res= MasterMetadata.albumES.invokeAll(MasterMetadata.albumTasks); 
-			
-			String filePath= "";
-			Logger log= AlbumLogger.getInstance().getLog();
-			for(int j= 0; j < length; ++j) {
-				try {
-					
-					if(res.get(j).get() == false) {
-						//retrieve the file that failed using the blockOffset and jth task.
-						filePath= MasterMetadata.fileList.get(MasterMetadata.blockOffset+j).getAbsolutePath();
-						log.info(filePath+" FAILED");
-					}
-					
-				} catch (ExecutionException e) {
-					//retrieve the file that failed using the blockOffset and jth task.
-					filePath= MasterMetadata.fileList.get(MasterMetadata.blockOffset+j).getAbsolutePath();
-					log.warning(filePath+" FAILED");
-				} catch (InterruptedException e) {
-					//retrieve the file that failed using the blockOffset and jth task.
-					filePath= MasterMetadata.fileList.get(MasterMetadata.blockOffset+j).getAbsolutePath();
-					log.warning(filePath+" FAILED");
-				} catch (CancellationException e) {
-					//retrieve the file that failed using the blockOffset and jth task.
-					filePath= MasterMetadata.fileList.get(MasterMetadata.blockOffset+j).getAbsolutePath();
-					log.warning(filePath+" FAILED");
-				}
-			}
-			
+			MasterMetadata.albumES.invokeAll(MasterMetadata.albumTasks); 
+
 			//Clean the queue
 			MasterMetadata.albumTasks.clear(); 
 		
@@ -318,7 +250,6 @@ public final class MasterMetadata {
 				if(++cnt == maxTask) {
 					MasterMetadata.submitAlbumTasks();
 					cnt= 0; //reset the counter
-					MasterMetadata.blockOffset += maxTask;
 				}
 			}
 			
@@ -350,39 +281,11 @@ public final class MasterMetadata {
 	private final static void submitSongTasks() 
 			 throws MasterException {
 		
-		int length= MasterMetadata.songTasks.size();
-		
 		try {
 			
 			//submit tasks to do.
 			//Waiting until all tasks are done
-			List<Future<Boolean>> res= MasterMetadata.songES.invokeAll(MasterMetadata.songTasks); 
-			
-			String filePath= "";
-			Logger log= SongLogger.getInstance().getLog();
-			for(int j= 0; j < length; ++j) {
-				try {
-					
-					if(res.get(j).get() == false) {
-						//retrieve the file that failed using the blockOffset and jth task.
-						filePath= MasterMetadata.fileList.get(MasterMetadata.blockOffset+j).getAbsolutePath();
-						log.info(filePath+" FAILED");
-					}
-						
-				} catch (ExecutionException e) {
-					//retrieve the file that failed using the blockOffset and jth task.
-					filePath= MasterMetadata.fileList.get(MasterMetadata.blockOffset+j).getAbsolutePath();
-					log.warning(filePath+" FAILED");
-				} catch (InterruptedException e) {
-					//retrieve the file that failed using the blockOffset and jth task.
-					filePath= MasterMetadata.fileList.get(MasterMetadata.blockOffset+j).getAbsolutePath();
-					log.warning(filePath+" FAILED");
-				} catch (CancellationException e) {
-					//retrieve the file that failed using the blockOffset and jth task.
-					filePath= MasterMetadata.fileList.get(MasterMetadata.blockOffset+j).getAbsolutePath();
-					log.warning(filePath+" FAILED");
-				}
-			}
+			MasterMetadata.songES.invokeAll(MasterMetadata.songTasks); 
 			
 			//Clean the queue
 			MasterMetadata.songTasks.clear(); 
@@ -410,7 +313,6 @@ public final class MasterMetadata {
 				if(++cnt == maxTask) {
 					MasterMetadata.submitSongTasks();
 					cnt= 0; //reset the counter
-					MasterMetadata.blockOffset += maxTask;
 				}
 			}
 			

@@ -66,7 +66,7 @@ public class FFTReal {
      * <b>Im(weightFft[k]) = sin ( -2 * PI * k / N) </b>
      * </p>
      * 
-     * @param numberFftPoints number of points in the FFT
+     * @param numFftPoints number of points in the FFT
      * @param invert whether it's direct (false) or inverse (true) FFT
      */
     private void createWeightFft(int numFftPoints, boolean invert) {
@@ -194,7 +194,7 @@ public class FFTReal {
      * @param imag1
      * @param real2
      * @param imag2
-     * @return
+     * @return result
      */
     double[] multiplyCmplx(double real1, double imag1, double real2, double imag2) {
         double[] output = new double[2];

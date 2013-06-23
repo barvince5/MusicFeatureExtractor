@@ -1,4 +1,4 @@
-package share.log;
+package log;
 
 import java.io.IOException;
 import java.util.Date;
@@ -43,7 +43,7 @@ public final class SongLogger {
 	
 	/**
 	 * There is only one instance of this class. (Singleton)
-	 * @return
+	 * @return song logger instance
 	 * @throws LogException 
 	 */
 	public static SongLogger getInstance() 
@@ -62,7 +62,7 @@ public final class SongLogger {
 	
 	/**
 	 * This method simply returns the log.
-	 * @return
+	 * @return logger
 	 */
 	public final Logger getLog() {
 		return SongLogger.log;
