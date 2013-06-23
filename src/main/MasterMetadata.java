@@ -83,7 +83,7 @@ public final class MasterMetadata {
 		MasterMetadata.artistES= Executors.newFixedThreadPool(nThread);
 		MasterMetadata.artistTasks= new ArrayList<ArtistFeature>(MasterMetadata.maxTask);
 		MasterMetadata.init(path); //create file list, filter and dir
-		MasterMetadata.startArtistAnalysis(MasterMetadata.getFiles(dir, fileList));
+		MasterMetadata.startArtistAnalysis(MasterMetadata.fileList);
 	}
 	
 	/**
@@ -97,7 +97,7 @@ public final class MasterMetadata {
 		MasterMetadata.albumES= Executors.newFixedThreadPool(MasterMetadata.nThread);
 		MasterMetadata.albumTasks= new ArrayList<AlbumFeature>(MasterMetadata.maxTask);
 		MasterMetadata.init(path); //create file list, filter and dir
-		MasterMetadata.startAlbumAnalysis(MasterMetadata.getFiles(dir, fileList));
+		MasterMetadata.startAlbumAnalysis(MasterMetadata.fileList);
 	}
 	
 	/**
@@ -114,7 +114,7 @@ public final class MasterMetadata {
 		MasterMetadata.songES= Executors.newFixedThreadPool(MasterMetadata.nThread);
 		MasterMetadata.songTasks= new ArrayList<SongFeature>(MasterMetadata.maxTask);
 		MasterMetadata.init(path); //create file list, filter and dir
-		MasterMetadata.startSongAnalysis(MasterMetadata.getFiles(dir, fileList), hlEvaluation, llEvaluation);
+		MasterMetadata.startSongAnalysis(MasterMetadata.fileList, hlEvaluation, llEvaluation);
 	}
 	
 	/**
@@ -132,7 +132,7 @@ public final class MasterMetadata {
 			return;
 		
 		MasterMetadata.dir= new File(path);
-		MasterMetadata.fileList= new LinkedList<File>();
+		MasterMetadata.fileList= MasterMetadata.getFiles(MasterMetadata.dir, new LinkedList<File>());
 		MasterMetadata.initFlag= true;
 	}
 
@@ -152,7 +152,7 @@ public final class MasterMetadata {
 	        files = new LinkedList<File>();
 	    
 	    if(dir.isDirectory() == false) {
-	    	if(dir.getName().endsWith(".mp3")) 
+	    	if(dir.getName().toLowerCase().endsWith(".mp3")) 
 	    		files.add(dir);
 	    	return files;
 	    }
