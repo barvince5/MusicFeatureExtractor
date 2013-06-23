@@ -64,7 +64,7 @@ public class MP3Info {
 	
 	/**
 	 * Gets the corresponding song title.
-	 * @return
+	 * @return title
 	 */
 	public final String getTitle() {
 		return this.songTitle;
@@ -72,7 +72,7 @@ public class MP3Info {
 	
 	/**
 	 * Gets the corresponding album title.
-	 * @return
+	 * @return album
 	 */
 	public final String getAlbum() {
 		return this.albumName;
@@ -80,7 +80,7 @@ public class MP3Info {
 	
 	/**
 	 * Gets the corresponding artist name.
-	 * @return
+	 * @return artist
 	 */
 	public final String getArtist() {
 		return this.artistName;
@@ -88,7 +88,7 @@ public class MP3Info {
 
 	/**
 	 * Gets informations inside the ID3v tags
-	 * @return
+	 * @return tags
 	 */
 	public final Tag getTags() {
 		return this.tag;
@@ -96,7 +96,7 @@ public class MP3Info {
 	
 	/**
 	 * Gets informations about the file.
-	 * @return
+	 * @return audio file
 	 */
 	public final AudioFile getAudioFile() {
 		return this.audioFile;

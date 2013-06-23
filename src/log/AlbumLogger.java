@@ -44,7 +44,7 @@ public final class AlbumLogger {
 	
 	/**
 	 * There is only one instance of this class. (Singleton)
-	 * @return
+	 * @return album logger instance
 	 * @throws LogException 
 	 */
 	public static AlbumLogger getInstance() 
@@ -63,7 +63,7 @@ public final class AlbumLogger {
 	
 	/**
 	 * This method simply returns the log.
-	 * @return
+	 * @return logger
 	 */
 	public final Logger getLog() {
 		return AlbumLogger.log;

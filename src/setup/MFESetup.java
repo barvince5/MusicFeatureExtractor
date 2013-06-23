@@ -45,7 +45,7 @@ public final class MFESetup {
 	
 	/**
 	 * This method load the setting from the xml setup file.
-	 * @return
+	 * @return setup
 	 * @throws MFESetupException
 	 */
 	private final MFESetupType getSettings() 
@@ -86,7 +86,7 @@ public final class MFESetup {
 	
 	/**
 	 * Gets a useful message for the user.
-	 * @return
+	 * @return help message
 	 */
 	public final String getHelpMessage() {
 		
@@ -104,7 +104,7 @@ public final class MFESetup {
 	/**
 	 * Gets a map where the key is the command and the entry is its corresponding class which will
 	 * be instantiated on the fly in the main class.
-	 * @return
+	 * @return commands
 	 */
 	public final HashMap<String, String> getCommands() {
 		
@@ -121,7 +121,7 @@ public final class MFESetup {
 	
 	/**
 	 * Gets a list of author.
-	 * @return
+	 * @return authors list
 	 */
 	public final List<Author> getAuthors() {
 		List<Author> aut= this.setup.getAuthors().getAuthor();
@@ -130,7 +130,7 @@ public final class MFESetup {
 	
 	/**
 	 * Gets the number version of MFE. (e.g. 1.0.0)
-	 * @return
+	 * @return version
 	 */
 	public final String getVersion() {
 		return this.setup.getMFENumberVersion();
@@ -138,7 +138,7 @@ public final class MFESetup {
 	
 	/**
 	 * Gets the name of this MFE version.
-	 * @return
+	 * @return version name.
 	 */
 	public final String getVersionName() {
 		return this.setup.getMFENameVersion();
@@ -146,7 +146,7 @@ public final class MFESetup {
 	
 	/**
 	 * Gets both version name and number.
-	 * @return
+	 * @return version information.
 	 */
 	public final String getCompleteVersionInfo() {
 		return (this.setup.getMFENumberVersion() + " " + this.setup.getMFENameVersion());
@@ -154,7 +154,7 @@ public final class MFESetup {
 	
 	/**
 	 * Gets the creation date of the setup xml file as string.
-	 * @return
+	 * @return creation date.
 	 * @throws DateConverterException
 	 */
 	public final String getCreationSetupFileDate() 

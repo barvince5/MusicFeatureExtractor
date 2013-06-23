@@ -39,7 +39,7 @@ public final class LoadRhythmHistogram {
 	/**
 	 * This method gets the rhythm histogram array of 60 values.
 	 * @param file
-	 * @return
+	 * @return rhythm histogram values
 	 * @throws JAXBException
 	 * @throws SAXException
 	 */

@@ -89,9 +89,7 @@ public final class MusicbrainzUrl {
 	/**
 	 * Creates a correct musicbrainz url for this song, returning all matches.<br>
 	 * Note: At least the title must not be null or empty.
-	 * @param artist
 	 * @param title
-	 * @param album
 	 * @return url musicbrainz style to perform a gethttp, or null.
 	 * @throws MusicbrainzUrlException in case of errors (e.g. title null).
 	 */

@@ -36,7 +36,7 @@ public final class CommandParameter {
 	
 	/**
 	 * To get the setup of MFE containing some data stored in setup.xml file.
-	 * @return
+	 * @return setup.
 	 */
 	public final MFESetup getMFESetup() {
 		return this.setup;

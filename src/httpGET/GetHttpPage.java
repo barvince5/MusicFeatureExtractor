@@ -54,7 +54,7 @@ public final class GetHttpPage {
 	 * This method allows to set a different timeOut.<br>
 	 * Note1: it must be greater that 1000 [ms] and less that 20000 [ms].<br>
 	 * NOte2: The default value is 7 seconds (7000 ms).
-	 * @param tiemOut in milli seconds
+	 * @param timeOut in milli seconds
 	 * @throws GetHttpException if the timeout is not correct.
 	 */
 	public final void changeTimeout(int timeOut) 
@@ -83,8 +83,7 @@ public final class GetHttpPage {
 	/**
 	 * This method return a web page, or empty string.
 	 * @param url
-	 * @param timeOut in milli-second
-	 * @return
+	 * @return Webpage content as string.
 	 * @throws GetHttpException
 	 */
 	public final String getWebPageAsString(URL url) 
@@ -135,7 +134,7 @@ public final class GetHttpPage {
 	/**
 	 * This method return a web page, or empty string.
 	 * @param url
-	 * @return
+	 * @return webpage content as string.
 	 * @throws GetHttpException
 	 */
 	public final String getWebPageAsString(String url) 
@@ -154,7 +153,7 @@ public final class GetHttpPage {
 	 * This method return a web page, or empty file.
 	 * @param url
 	 * @param outputFile
-	 * @return
+	 * @return webpage content as file.
 	 * @throws GetHttpException
 	 */
 	public final File getWebPageAsFile(URL url, String outputFile) 
@@ -181,7 +180,7 @@ public final class GetHttpPage {
 	 * This method return a web page, or empty file.
 	 * @param url
 	 * @param outputFile
-	 * @return
+	 * @return webpage content as file.
 	 * @throws GetHttpException
 	 */
 	public final File getWebPageAsFile(String url, String outputFile) 
