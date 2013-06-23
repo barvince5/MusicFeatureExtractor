@@ -13,26 +13,26 @@ import java.util.List;
  * position of the cluster centroid, computed again each time an
  * item is assigned or removed from the cluster.
  */
-public final class Cluster {
-	
+public class Cluster {
+
 	private int id;
 	private int dimensions;
 	private HashMap<String, Song> songMap;
 	private double[] centroid;
 	
 	/**
-	 * Creates a new empty Cluster with default dimensions (60).
+	 * Creates a new empty Cluster.
 	 * @param id the unique identifier of the Cluster
 	 */
 	public Cluster(int id) {
 		this.id= id;
-		this.dimensions= 60;
 		this.songMap= new HashMap<String, Song>();
+		this.dimensions= 60;
 		this.centroid= new double[this.dimensions];
 	}
 
 	/**
-	 * Creates a new empty Cluster with user-defined dimensions.
+	 * Creates a new empty Cluster.
 	 * @param id the unique identifier of the Cluster
 	 * @param dimensions the position dimension number for the data 
 	 * (RhythmHistogram defaults to 60)
@@ -49,7 +49,7 @@ public final class Cluster {
 	 * (The Rhythm Histogram defaults to 60).
 	 * @param dim the number of dimensions
 	 */
-	public final void setDimensions(int dim) {
+	public void setDimensions(int dim) {
 		this.dimensions= dim;
 	}
 	
@@ -57,7 +57,7 @@ public final class Cluster {
 	 * Gets the number of dimensions.
 	 * @return number of dimensions
 	 */
-	public final int getDimensions() {
+	public int getDimensions() {
 		return this.dimensions;
 	}
 	
@@ -65,18 +65,18 @@ public final class Cluster {
 	 * Gets the identifier of the current Cluster.
 	 * @return cluster identifier
 	 */
-	public final int getId() {
+	public int getId() {
 		return this.id;
 	}
 	
 	/**
-	 * Adds a Song to the Cluster and recalculates the centroid.
+	 * Adds a Song to the Cluster.
 	 * @return true if added correctly, false if already present.
 	 */
-	public final boolean assignSong(Song s) {
+	public boolean assignSong(Song s) {
 		
 		String path= s.getPath();
-		if(this.songMap.containsKey(path))
+		if(this.songMap.get(path) != null)
 			return false;
 		
 		this.songMap.put(path, s);
@@ -87,7 +87,7 @@ public final class Cluster {
 	 * Removes a Song from the Cluster and recalculates the centroid.
 	 * @return the song if it was present, null otherwise
 	 */
-	public final Song removeSong(String path) {
+	public Song removeSong(String path) {
 		
 		if(path == null || path.equals(""))
 			return null;
@@ -101,7 +101,7 @@ public final class Cluster {
 	 * Gets the current position of the Cluster centroid
 	 * @return position of the centroid
 	 */
-	public final double[] getCentroid() {
+	public double[] getCentroid() {
 		return this.centroid;
 	}
 	
@@ -109,7 +109,7 @@ public final class Cluster {
 	 * Gets the number of songs in the cluster
 	 * @return song count
 	 */
-	public final int getSongCount() {
+	public int getSongCount() {
 		return this.songMap.size();
 	}
 	
@@ -117,14 +117,10 @@ public final class Cluster {
 	 * Returns a copy of the list of songs in the Cluster.
 	 * @return copy of song List
 	 */
-	public final List<Song> getSongListCopy() {
+	public List<Song> getSongListCopy() {
 		
 		List<Song> result= new ArrayList<Song>();
-		Iterator<String> iter= this.songMap.keySet().iterator();
-		while(iter.hasNext()) {
-			result.add(this.songMap.get(iter.next()));
-		}
-		
+		result.addAll(this.songMap.values());
 		return result;
 	}
 
@@ -134,7 +130,7 @@ public final class Cluster {
 	 * song in the Cluster.
 	 * 
 	 */
-	public final void resetCentroid() {
+	public void resetCentroid() {
 		
 		int size= this.songMap.size();
 		
@@ -144,8 +140,8 @@ public final class Cluster {
 		
 		// if there's only one song, the centroid will be in the same position as that song
 		if(size == 1) {			
-			Song[] songs= this.songMap.values().toArray(new Song[size]);
-			this.centroid= songs[0].getPosition();
+			Iterator<Song> iterm= this.songMap.values().iterator();
+			this.centroid= iterm.next().getPosition();
 			return;
 		}
 		
@@ -154,16 +150,14 @@ public final class Cluster {
 		
 		Iterator<Song> iter= this.songMap.values().iterator();
 		while(iter.hasNext()) {
-			
 			double[] currSong= iter.next().getPosition();
-
-			for (int i= 0; i< this.dimensions; ++i)
-				this.centroid[i] += currSong[i];
+			for (int i= 0; i< this.dimensions; ++i) {
+				this.centroid[i] += currSong[i]; 
+			}	
 		}
 
 		for(int i= 0; i< this.dimensions; ++i)
 			this.centroid[i] = this.centroid[i] / (double) this.songMap.size();
-		
 
 		return;
 	}

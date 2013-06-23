@@ -33,8 +33,10 @@ public final class KmeansCommand implements Command {
 		int maxIter= Integer.valueOf(args[2]);
 		String dir= args[3];
 		
+		System.out.println("KMEANS CLUSTERING STARTED: Please wait...");
 		KMeans kmeans= new KMeans(clusterNumber, maxIter, dir);
 		kmeans.execute();
+		System.out.println("KMEANS CLUSTERING COMPLETED");
 	}
 
 }

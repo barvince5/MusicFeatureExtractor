@@ -2,13 +2,14 @@ package clustering;
 
 import customException.ClusterException;
 
+
 /**
  * This class contains the result of the method that finds the closest
  * Cluster with respect to the current position. It contains the closest
  * cluster identifier, the cosine similarity with respect to it, and 
  * the name of the element in the current position (the song path). 
  */
-public final class DistanceResult {
+public class DistanceResult {
 	
 	private int cluster;
 	private double similarity;
@@ -31,8 +32,9 @@ public final class DistanceResult {
 	 * @param cluster cluster id
 	 * @throws ClusterException 
 	 */
-	public final void setCluster(int cluster) 
+	public void setCluster(int cluster) 
 			throws ClusterException {
+		
 		if(cluster < 0)
 			throw new ClusterException("The cluster identifier cannot be negative!");
 		
@@ -43,7 +45,7 @@ public final class DistanceResult {
 	 * Gets the cluster identifier.
 	 * @return cluster id
 	 */
-	public final int getCluster() {
+	public int getCluster() {
 		return this.cluster;
 	}
 	
@@ -52,11 +54,9 @@ public final class DistanceResult {
 	 * @param similarity similarity w.r.t. the cluster
 	 * @throws ClusterException 
 	 */
-	public final void setSimilarity(double similarity) 
+	public void setSimilarity(double similarity) 
 			throws ClusterException {
-		if(similarity < -1.0 || similarity > 1.0)
-			throw new ClusterException("The similarity must be between -1 and 1!");
-		
+
 		this.similarity= similarity;
 	}
 	
@@ -64,15 +64,21 @@ public final class DistanceResult {
 	 * Gets the cosine similarity with respect to the best cluster centroid.
 	 * @return similarity w.r.t. the cluster
 	 */
-	public final double getSimilarity() {
+	public double getSimilarity() {
 		return this.similarity;
 	}
 	
 	/**
 	 * Sets the name of the element in the current position.
 	 * @param name element name
+	 * @throws ClusterException 
 	 */
-	public final void setName(String name) {
+	public void setName(String name) 
+			throws ClusterException {
+		
+		if(name == null || name.equals(""))
+			throw new ClusterException("The file name of the song cannot be null or empty string");
+			
 		this.name= name;
 	}
 	
@@ -80,7 +86,7 @@ public final class DistanceResult {
 	 * Gets the name of the element in the current position.
 	 * @return element name
 	 */
-	public final String getName() {
+	public String getName() {
 		return this.name;
 	}
 }

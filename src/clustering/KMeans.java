@@ -31,19 +31,21 @@ import clusterArtifacts.ObjectFactory;
 
 import customException.ClusterException;
 import customException.DateConverterException;
+import feature.lowLevel.LowLevelSongFeature;
 
-/**
- * This class executes the K-Means algorithm to perform clustering on a set of
- * Low Level Song Feature files starting from a directory. The measure used for 
- * position is the Rhythm Histogram (60-dimensional array) and the measure of 
- * distance used is the Cosine Similarity. 
- */
-public final class KMeans {
+public class KMeans {
+
+	
+	/**
+	 * This class executes the K-Means algorithm to perform clustering on a set of
+	 * Low Level Song Feature files starting from a directory. The measure used for 
+	 * position is the Rhythm Histogram (60-dimensional array) and the measure of 
+	 * distance used is the Cosine Similarity. 
+	 */
 	
 	
 	private List<Song> songList= null;
 	private int clusterNumber= -1;
-	private int songNumber= -1;
 	private int maxIter= -1;
 	private List<Cluster> clusterList= null;
 	
@@ -59,7 +61,7 @@ public final class KMeans {
 		throws ClusterException {
 		
 		if(clusterNumber <= 0)
-			throw new ClusterException("The number of clusters must be positive!");
+			throw new ClusterException("The number of clusters can't be negative!");
 		
 		if(maxIter < 1)
 			throw new ClusterException("Must iterate at least once!");
@@ -73,9 +75,8 @@ public final class KMeans {
 		
 		// loads the songs list and returns the number of dimensions
 		int dimensions= this.loadSongs(path);
-		this.songNumber= this.songList.size();
 		
-		if (this.songNumber < this.clusterNumber)
+		if (this.songList.size() < this.clusterNumber)
 			throw new ClusterException("The number of files can't be less than the number of clusters!");
 		
 		this.clusterList= new ArrayList<Cluster>();
@@ -96,7 +97,7 @@ public final class KMeans {
 	 * they are the closest to.  
 	 * @throws ClusterException
 	 */
-	private final void init() 
+	private void init() 
 			throws ClusterException {
 		
 		int i= 0;
@@ -107,7 +108,7 @@ public final class KMeans {
 			c.resetCentroid();
 		}
 		
-		for(; i<this.songNumber; ++i) {
+		for(; i<this.songList.size(); ++i) {
 			Song s= this.songList.get(i);
 			int clust= this.findNearestCluster(s.getPosition()).getCluster();
 			Cluster c= this.clusterList.get(clust);
@@ -120,7 +121,7 @@ public final class KMeans {
 	 * Executes the algorithm for the parameters specified in the constructor.
 	 * @throws ClusterException
 	 */
-	public final void execute() 
+	public void execute() 
 			throws ClusterException {
 		
 		boolean bestResult= false;
@@ -194,7 +195,7 @@ public final class KMeans {
 	 * Writes the results of the clustering algorithm procedure to XML.
 	 * @throws ClusterException
 	 */
-	private final void saveResults() 
+	private void saveResults() 
 			throws ClusterException {
 		
 		ObjectFactory obf= new ObjectFactory();
@@ -208,14 +209,13 @@ public final class KMeans {
 		}
 		
 		ClusterListType clusters= obf.createClusterListType();
-		clusters.setClusterCount(BigInteger.valueOf(this.clusterNumber));
-		clusters.setSongCount(BigInteger.valueOf(this.songNumber));
 		Iterator<Cluster> iterC= this.clusterList.iterator();
 		
 		while(iterC.hasNext()) {
 			Cluster c= iterC.next();
 			ClusterType ct= obf.createClusterType();
 			ct.setId(BigInteger.valueOf(c.getId()));
+			ct.setCount(BigInteger.valueOf(c.getSongCount()));
 			Iterator<Song> iterS= c.getSongListCopy().iterator();
 			
 			while(iterS.hasNext()) {
@@ -237,7 +237,7 @@ public final class KMeans {
 			Marshaller m= jc.createMarshaller();
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 			SchemaFactory sf= SchemaFactory.newInstance(W3C_XML_SCHEMA_NS_URI);
-			InputStream is= KMeans.class.getClassLoader().getResourceAsStream("MetadataSchema/cluster.xsd");
+			InputStream is= LowLevelSongFeature.class.getClassLoader().getResourceAsStream("MetadataSchema/cluster.xsd");
 			Schema schema= sf.newSchema(new StreamSource(is));
 			m.setSchema(schema);
 			m.setEventHandler(new ValidationEventHandler() {
@@ -298,7 +298,7 @@ public final class KMeans {
 	 * @return number of dimensions for the files loaded (RhythmHistogram defaults to 60)
 	 * @throws ClusterException
 	 */
-	private final int loadSongs(String dir) 
+	private int loadSongs(String dir) 
 		throws ClusterException {
 		
 		try {
@@ -315,7 +315,7 @@ public final class KMeans {
 	 * @return number of dimensions for the files loaded (RhythmHistogram defaults to 60)
 	 * @throws ClusterException
 	 */
-	private final int loadSongs(File dir) 
+	private int loadSongs(File dir) 
 			throws ClusterException {
 		
 		int dimensions= -1;
@@ -343,7 +343,7 @@ public final class KMeans {
 	 * @return closest cluster identifier and distance from it
 	 * @throws ClusterException
 	 */
-	private final DistanceResult findNearestCluster(double[] position) 
+	private DistanceResult findNearestCluster(double[] position) 
 			throws ClusterException {
 
 		DistanceResult res= new DistanceResult();
@@ -371,7 +371,7 @@ public final class KMeans {
 	 * @return dot product
 	 * @throws ClusterException
 	 */
-	private final double dotProduct(double[] a, double[] b) 
+	private double dotProduct(double[] a, double[] b) 
 		throws ClusterException {
 		
 		int size = a.length;
@@ -390,7 +390,7 @@ public final class KMeans {
 	 * @param a array
 	 * @return norm
 	 */
-	private final double getNorm(double[] a) {
+	private double getNorm(double[] a) {
 		
 		int size = a.length;
 		
@@ -409,7 +409,7 @@ public final class KMeans {
 	 * @return cosine similarity
 	 * @throws ClusterException
 	 */
-	private final double cosineSimilarity(double[] a, double[] b) 
+	private double cosineSimilarity(double[] a, double[] b) 
 			throws ClusterException {
 		
 		double dot= this.dotProduct(a, b);

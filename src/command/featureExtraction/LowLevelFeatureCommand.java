@@ -40,7 +40,7 @@ public final class LowLevelFeatureCommand implements Command {
 		if(path.equals("."))
 			path= System.getProperty("user.dir");
 		
-		System.out.println("LOW LEVEL SONG PHASE: Please wait...");
+		System.out.println("LOW LEVEL SONG PHASE STARTED: Please wait...");
 		MasterMetadata.songMetadata(path, hlFlag, llFlag);
 		System.out.println("LOW LEVEL SONG PHASE COMPLETED");
 

@@ -40,14 +40,17 @@ public final class AllFeatureCommand implements Command {
 		if(path.equals("."))
 			path= System.getProperty("user.dir");
 		
-		System.out.println("ARTISTS PHASE: Please wait...");
+		System.out.println("ARTISTS PHASE STARTED: Please wait...");
 		MasterMetadata.artistMetadata(path);
+		System.out.println("ARTISTS PHASE COMPLETED");
 		
-		System.out.println("ALBUMS PHASE: Please wait...");
+		System.out.println("ALBUMS PHASE STARTED: Please wait...");
 		MasterMetadata.albumMetadata(path);
+		System.out.println("ALBUMS PHASE COMPLETED");
 		
-		System.out.println("SONGS PHASE: Please wait...");
+		System.out.println("SONGS PHASE STARTED: Please wait...");
 		MasterMetadata.songMetadata(path, hlFlag, llFlag);
+		System.out.println("SONGS PHASE COMPLETED");
 		
 	}
 
