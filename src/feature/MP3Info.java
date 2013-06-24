@@ -28,7 +28,7 @@ import entagged.audioformats.Tag;
 import entagged.audioformats.exceptions.CannotReadException;
 
 /**
- * This class extracts all data from ID3v and file. This class is also extended by all classes that extracts
+ * This class extracts all data from ID3 and file. This class is also extended by all classes that extracts
  * features (i.e. SonFeature, AlbumFeature, ArtistFeature)
  */
 public class MP3Info {
@@ -58,7 +58,7 @@ public class MP3Info {
 	}
 	
 	/**
-	 * This method extract data from ID3v and audio file.
+	 * This method extract data from ID3 and audio file.
 	 * @param song
 	 * @throws MP3Exception
 	 * @throws UnsupportedAudioException
@@ -105,7 +105,7 @@ public class MP3Info {
 	}
 
 	/**
-	 * Gets informations inside the ID3v tags
+	 * Gets informations inside the ID3 tags
 	 * @return tags
 	 */
 	public final Tag getTags() {
