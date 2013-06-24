@@ -18,6 +18,9 @@ http://www.gnu.org/licenses/.  */
 
 package feature.lowLevel;
 
+/**
+ * This class extract information related to the audio content.
+ */ 
 import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
 
 import java.io.File;
