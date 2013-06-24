@@ -22,17 +22,17 @@
     <possibleCommands>
         <command>
             <cmd>-all</cmd>
-            <description>[dir or file] for high and low level feature</description>
+            <description>[dir or file] for high and low level metadata</description>
             <class>command.featureExtraction.AllFeatureCommand</class>
         </command>
         <command>
             <cmd>-hl</cmd>
-            <description>[dir or file] for high level feature</description>
+            <description>[dir or file] for high level metadata</description>
             <class>command.featureExtraction.HighLevelFeatureCommand</class>
         </command>
         <command>
             <cmd>-ll</cmd>
-            <description>[dir or file] for low level feature</description>
+            <description>[dir or file] for low level metadata</description>
             <class>command.featureExtraction.LowLevelFeatureCommand</class>
         </command>
         <command>
