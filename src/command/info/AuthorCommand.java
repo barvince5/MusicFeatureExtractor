@@ -30,7 +30,7 @@ import command.Command;
 import command.CommandParameter;
 
 /**
- * This class prints on screen informations about the authors.
+ * This class prints on screen information about the authors.
  */
 public final class AuthorCommand implements Command {
 
