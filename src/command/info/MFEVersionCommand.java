@@ -22,7 +22,7 @@ import command.Command;
 import command.CommandParameter;
 
 /**
- * This class simply prints on screen informations about the MFE version.
+ * This class simply prints on screen information about the MFE version.
  */
 public final class MFEVersionCommand implements Command {
 
