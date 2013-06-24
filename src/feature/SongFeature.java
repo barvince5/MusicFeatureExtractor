@@ -26,6 +26,9 @@ import customException.SongFeatureException;
 import feature.highLevel.HighLevelSongFeature;
 import feature.lowLevel.LowLevelSongFeature;
 
+/**
+ * This class is used to manage the extraction of both high and low level information about songs. 
+ */
 public final class SongFeature extends MP3Info implements Callable<Boolean> {
 
 	private File song;
