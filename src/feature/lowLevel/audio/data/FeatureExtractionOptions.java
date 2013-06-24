@@ -41,7 +41,7 @@ public class FeatureExtractionOptions {
      * Default values are: 
      * - extractRH, extractRP, extractSSD = true (extract all features)
      * - inputBaseDir = empty string
-     * - bandLimit = 23
+     * - bandLimit = 24
      * - modAmpimit = 60
      * - stepWidth = 3
      * - skipLeadInFadeOut = 1
@@ -52,7 +52,7 @@ public class FeatureExtractionOptions {
     	this.extractRP= true;
     	this.extractSSD= true;
     	this.inputBaseDir= "";
-    	this.bandLimit= 23;
+    	this.bandLimit= 24;
     	this.modAmplLimit= 60;
     	this.stepWidth= 3;
     	this.skipLeadInFadeOut= 1;
