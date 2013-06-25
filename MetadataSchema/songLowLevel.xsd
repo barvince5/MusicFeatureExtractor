@@ -49,8 +49,8 @@
     <complexType name="RhythmPatternType">
     	<sequence>
             <element name="description" type="string" maxOccurs="1" minOccurs="1"></element>
-            <element name="row" type="xsd4:rowType" minOccurs="23"
-    			maxOccurs="23">
+            <element name="row" type="xsd4:rowType" minOccurs="24"
+    			maxOccurs="24">
     		</element>
     	</sequence>
     	<attribute name="rows" type="positiveInteger"></attribute>
@@ -88,8 +88,8 @@
 
     <complexType name="ssdType">
     	<sequence>
-    		<element name="value" type="double" minOccurs="23"
-    			maxOccurs="23">
+    		<element name="value" type="double" minOccurs="24"
+    			maxOccurs="24">
     		</element>
     	</sequence>
     	<attribute name="size" type="positiveInteger"></attribute>
