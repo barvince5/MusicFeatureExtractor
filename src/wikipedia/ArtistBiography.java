@@ -99,7 +99,7 @@ public final class ArtistBiography {
 	 * This method gets the entire biography of an artist or a band from the wikipedia english website.<br>
 	 * Note: It is allowed on the wikipedia in english language.
 	 * @param url of the artist/band on wikipedia website.
-	 * @return the biography
+	 * @return the biography or null if not found.
 	 * @throws ArtistBiographyException in case of errors
 	 */
 	public final String getArtistBiography(String url) 
@@ -137,6 +137,9 @@ public final class ArtistBiography {
 				p= paragraphs.get(i);
 				bio += p.text().replaceAll("\\[.*\\]", "") + '\n';
 			}
+			
+			if(bio.equals("[From en.wikipedia] "))
+				return null;
 			
 			return bio;
 			

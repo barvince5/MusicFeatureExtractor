@@ -226,8 +226,11 @@ public final class ArtistFeature extends MP3Info implements Callable<Boolean> {
 					this.artist.setLinkList(linkList);
 					
 					//get wikipedia biography
-					if(wikipediaLink != null)
-						this.artist.setBiography(ArtistBiography.getInstance().getArtistBiography(wikipediaLink));
+					if(wikipediaLink != null) {
+						String bio= ArtistBiography.getInstance().getArtistBiography(wikipediaLink);
+						if(bio != null)
+							this.artist.setBiography(bio);
+					}
 				}
 			}
 			
