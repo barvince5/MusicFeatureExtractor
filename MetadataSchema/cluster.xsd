@@ -18,6 +18,8 @@
 				maxOccurs="unbounded">
 			</element>
 		</sequence>
+		<attribute name="k" type="positiveInteger" use="required"></attribute>
+		<attribute name="iter" type="positiveInteger" use="required"></attribute>
 	</complexType>
 
 	<complexType name="clusterType">

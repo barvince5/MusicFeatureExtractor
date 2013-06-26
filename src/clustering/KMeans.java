@@ -65,6 +65,7 @@ public class KMeans {
 	private List<Song> songList= null;
 	private int clusterNumber= -1;
 	private int maxIter= -1;
+	private int iter= 0;
 	private List<Cluster> clusterList= null;
 	
 	
@@ -90,13 +91,13 @@ public class KMeans {
 		this.clusterNumber= clusterNumber;
 		this.maxIter= maxIter;
 		this.songList= new ArrayList<Song>();
-		
+				
 		// loads the songs list and returns the number of dimensions
 		int dimensions= this.loadSongs(path);
 		
 		if (this.songList.size() < this.clusterNumber)
 			throw new ClusterException("The number of files can't be less than the number of clusters!");
-		
+
 		this.clusterList= new ArrayList<Cluster>();
 		
 		for(int i= 0; i< this.clusterNumber; ++i) {
@@ -143,7 +144,7 @@ public class KMeans {
 			throws ClusterException {
 		
 		boolean bestResult= false;
-		for(int i= 0; i< maxIter && bestResult == false ; ++i) {
+		for(this.iter= 0; this.iter< maxIter && bestResult == false ; ++this.iter) {
 			
 			// at the start of each iteration, recalculate each centroid
 			Iterator<Cluster> iterC= this.clusterList.iterator();
@@ -227,6 +228,8 @@ public class KMeans {
 		}
 		
 		ClusterListType clusters= obf.createClusterListType();
+		clusters.setK(BigInteger.valueOf(this.clusterNumber));
+		clusters.setIter(BigInteger.valueOf(this.iter));
 		Iterator<Cluster> iterC= this.clusterList.iterator();
 		
 		while(iterC.hasNext()) {
@@ -289,7 +292,7 @@ public class KMeans {
 	 * @return the list of files in this directory
 	 * @throws ClusterException
 	 */
-	private final static List<File> getFiles(File dir, List<File> files) 
+	private final List<File> getFiles(File dir, List<File> files) 
 			throws ClusterException {
 		
 		if(dir == null)
@@ -305,7 +308,7 @@ public class KMeans {
 	    }
 		
 	    for (File file : dir.listFiles())
-	    	KMeans.getFiles(file, files); //recursive approach.
+	    	this.getFiles(file, files); //recursive approach.
 	    
 		return files;
 	}
@@ -337,7 +340,7 @@ public class KMeans {
 			throws ClusterException {
 		
 		int dimensions= -1;
-		List<File> fileList= KMeans.getFiles(dir, new ArrayList<File>());
+		List<File> fileList= this.getFiles(dir, new ArrayList<File>());
 		Iterator<File> iter= fileList.iterator();
 		while(iter.hasNext()) {
 			Song newSong= new Song(iter.next());
@@ -348,9 +351,8 @@ public class KMeans {
 			else 
 				if(dimensions != newSong.getDimensions())
 					throw new ClusterException("All songs must have the same number dimensions");
-			this.songList.add(newSong);
+			this.songList.add(newSong);	
 		}
-		
 		return dimensions;
 	}
 	
